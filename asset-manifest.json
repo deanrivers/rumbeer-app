@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/rumbeer-app/static/css/main.c8a9e523.chunk.css",
+    "main.js": "/rumbeer-app/static/js/main.486b627a.chunk.js",
+    "main.js.map": "/rumbeer-app/static/js/main.486b627a.chunk.js.map",
+    "runtime-main.js": "/rumbeer-app/static/js/runtime-main.7726a0ab.js",
+    "runtime-main.js.map": "/rumbeer-app/static/js/runtime-main.7726a0ab.js.map",
+    "static/css/2.fb346933.chunk.css": "/rumbeer-app/static/css/2.fb346933.chunk.css",
+    "static/js/2.7e280e76.chunk.js": "/rumbeer-app/static/js/2.7e280e76.chunk.js",
+    "static/js/2.7e280e76.chunk.js.map": "/rumbeer-app/static/js/2.7e280e76.chunk.js.map",
+    "index.html": "/rumbeer-app/index.html",
+    "precache-manifest.5e1d33b3181f35081f8775d2f8f96d5f.js": "/rumbeer-app/precache-manifest.5e1d33b3181f35081f8775d2f8f96d5f.js",
+    "service-worker.js": "/rumbeer-app/service-worker.js",
+    "static/css/2.fb346933.chunk.css.map": "/rumbeer-app/static/css/2.fb346933.chunk.css.map",
+    "static/css/main.c8a9e523.chunk.css.map": "/rumbeer-app/static/css/main.c8a9e523.chunk.css.map",
+    "static/js/2.7e280e76.chunk.js.LICENSE.txt": "/rumbeer-app/static/js/2.7e280e76.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7726a0ab.js",
+    "static/css/2.fb346933.chunk.css",
+    "static/js/2.7e280e76.chunk.js",
+    "static/css/main.c8a9e523.chunk.css",
+    "static/js/main.486b627a.chunk.js"
+  ]
+}
