@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+import './Styles/App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from "react-router-dom";
 
-        <p>Test</p>
+import Login from './Components/login'
+import Home from './Components/home'
+import Nav from './Components/Common/nav'
 
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+const App = () => {
+
+
+
+
+  return ([
+    <Router>
+        <Switch>
+            <Route path="/login" exact component={Login}></Route>
+            <Route path="/" exact component={Login}></Route>
+            <Route path="/home" exact component={Home}></Route>
+        </Switch>
+    </Router>,
+    <Nav/>
+  ]);
 }
 
 export default App;
