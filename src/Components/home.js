@@ -1,10 +1,12 @@
 import '../Styles/Home.css'
-
 import React from 'react'
+import {Carousel} from 'react-responsive-carousel'
+import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+
 import FUTCard from './Common/futCard'
 
 const Home = () =>{
-    return(
+    return([
         <div className="home-container-grid">
             <div className="header-container">
                 <h1>WELCOME, <br/>PLAYER.</h1>
@@ -19,14 +21,25 @@ const Home = () =>{
             </div>
 
             <div className="fifa-card-container grid-section">
+            
                 <div className="card-container">
+                    
                     <FUTCard/>
+                    <FUTCard/>
+                    <FUTCard/>
+                    
+
+                        
+  
+                    
+
                 </div>
                 
             </div>
+
             
         </div>
-    )
+    ])
 }
 
 export default Home

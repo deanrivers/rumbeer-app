@@ -37,10 +37,7 @@ const FUTCard = (props) => {
                 alt="Messi"
                 draggable="false"
               />
-              <div class="player-extra">
-                <span>4*SM</span>
-                <span>4*WF</span>
-              </div>
+
             </div>
           </div>
           {/* <!-- Player Card Bottom--> */}
@@ -57,6 +54,7 @@ const FUTCard = (props) => {
                     <div class="player-feature-value">97</div>
                     <div class="player-feature-title">PAC</div>
                   </span>
+
                   <span>
                     <div class="player-feature-value">95</div>
                     <div class="player-feature-title">SHO</div>
