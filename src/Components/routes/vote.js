@@ -72,7 +72,7 @@ const Vote = () => {
 
   return (
     <React.Fragment>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       {/* <AppBar position="relative">
         <Toolbar>
           <CameraIcon className={classes.icon} />
