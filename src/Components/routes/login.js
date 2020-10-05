@@ -1,5 +1,5 @@
-import '../Styles/Login.css'
-import {accent} from '../Styles/Standard'
+import '../../Styles/Login.css'
+import {accent} from '../../Styles/Standard'
 
 import React from 'react'
 import {NavLink} from 'react-router-dom'

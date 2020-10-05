@@ -14,6 +14,16 @@
     align-items: center;
 }
 
+.nav-container a{
+  text-decoration: none;
+  color: #A8A8A8;
+}
+
+/* .active{
+  color: red;
+  text-decoration: underline;
+} */
+
 ul {
     list-style-type: none;
     margin: 0;
@@ -21,6 +31,7 @@ ul {
     overflow: hidden;
     font-weight: bold;
     width: 100%;
+    
   }
   
   li {

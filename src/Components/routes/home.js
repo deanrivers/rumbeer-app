@@ -1,10 +1,10 @@
-import '../Styles/Home.css'
+import '../../Styles/Home.css'
 import React from 'react'
 import {Carousel} from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 
-import FUTCard from './Common/futCard'
-import Vote from './vote'
+import FUTCard from '../Common/futCard'
+
 
 const Home = () =>{
     return([
@@ -15,6 +15,14 @@ const Home = () =>{
 
             <div className="highlights-container grid-section">
                 <h1>Highlights.</h1>
+                <div className="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/l1wQKbcOpSQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                
+            </div>
+
+            <div className="highlights-container grid-section">
+                <h1>League Standings.</h1>
                 <div className="video-container">
                     <iframe width="560" height="315" src="https://www.youtube.com/embed/l1wQKbcOpSQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
