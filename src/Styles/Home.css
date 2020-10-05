@@ -78,4 +78,12 @@
         justify-content: center;
         align-items: center;
     }
+
+    .grid-section{
+        width: 100%;
+    }
+
+    .fifa-card-container{
+        padding: 0;
+    }
 }
