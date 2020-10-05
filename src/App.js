@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from "r
 import Login from './Components/login'
 import Home from './Components/home'
 import Nav from './Components/Common/nav'
+import Vote from './Components/vote'
 
 
 
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/login" exact component={Login}></Route>
             <Route path="/" exact component={Login}></Route>
             <Route path="/home" exact component={Home}></Route>
+            <Route path="/vote" exact component={Vote}></Route>
         </Switch>
     </Router>,
     <Nav/>
