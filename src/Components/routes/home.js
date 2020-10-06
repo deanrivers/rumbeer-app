@@ -1,7 +1,8 @@
 import '../../Styles/Home.css'
+import "react-responsive-carousel/lib/styles/carousel.min.css"
 import React from 'react'
 import {Carousel} from 'react-responsive-carousel'
-import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+
 
 import FUTCard from '../Common/futCard'
 
@@ -36,16 +37,19 @@ const Home = () =>{
             <div className="fifa-card-container grid-section">
                 <h1>Player Ratings.</h1>
                 <div className="card-container">
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
-                    <FUTCard/>
+                    
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                        <FUTCard/>
+                    
+                    
                 </div>
                 
             </div>

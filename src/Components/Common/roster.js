@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 //   );
 // }
 
-const PlayerStats = () =>{
+const Roster = () =>{
   const classes = useStyles();
   const [dense, setDense] = useState(false);
   const [secondary, setSecondary] = useState(false);
@@ -60,17 +60,6 @@ const PlayerStats = () =>{
                 )
             })}
 
-
-
-
-              {/* {generate(
-                <ListItem>
-                  <ListItemText
-                    primary="Single-line item"
-                    secondary={secondary ? 'Secondary text' : null}
-                  />
-                </ListItem>,
-              )} */}
             </List>
           </div>
         </Grid>
@@ -80,4 +69,4 @@ const PlayerStats = () =>{
   );
 }
 
-export default PlayerStats
+export default Roster

@@ -3,6 +3,7 @@ import '../../Styles/Stats.css'
 import React from 'react'
 import Standings from '../Common/standings'
 import PlayerStats from '../Common/playerStats'
+import Roster from '../Common/roster'
 
 const Stats = () =>{
 
@@ -15,8 +16,10 @@ const Stats = () =>{
             <div className="stats-section">
                 <h1>Your Stats.</h1>
                 <PlayerStats/>
-                
-                
+            </div>
+            <div className="stats-section">
+                <h1>Your Team.</h1>
+                <PlayerStats/>
             </div>
 
             <div className="stats-section">

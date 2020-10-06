@@ -24,6 +24,10 @@ const App = () => {
             <Route path="/home" exact component={Home}></Route>
             <Route path="/vote" exact component={Vote}></Route>
             <Route path="/stats" exact component={Stats}></Route>
+        
+            <Route exact path="/rumbeer-app">
+              <Redirect to="/" />
+            </Route>
         </Switch>
         <Nav/>
     </Router>,
