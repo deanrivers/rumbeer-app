@@ -27,8 +27,7 @@ const App = () => {
               <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={SignUp} />
 
-              {/* <PrivateRoute exact path="/" component={Home} />
-              <Route exact path="/signup" component={SignUp} />
+             
               <Route path="/login" exact component={Login}></Route>
               <Route path="/" exact component={Login}></Route>
               <Route path="/home" exact component={Home}></Route>
@@ -37,7 +36,7 @@ const App = () => {
 
               <Route exact path="/rumbeer-app">
                 <Redirect to="/" />
-              </Route> */}
+              </Route>
 
           </Switch>
           <Nav/>
