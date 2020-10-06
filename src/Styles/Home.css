@@ -20,20 +20,22 @@
 }
 
 .grid-section{
-    background-color: white;
+    /* background-color: white;
     border: none;
     box-shadow: 1px 1px 2px 1px #ccc;
     border-radius: 5px;
     margin-top: 3%;
-    padding: 3%;
+    padding: 3%; */
+
+    margin-top: 5%;
 }
 
 .grid-section h1{
     /* padding-left: 5%;
     padding-top: 3%; */
     /* padding: 2%; */
-    margin-bottom: 2%;
-    font-size: 3rem;
+    /* margin-bottom: 2%; */
+    
 }
 
 .header-container{
