@@ -18,6 +18,7 @@ const Nav = () =>{
                 <li>RUM AND BEER DRAFT LEAGUE</li>
 
                 <li onClick={() => app.auth().signOut()}>Logout</li>
+                {/* <li onClick={() => alert('test')}>Logout</li> */}
                 <li><NavLink activeStyle={activeStyle} to="/vote">Vote</NavLink></li>
                 <li><NavLink activeStyle={activeStyle} to="/stats">Stats</NavLink></li>
                 <li><NavLink activeStyle={activeStyle} to="/home">Home</NavLink></li>
