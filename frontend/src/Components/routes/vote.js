@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -15,6 +15,9 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 
 import VoteCard from '../Common/voteCard'
+
+
+
 
 const Copyright = () => {
   return (
@@ -60,14 +63,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
-  rateButton:{
-      background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+  submitButton:{
+      background: 'linear-gradient(45deg, #FF0062 30%, #FF8E53 90%)',
+  },
+  clearButton:{
+    borderColor:'black'
   }
 }));
 
 const cards = [1, 2, 3,4,5,6,7,8,9,10];
 
 const Vote = () => {
+  const [clearDisabled,updatedClearDisabled] = useState(true) 
   const classes = useStyles();
 
   return (
@@ -96,12 +103,12 @@ const Vote = () => {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" className={classes.rateButton}>
+                  <Button variant="contained" color="primary" className={classes.submitButton}>
                     Submit Ratings
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" color="primary">
+                  <Button variant="outlined" className={classes.clearButton} disabled={clearDisabled}>
                     Clear All Ratings
                   </Button>
                 </Grid>
@@ -112,6 +119,10 @@ const Vote = () => {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
+
+
+
+            
             {cards.map((card) => (
               <Grid item key={card} xs={12} sm={6} md={4}>
                 <VoteCard/>

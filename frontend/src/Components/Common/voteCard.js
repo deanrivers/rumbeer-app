@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -16,18 +16,12 @@ import Link from '@material-ui/core/Link';
 
 
 const VoteCard = () =>{
+
+
+
+    const [clearDisabled,updateClearDisabled] = useState(true)
+
     const useStyles = makeStyles((theme) => ({
-        icon: {
-          marginRight: theme.spacing(2),
-        },
-        heroContent: {
-          backgroundColor: theme.palette.background.paper,
-          padding: theme.spacing(8, 0, 6),
-        },
-        heroButtons: {
-          marginTop: theme.spacing(4),
-          
-        },
         cardGrid: {
           paddingTop: theme.spacing(8),
           paddingBottom: theme.spacing(8),
@@ -43,9 +37,17 @@ const VoteCard = () =>{
         cardContent: {
           flexGrow: 1,
         },
-
+        rateButton:{
+          backgroundColor:'#FF0062'
+        },
+        clearButton:{
+          borderColor:'black'
+        }
       }));
     const classes = useStyles();
+
+
+
     return(
 
         
@@ -64,11 +66,11 @@ const VoteCard = () =>{
                     </Typography>
                 </CardContent>
                 <CardActions>
-                <Button size="small" color="primary">
-                    View
+                <Button size="small" color="primary" variant="contained" className={classes.rateButton}>
+                    Rate
                 </Button>
-                <Button size="small" color="primary">
-                    Edit
+                <Button size="small" variant="outlined" disabled={clearDisabled} className={classes.clearButton}>
+                    Clear
                 </Button>
                 </CardActions>
         </Card>

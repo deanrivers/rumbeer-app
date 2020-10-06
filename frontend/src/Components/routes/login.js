@@ -1,34 +1,47 @@
-import '../../Styles/Login.css'
-import {accent} from '../../Styles/Standard'
+import React, { useCallback, useContext } from "react";
+import { withRouter, Redirect } from "react-router";
+import app from '../../base';
+import { AuthContext } from "../../Auth";
 
-import React from 'react'
-import {NavLink} from 'react-router-dom'
-// import ReactDOM from 'react-dom';
-import Button from '@material-ui/core/Button';
+const Login = ({ history }) => {
+  const handleLogin = useCallback(
+    async event => {
+      event.preventDefault();
+      const { email, password } = event.target.elements;
+      try {
+        await app
+          .auth()
+          .signInWithEmailAndPassword(email.value, password.value);
+        history.push("/");
+      } catch (error) {
+        alert(error);
+      }
+    },
+    [history]
+  );
 
+  const { currentUser } = useContext(AuthContext);
 
-const Login = () =>{
+  if (currentUser) {
+    return <Redirect to="/" />;
+  }
 
-    return(
-        <div id="main-login-container">
+  return (
+    <div className="login-container">
+      <h1>Log in</h1>
+      <form onSubmit={handleLogin}>
+        <label>
+          Email
+          <input name="email" type="email" placeholder="Email" />
+        </label>
+        <label>
+          Password
+          <input name="password" type="password" placeholder="Password" />
+        </label>
+        <button type="submit">Log in</button>
+      </form>
+    </div>
+  );
+};
 
-            <div className="login-container">
-                <div className="header-container">
-                    <h1>RUM & BEER<br/> DRAFT LEAGUE</h1>
-                </div>
-
-
-                
-                <div class="buttons-container">
-                    <NavLink to="/home"><button id="login-button" className="button">LOGIN</button></NavLink>
-                    {/* <button id="register-button" className="button">REGISTER</button> */}
-                    <Button variant="contained" color="primary">
-                        Register
-                    </Button>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-export default Login
+export default withRouter(Login);
