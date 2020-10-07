@@ -3,7 +3,7 @@ import pyrebase
 import json
 import sys
 import os
-from python_dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv, find_dotenv
 from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth

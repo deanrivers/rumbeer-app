@@ -1,19 +1,21 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/frontend/node_modules
-/.pnp
+node_modules
+frontend/node_modules
+.pnp
 .pnp.js
-/backend/venv/lib*
-/backend/venv/share
-/frontend/build
+backend/venv/*
+backend/venv/share
+backend/venv/lib
+frontend/build
+venv
 
 # testing
-/coverage
+coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store
@@ -27,4 +29,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 backend/.env
-backend/venv
