@@ -1,86 +1,111 @@
 import firebase_admin
 import pyrebase
 import json
+import sys
 from functools import wraps
-from flask import (Flask, render_template, request)
+from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
+from requests.exceptions import HTTPError
 
-app = Flask(__name__, 
-    static_url_path='', 
-    static_folder='../frontend/build', 
-    template_folder='../frontend/build')
+app = Flask(__name__,
+            static_url_path="",
+            static_folder="../frontend/build",
+            template_folder="../frontend/build")
 
-cred = credentials.Certificate('rumbeer-firebase-creds.json')
+cred = credentials.Certificate("rumbeer-firebase-creds.json")
 firebase = firebase_admin.initialize_app(cred)
-pb = pyrebase.initialize_app(json.load(open('fbConfig.json')))
+pb = pyrebase.initialize_app(json.load(open("fbConfig.json")))
+db = pb.database()
 
 def check_token(f):
     @wraps(f)
-    def wrap(*args,**kwargs):
-        if not request.headers.get('authorization'):
-            return {'message': 'No token provided'},400
+    def wrap(*args, **kwargs):
+        if not request.headers.get("authorization"):
+            return {"message": "No token provided"}, 400
         try:
-            user = auth.verify_id_token(request.headers['Authorization'])
-            print(user)
+            user = auth.verify_id_token(request.headers["Authorization"])
+            # print(user)
             request.user = user
         except:
-            return {'message':'Invalid token provided.'},400
+            return {"message": "Invalid token provided."}, 400
         return f(*args, **kwargs)
     return wrap
+
 
 @app.route("/")
 def serve_react_build():
     return render_template("index.html")
 
-#api route to sign up a new user
+# api route to sign up a new user
 @app.route("/api/signup", methods=["POST"])
 def signup():
     data = request.get_json()
-    email = data['email']
-    password = data['password']
+    email = data["email"]
+    password = data["password"]
     if email is None or password is None:
-        return {'message': 'Error missing email or password'},400
+        return {"message": "Error missing email or password"}, 400
     try:
         user = auth.create_user(
-               email=email,
-               password=password
+            email=email,
+            password=password
         )
-        return {'message': f'Successfully created user {user.uid}'},200
-    except:
-        return {'message': 'Error creating user'},400
 
-#api route to get token for authorization
+        db.child("Players").child(user.uid).set(
+            {
+                "email": email,
+                "uid": user.uid,
+                "stats": {
+                    "defense": 0,
+                    "speed": 0,
+                    "shot": 0,
+                    "offense": 0
+                }
+            }
+        )
+
+        return {"message": f"Successfully created user {user.uid} using email {email}"}, 200
+    except:
+        return {"message": "Error creating user"}, 400
+
+# api route to get token for authorization
 @app.route("/api/token", methods=["POST"])
 def login():
     data = request.get_json()
-    email = data['email']
-    password = data['password']
+    email = data["email"]
+    password = data["password"]
 
     if email is None or password is None:
-        return {'message': 'Error missing email or password'},400
+        return {"message": "Error missing email or password"}, 400
     try:
         user = pb.auth().sign_in_with_email_and_password(email, password)
-        jwt = user['idToken']
-        return {'token': jwt}, 200
+        jwt = user["idToken"]
+        return {"token": jwt}, 200
     except:
-        return {'message': 'There was an error logging in'},400
+        return {"message": "There was an error logging in"}, 400
 
-@app.route('/api/userinfo')
+
+@app.route("/api/userinfo", methods=["GET"])
 @check_token
 def userinfo():
-    return {"data": request.user}, 200
+    try:
+        user_stats = db.child("Players").child(request.user["uid"]).get()
+        return user_stats.val(), 200
+
+    except:
+        return {"message": "There was an error retrieving stats"}, 400
+
 
 @app.route("/api/updateStats")
 def update_stats():
     return {"success": True}, 200
 
 # this handles if user wants to go to specific endpoint in react
-# without this, app will return 404 for anything non '/' i.e. /stats, /logout
-@app.errorhandler(404)   
-def not_found(e):   
-  return app.send_static_file('index.html')
+# without this, app will return 404 for anything non "/" i.e. /stats, /logout
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file("index.html")
 
-if __name__ == '__main__':
-    app.run(debug=True)
 
-#app.run()
+if __name__ == "__main__":
+    app.run()
+    #app.run(debug=True)
