@@ -2,9 +2,13 @@
 
 In the project directory, to start server locally:
 
-### `source venv/bin/activate`
+### `python3 -m venv venv`
 
 Creates virtual environment to use python project-level.
+
+### `source venv/bin/activate`
+
+Activate virtual environment to use python project-level.
 
 ### `pip3 install -r requirements.txt`
 
