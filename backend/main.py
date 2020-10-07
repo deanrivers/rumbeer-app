@@ -40,7 +40,6 @@ def check_token(f):
             return {"message": "No token provided"}, 400
         try:
             user = auth.verify_id_token(request.headers["Authorization"])
-             print(user)
             request.user = user
         except:
             return {"message": "Invalid token provided."}, 400
@@ -75,7 +74,7 @@ def signup():
                     "defense": 0,
                     "speed": 0,
                     "shot": 0,
-                    "offense": 0
+                    "offense": 0,
                     "pass": 0
                 }
             }
