@@ -37,7 +37,6 @@ def serve_react_build():
 def signup():
     
     data = request.get_json()
-    print(data)
     email = data['email']
     password = data['password']
     if email is None or password is None:
