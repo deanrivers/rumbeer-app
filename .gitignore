@@ -9,7 +9,7 @@ backend/venv/*
 backend/venv/share
 backend/venv/lib
 frontend/build
-venv
+frontend/build/*
 
 # testing
 coverage
