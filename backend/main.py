@@ -2,6 +2,8 @@ import firebase_admin
 import pyrebase
 import json
 import sys
+import os
+from dotenv import load_dotenv, find_dotenv #ignore-error
 from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
@@ -12,9 +14,22 @@ app = Flask(__name__,
             static_folder="../frontend/build",
             template_folder="../frontend/build")
 
+load_dotenv(find_dotenv())
+
+config = {
+    "apiKey": os.environ['FIREBASE_API_KEY'],
+    "authDomain": "rumbeer-dda6f.firebaseapp.com",
+    "databaseURL": "https://rumbeer-dda6f.firebaseio.com",
+    "projectId": "rumbeer-dda6f",
+    "storageBucket": "rumbeer-dda6f.appspot.com",
+    "messagingSenderId": "884743176160",
+    "appId": "1:884743176160:web:82ad6a455ed9a8e7baf585",
+    "measurementId": "G-45DZSXSVR2"
+  }
+
 cred = credentials.Certificate("rumbeer-firebase-creds.json")
 firebase = firebase_admin.initialize_app(cred)
-pb = pyrebase.initialize_app(json.load(open("fbConfig.json")))
+pb = pyrebase.initialize_app(config)
 db = pb.database()
 
 def check_token(f):
