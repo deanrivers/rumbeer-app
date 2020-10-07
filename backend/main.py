@@ -5,7 +5,7 @@ from flask import (Flask, render_template, request)
 from firebase_admin import credentials, auth
 
 
-app = Flask("__main__", 
+app = Flask(__name__, 
     static_url_path='', 
     static_folder='../frontend/build', 
     template_folder='../frontend/build')
@@ -22,8 +22,9 @@ def serve_react_build():
 #Api route to sign up a new user
 @app.route('/api/signup', methods=['POST'])
 def signup():
-    email = request.form.get('email')
-    password = request.form.get('password')
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
     if email is None or password is None:
         return {'message': 'Error missing email or password'},400
     try:
@@ -35,6 +36,7 @@ def signup():
     except:
         return {'message': 'Error creating user'},400
 
+
 @app.route("/api/updateStats")
 def update_stats():
     return {"success": True}, 200
@@ -45,7 +47,7 @@ def update_stats():
 def not_found(e):   
   return app.send_static_file('index.html')
 
+if __name__ == '__main__':
+    app.run(debug=True)
 
-#app.run(debug=True)
-
-app.run()
+#app.run()
