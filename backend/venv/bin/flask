@@ -1,4 +1,4 @@
-#!/mnt/hdd/git/rumbeer-app/backend/venv/bin/python3
+#!/Users/josecaicedo/git/rumbeer-app/backend/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

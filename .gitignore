@@ -5,6 +5,9 @@
 /frontend/node_modules
 /.pnp
 .pnp.js
+/backend/venv/lib*
+/backend/venv/share
+/frontend/build
 
 # testing
 /coverage

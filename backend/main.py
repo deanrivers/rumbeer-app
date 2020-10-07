@@ -17,10 +17,10 @@ pb = pyrebase.initialize_app(json.load(open('fbConfig.json')))
 
 @app.route("/")
 def serve_react_build():
-    return render_template("index.html", flask_token="Hello World")
+    return render_template("index.html")
 
 #Api route to sign up a new user
-@app.route('/api/signup', methods=['POST'])
+@app.route("/api/signup", methods=["POST"])
 def signup():
     data = request.get_json()
     email = data['email']
@@ -35,6 +35,12 @@ def signup():
         return {'message': f'Successfully created user {user.uid}'},200
     except:
         return {'message': 'Error creating user'},400
+
+@app.route("/api/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
 
 
 @app.route("/api/updateStats")
