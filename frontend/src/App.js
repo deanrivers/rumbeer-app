@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useContext } from 'react'
 import './Styles/App.css';
 
 import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from "react-router-dom";
@@ -10,12 +10,15 @@ import Vote from './Components/routes/vote'
 import Stats from './Components/routes/stats'
 import SignUp from './Components/routes/signUp'
 
-import { AuthProvider } from './Auth'
+import { AuthContext, AuthProvider } from './Auth'
 import PrivateRoute from "./PrivateRoute";
 
 
 
 const App = () => {
+
+  
+
 
   return (
     <AuthProvider>
