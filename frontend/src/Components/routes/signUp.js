@@ -7,46 +7,49 @@ const SignUp = ({ history }) => {
   const handleSignUp = useCallback(async event => {
     event.preventDefault();
     const { email, password } = event.target.elements;
-    console.log(email,password)
+    console.log(email.value,password.value)
 
 
-    let response = await fetch('/api/signup',{
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
+    //flask signup
+    // let response = await fetch('/api/signup',{
+    //   method: "POST",
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
 
-      //make sure to serialize your JSON body
-      body: JSON.stringify({
-        email: email,
-        password: password
-      })
-      // body:{
-      //   email:email,
-      //   password:password
-      // }
-    })
+    //   //make sure to serialize your JSON body
+    //   body: JSON.stringify({
+    //     email: email.value,
+    //     password: password.value
+    //   })
+    // })
 
-    let data = await response.json()
-    console.log(data)
-
-
+    // let data = await response.json()
+    // console.log('Data ->',data)
 
     // if(response.status==200){
-    //     console.log('A response',response)
-    //     // history.push("/");
-    //   }
+    //     console.log('A response ->',response)
 
-
-    // try {
-    //   await app
-    //     .auth()
-    //     .createUserWithEmailAndPassword(email.value, password.value);
-    //   history.push("/");
-    // } catch (error) {
-    //   alert(error);
+    //     //try and login with the credentials returned by flask
+    //     try {
+    //       await app
+    //         .auth()
+    //         .signInWithEmailAndPassword(email.value, password.value);
+    //       history.push("/");
+    //     } catch (error) {
+    //       alert(error);
+    //     }
     // }
+
+    //firebase signup
+    try {
+      await app.auth().createUserWithEmailAndPassword(email.value, password.value);
+      history.push("/");
+    } catch (error) {
+      alert(error);
+    }
+
   }, [history]);
 
   return (

@@ -55,8 +55,8 @@ def serve_react_build():
 @app.route("/api/signup", methods=["POST"])
 def signup():
     data = request.get_json()
-    email = data["email"]
-    password = data["password"]
+    email = data['email']
+    password = data['password']
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400
     try:

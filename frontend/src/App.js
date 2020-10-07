@@ -22,21 +22,15 @@ const App = () => {
       <Router>
           <Switch>
 
+            {/* Home screen is private and should only render on authentication success. */}
+            <PrivateRoute exact path="/" component={Home} />
 
-              <PrivateRoute exact path="/" component={Home} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/signup" component={SignUp} />
+            {/* The rest of the routes are only accessible after hitting the home page */}
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={SignUp} />
+            <Route path="/vote" exact component={Vote}></Route>
+            <Route path="/stats" exact component={Stats}></Route>
 
-             
-              <Route path="/login" exact component={Login}></Route>
-              <Route path="/" exact component={Login}></Route>
-              <Route path="/home" exact component={Home}></Route>
-              <Route path="/vote" exact component={Vote}></Route>
-              <Route path="/stats" exact component={Stats}></Route>
-
-              <Route exact path="/rumbeer-app">
-                <Redirect to="/" />
-              </Route>
 
           </Switch>
           <Nav/>
