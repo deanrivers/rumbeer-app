@@ -3,7 +3,7 @@ import pyrebase
 import json
 import sys
 import os
-from dotenv import load_dotenv, find_dotenv   ignore-error
+from dotenv import load_dotenv, find_dotenv  #ignore-error
 from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
