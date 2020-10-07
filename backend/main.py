@@ -3,7 +3,7 @@ import pyrebase
 import json
 import sys
 import os
-from dotenv import load_dotenv, find_dotenv #ignore-error
+from dotenv import load_dotenv, find_dotenv   ignore-error
 from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
@@ -25,12 +25,13 @@ config = {
     "messagingSenderId": "884743176160",
     "appId": "1:884743176160:web:82ad6a455ed9a8e7baf585",
     "measurementId": "G-45DZSXSVR2"
-  }
+}
 
 cred = credentials.Certificate("rumbeer-firebase-creds.json")
 firebase = firebase_admin.initialize_app(cred)
 pb = pyrebase.initialize_app(config)
 db = pb.database()
+
 
 def check_token(f):
     @wraps(f)
@@ -39,19 +40,20 @@ def check_token(f):
             return {"message": "No token provided"}, 400
         try:
             user = auth.verify_id_token(request.headers["Authorization"])
-            # print(user)
+             print(user)
             request.user = user
         except:
             return {"message": "Invalid token provided."}, 400
         return f(*args, **kwargs)
     return wrap
 
-
 @app.route("/")
 def serve_react_build():
     return render_template("index.html")
 
-# api route to sign up a new user
+""" 
+api route to sign up a new user
+"""
 @app.route("/api/signup", methods=["POST"])
 def signup():
     data = request.get_json()
@@ -74,6 +76,7 @@ def signup():
                     "speed": 0,
                     "shot": 0,
                     "offense": 0
+                    "pass": 0
                 }
             }
         )
@@ -82,7 +85,10 @@ def signup():
     except:
         return {"message": "Error creating user"}, 400
 
-# api route to get token for authorization
+
+"""
+api route to get token for authorization
+"""
 @app.route("/api/token", methods=["POST"])
 def login():
     data = request.get_json()
@@ -98,8 +104,7 @@ def login():
     except:
         return {"message": "There was an error logging in"}, 400
 
-
-@app.route("/api/userinfo", methods=["GET"])
+@app.route("/api/userStats", methods=["GET"])
 @check_token
 def userinfo():
     try:
@@ -109,13 +114,53 @@ def userinfo():
     except:
         return {"message": "There was an error retrieving stats"}, 400
 
+@app.route("/api/allStats", methods=["GET"])
+@check_token
+def allStats():
+    try:
+        user_stats = db.child("Players").get()
+        return user_stats.val(), 200
 
-@app.route("/api/updateStats")
+    except:
+        return {"message": "There was an error retrieving stats"}, 400
+
+
+"""
+ body format:
+ {
+   "uid": "1234"
+   "stats": 
+   {
+       "defense": 1,
+       "speed": 1,
+       "shot": 2,
+       "offense": 4
+       "pass": 3
+   }
+}
+"""
+@app.route("/api/updateStats", methods=["POST"])
+@check_token
 def update_stats():
-    return {"success": True}, 200
+    data = request.get_json()
+    uid = data["uid"]
+    stat_updates = {
+        "stats": data["stats"]
+    }
+    print(stat_updates)
 
-# this handles if user wants to go to specific endpoint in react
-# without this, app will return 404 for anything non "/" i.e. /stats, /logout
+    try:
+        db.child("Players").child(uid).update(stat_updates)
+        
+        return {"message": "Updated player stats"}, 200
+    except:
+        return {"message": "There was an error updating stats"}, 400
+
+
+"""
+ this handles if user wants to go to specific endpoint in react
+ without this, app will return 404 for anything non "/" i.e. /stats, /logout
+"""
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file("index.html")
@@ -123,4 +168,4 @@ def not_found(e):
 
 if __name__ == "__main__":
     app.run()
-    #app.run(debug=True)
+     app.run(debug=True)
