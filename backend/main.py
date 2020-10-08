@@ -3,7 +3,7 @@ import pyrebase
 import json
 import sys
 import os
-from dotenv import load_dotenv, find_dotenv  #ignore-error
+from dotenv import load_dotenv, find_dotenv  # ignore-error
 from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
@@ -46,13 +46,17 @@ def check_token(f):
         return f(*args, **kwargs)
     return wrap
 
+
 @app.route("/")
 def serve_react_build():
     return render_template("index.html")
 
+
 """ 
 api route to sign up a new user
 """
+
+
 @app.route("/api/signup", methods=["POST"])
 def signup():
     data = request.get_json()
@@ -66,19 +70,44 @@ def signup():
             password=password
         )
 
-        db.child("Players").child(user.uid).set(
-            {
-                "email": email,
-                "uid": user.uid,
-                "stats": {
-                    "defense": 0,
-                    "speed": 0,
-                    "shot": 0,
-                    "offense": 0,
-                    "pass": 0
+        SHEET_STATS_UID = "1D_KECY_BEbw70UR8gvXuUZIrKy9xsEkJ7hbdeREyZpY"
+        sheet_stats = db.child(SHEET_STATS_UID).child("Player Stats").get()
+        sheet_stats = sheet_stats.val()[1:]
+
+        isPlayer = False
+
+        for entry in sheet_stats:
+            if entry["email"] == email:
+                isPlayer = True
+
+        if isPlayer:
+            db.child("Players").child(user.uid).set(
+                {
+                    "email": email,
+                    "uid": user.uid,
+                    "voteCounter": 0,
+                    "isPlayer": isPlayer,
+                    "stats": {
+                        "pace": 60,
+                        "defense": 60,
+                        "dribbling": 60,
+                        "physical": 60,
+                        "overall": 60,
+                        "position": 60,
+                        "shot": 60,
+                        "pass": 60
+                    }
+
                 }
-            }
-        )
+            )
+        else:
+            db.child("Players").child(user.uid).set(
+                {
+                    "email": email,
+                    "uid": user.uid,
+                    "isPlayer": isPlayer,
+                }
+            )
 
         return {"message": f"Successfully created user {user.uid} using email {email}"}, 200
     except:
@@ -88,6 +117,8 @@ def signup():
 """
 api route to get token for authorization
 """
+
+
 @app.route("/api/token", methods=["POST"])
 def login():
     data = request.get_json()
@@ -103,6 +134,35 @@ def login():
     except:
         return {"message": "There was an error logging in"}, 400
 
+
+@app.route("/api/sheetStats", methods=["GET"])
+@check_token
+def sheet_stats():
+    try:
+        SHEET_STATS_UID = "1D_KECY_BEbw70UR8gvXuUZIrKy9xsEkJ7hbdeREyZpY"
+        sheet_stats = db.child(SHEET_STATS_UID).child("Player Stats").get()
+
+        response = {"stats": sheet_stats.val()[1:]}
+        return response, 200
+
+    except:
+        return {"message": "There was an error retrieving sheet stats"}, 400
+
+
+@app.route("/api/sheetStandings", methods=["GET"])
+@check_token
+def standing_stats():
+    try:
+        SHEET_STANDINGS_UID = "1gMonxA02kvBpRK3HoJ6hz8LXEU4vt-1YC7yE8WLyCgY"
+        standings_stats = db.child(
+            SHEET_STANDINGS_UID).child("Team Standings").get()
+        response = {"standings": standings_stats.val()[1:]}
+        return response, 200
+
+    except:
+        return {"message": "There was an error retrieving sheet stats"}, 400
+
+
 @app.route("/api/userStats", methods=["GET"])
 @check_token
 def userinfo():
@@ -112,6 +172,7 @@ def userinfo():
 
     except:
         return {"message": "There was an error retrieving stats"}, 400
+
 
 @app.route("/api/allStats", methods=["GET"])
 @check_token
@@ -138,6 +199,8 @@ def allStats():
    }
 }
 """
+
+
 @app.route("/api/updateStats", methods=["POST"])
 @check_token
 def update_stats():
@@ -150,7 +213,7 @@ def update_stats():
 
     try:
         db.child("Players").child(uid).update(stat_updates)
-        
+
         return {"message": "Updated player stats"}, 200
     except:
         return {"message": "There was an error updating stats"}, 400
@@ -160,6 +223,8 @@ def update_stats():
  this handles if user wants to go to specific endpoint in react
  without this, app will return 404 for anything non "/" i.e. /stats, /logout
 """
+
+
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file("index.html")
@@ -167,4 +232,4 @@ def not_found(e):
 
 if __name__ == "__main__":
     app.run()
-    #app.run(debug=True)
+    # app.run(debug=True)
