@@ -134,6 +134,7 @@ def login():
     except:
         return {"message": "There was an error logging in"}, 400
 
+
 @app.route("/api/weekData", methods=["GET"])
 @check_token
 def week_data():
@@ -202,15 +203,30 @@ def allStats():
 """
  body format:
  {
-   "uid": "1234"
-   "stats": 
-   {
-       "defense": 1,
-       "speed": 1,
-       "shot": 2,
-       "offense": 4
-       "pass": 3
-   }
+     updates: [
+        {
+            "uid": "1234"
+            "stats": 
+            {
+                "defense": 1,
+                "speed": 1,
+                "shot": 2,
+                "offense": 4
+                "pass": 3
+            }
+        },
+        {
+            "uid": "3456"
+            "stats": 
+            {
+                "defense": 1,
+                "speed": 1,
+                "shot": 2,
+                "offense": 4
+                "pass": 3
+            }
+         },
+     ]
 }
 """
 
@@ -219,15 +235,21 @@ def allStats():
 @check_token
 def update_stats():
     data = request.get_json()
-    uid = data["uid"]
-    stat_updates = {
-        "stats": data["stats"]
-    }
-    print(stat_updates)
+    data_list = data["updates"]
+    user_uid = request.user["uid"]
 
     try:
-        db.child("Players").child(uid).update(stat_updates)
 
+        for entry in data_list:
+            uid = entry["uid"]
+            stat_updates = {"stats": entry["stats"]}
+
+            db.child("Players").child(uid).update(stat_updates)
+        
+        user_entry = db.child("Players").child(user_uid).get().val()
+        vote_count = user_entry["voteCounter"]
+        db.child("Players").child(user_uid).update({"voteCounter": vote_count + 1 })
+        
         return {"message": "Updated player stats"}, 200
     except:
         return {"message": "There was an error updating stats"}, 400
