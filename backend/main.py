@@ -134,6 +134,20 @@ def login():
     except:
         return {"message": "There was an error logging in"}, 400
 
+@app.route("/api/weekData", methods=["GET"])
+@check_token
+def week_data():
+    try:
+        week_dates = db.child("Weeks").get()
+
+        print(week_dates.val())
+
+        response = {"weeks": week_dates.val()}
+        return response, 200
+
+    except:
+        return {"message": "There was an error retrieving week data"}, 400
+
 
 @app.route("/api/sheetStats", methods=["GET"])
 @check_token
