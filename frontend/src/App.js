@@ -17,7 +17,7 @@ import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
 
-  
+
 
 
   return (
@@ -33,6 +33,7 @@ const App = () => {
             <Route exact path="/signup" component={SignUp} />
             <Route path="/vote" exact component={Vote}></Route>
             <Route path="/stats" exact component={Stats}></Route>
+            <Route path="/home" exact component={Home}></Route>
 
 
           </Switch>

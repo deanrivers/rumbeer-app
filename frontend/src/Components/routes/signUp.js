@@ -57,9 +57,6 @@ const SignUp = ({ history }) => {
     const { email, password } = event.target.elements;
     console.log(email.value,password.value)
 
-    
-
-
     //flask signup
     let response = await fetch('/api/signup',{
       method: "POST",
@@ -121,7 +118,7 @@ const SignUp = ({ history }) => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

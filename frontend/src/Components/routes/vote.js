@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -71,23 +71,104 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const cards = [1, 2, 3,4,5,6,7,8,9,10];
+//const cards = [1, 2, 3,4,5,6,7,8,9,10];
 
-const Vote = () => {
+
+
+// const playerStats = {
+//   'Ronaldo':{
+//     stats:[],
+    
+//   },
+//   'Messi':{
+//     stats:[],
+    
+//   }
+// }
+
+const playerStats = {
+  'Ronaldo':{
+    'stats':{
+      'PACE':'',
+      'SHO':'',
+      'PAS':'',
+      'DRI':'',
+      'DEF':'',
+      'PHY':'',
+    }
+  },
+  'Messi':{
+    'stats':{
+      'PACE':'0',
+      'SHO':'',
+      'PAS':'',
+      'DRI':'',
+      'DEF':'',
+      'PHY':'',
+    }
+  },
+  'Pogba':{
+    'stats':{
+      'PACE':'0',
+      'SHO':'',
+      'PAS':'',
+      'DRI':'',
+      'DEF':'',
+      'PHY':'',
+    }
+  }
+}
+
+const playerCards = [
+  'Ronaldo','Messi','Pogba'
+]
+
+
+
+
+
+
+
+const Vote = (currentUser,) => {
   const [clearDisabled,updatedClearDisabled] = useState(true) 
+  const [voteData,updateVoteData] = useState(playerStats)
   const classes = useStyles();
+
+  //listen to voteData
+  useEffect(()=>{
+    // console.log('Vote Data in effect',voteData)
+    console.log('Player Stats from effect Hook',playerStats)
+  },[voteData])
+
+
+  //functions
+  const submitRatings = () =>{
+
+  }
+  
+  const updateVoteCounter = () =>{
+    
+  }
+
+  const resetRatings = () =>{
+
+  }
+
+  const updateVoteDataState = (playerData) =>{
+    let playerDataObj = voteData
+    let player = playerData.player
+
+    // console.log('Player Data from vote.js',playerData)
+    // console.log('Object->',playerStats)
+    // console.log(playerDataObj.player.values)
+    // console.log('Player->',playerDataObj[player])
+
+    playerDataObj[player]['stats'] = {...playerData.values}
+    updateVoteData({...playerDataObj})
+  }
 
   return (
     <React.Fragment>
-      {/* <CssBaseline /> */}
-      {/* <AppBar position="relative">
-        <Toolbar>
-          <CameraIcon className={classes.icon} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Album layout
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
@@ -122,12 +203,17 @@ const Vote = () => {
 
 
 
-            
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <VoteCard/>
+            {/* create a card for each player */}
+            {playerCards.map((card,index) => (
+              <Grid item key={index} xs={12} sm={6} md={4}>
+                <VoteCard
+                  player={card}
+                  update={updateVoteDataState}
+                />
               </Grid>
             ))}
+
+
           </Grid>
         </Container>
       </main>
