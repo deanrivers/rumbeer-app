@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useState } from "react";
 import { withRouter, Redirect } from "react-router";
 import app from '../../base';
 import { AuthContext } from "../../Auth";
+import {NavLink} from 'react-router-dom'
 
 
 //material
@@ -18,6 +19,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Nav from "../Common/nav";
 
 const Login = ({ history }) => {
 
@@ -57,19 +59,20 @@ const Login = ({ history }) => {
   }));
   const classes = useStyles();
 
-  // const handleLogin = useCallback(
-  //   async event => {
-  //     event.preventDefault();
-  //     const { email, password } = event.target.elements;
-  //     console.log(email.value,password.value)
-  //     try {
-  //       await app.auth().signInWithEmailAndPassword(email.value, password.value)
+  const handleLogin = useCallback(
+    async event => {
+      event.preventDefault();
+      const { email, password } = event.target.elements;
+      console.log(email.value,password.value)
+      try {
+        await app.auth().signInWithEmailAndPassword(email.value, password.value)
 
-  //       history.push("/");
-  //     } catch (error) {
-  //       alert(error);
-  //     }
-  //   },[history]);
+        history.push("/");
+      } catch (error) {
+        alert(error);
+      }
+    },[history]);
+
 
 
   const loginFlask = async (event) =>{
@@ -137,7 +140,7 @@ const Login = ({ history }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={loginFlask}>
+        <form className={classes.form} noValidate onSubmit={handleLogin}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -182,9 +185,12 @@ const Login = ({ history }) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
+              <NavLink to="/signup">
+                <Link variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </NavLink>
+              
             </Grid>
           </Grid>
         </form>

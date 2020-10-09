@@ -9,6 +9,7 @@ import Nav from './Components/Common/nav'
 import Vote from './Components/routes/vote'
 import Stats from './Components/routes/stats'
 import SignUp from './Components/routes/signUp'
+import SwipeNav from './Components/Common/swipeNav'
 
 import { AuthContext, AuthProvider } from './Auth'
 import PrivateRoute from "./PrivateRoute";
@@ -37,7 +38,9 @@ const App = () => {
 
 
           </Switch>
-          <Nav/>
+          {/* <Nav/> */}
+          <SwipeNav/>
+
       </Router>
     </AuthProvider>
     

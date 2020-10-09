@@ -1,0 +1,23 @@
+.swipe-nav-container{
+    /* position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+
+    display: flex;
+    justify-content: flex-end;
+
+
+    background-color: rgb(162, 162, 162);
+    color: white; */
+}
+
+.nav-link{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: black
+}
+
