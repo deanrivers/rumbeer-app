@@ -76,7 +76,7 @@ const SignUp = ({ history }) => {
     console.log('Data ->',data)
 
     if(response.status==200){
-        console.log('A response ->',response)
+        // console.log('A response ->',response)
 
         //try and login with the credentials returned by flask
         try {

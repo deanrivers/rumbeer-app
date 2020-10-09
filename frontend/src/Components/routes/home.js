@@ -1,15 +1,79 @@
 import '../../Styles/Home.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
-import React from 'react'
+import React, {useEffect,useState,useContext} from 'react'
 import {Carousel} from 'react-responsive-carousel'
 import Standings from '../Common/standings'
+import { css } from "@emotion/core";
+import {PulseLoader} from "react-spinners";
+import { AuthContext } from "../../Auth";
 
 import FUTCard from '../Common/futCard'
 
 
 const Home = () =>{
+
+    const [cardsLoading,updateCardsLoading] = useState(true)
+    const [isLoading,updateIsLoading] = useState(true)
+
+    const { currentUser } = useContext(AuthContext);
+
+    const override = css`
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+    `;
+
+
+    //component didi mount
+    useEffect(()=>{
+
+        console.log('Home Mounted')
+        console.log('Home Mounted')
+        console.log('Home Mounted')
+        console.log(currentUser.email)
+
+        //get token
+
+
+
+        //fetch league standings
+        //getLeagueStandings()
+
+        //fetch FUT card info
+
+
+    },[])
+
+    // const getToken = async () =>{
+    //     let response = await fetch('/api/token',{
+    //         method: "GET",
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+
+    //         body: JSON.stringify({
+    //             email: email.value,
+    //             password: password.value
+    //         })
+    //     })
+    // }
+
+    const getLeagueStandings = async () =>{
+        console.log('func')
+        let response = await fetch('/api/sheetStandings')
+        let data = await response.json()
+        console.log('Data->',data)
+
+    }
+
+    const getFUTData = () =>{
+
+    }
+
     return([
         <div className="home-container-grid">
+                
             <div className="header-container">
                 <h1>WELCOME, <br/>PLAYER.</h1>
             </div>
@@ -26,6 +90,13 @@ const Home = () =>{
             <div className="highlights-container grid-section">
                 <h1 className="sub-header">League Standings.</h1>
                 <div className="video-container">
+                    {/* <PulseLoader
+                        css={override}
+                        size={10}
+                        color={"#FF0062"}
+                        loading={isLoading}
+                        
+                    /> */}
                     <Standings/>
                 </div>
                 
