@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { withRouter, Redirect } from "react-router";
 import app from '../../base';
 import { AuthContext } from "../../Auth";
@@ -34,6 +34,8 @@ const Login = ({ history }) => {
     );
   }
 
+  const [userToken,updateUserToken] = useState('')
+
   const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -55,26 +57,58 @@ const Login = ({ history }) => {
   }));
   const classes = useStyles();
 
-  const handleLogin = useCallback(
-    async event => {
-      event.preventDefault();
-      const { email, password } = event.target.elements;
-      console.log(email.value,password.value)
-      try {
-        await app
-          .auth()
-          .signInWithEmailAndPassword(email.value, password.value);
-        history.push("/");
-      } catch (error) {
-        alert(error);
-      }
-    },[history]);
+  // const handleLogin = useCallback(
+  //   async event => {
+  //     event.preventDefault();
+  //     const { email, password } = event.target.elements;
+  //     console.log(email.value,password.value)
+  //     try {
+  //       await app.auth().signInWithEmailAndPassword(email.value, password.value)
+
+  //       history.push("/");
+  //     } catch (error) {
+  //       alert(error);
+  //     }
+  //   },[history]);
+
+
+  const loginFlask = async (event) =>{
+    event.preventDefault();
+    
+    const { email, password } = event.target.elements;
+    console.log(email.value,password.value)
+    let response = await fetch('/api/token',{
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+
+      //make sure to serialize your JSON body
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    })
+
+    let data = await response.json()
+    console.log('Token',data)
+
+
+    
+
+    // updateUserToken()
+  }
 
   const { currentUser } = useContext(AuthContext);
 
-  if (currentUser) {
-    return <Redirect to="/" />;
-  }
+  // if (currentUser) {
+  //   return <Redirect to="/" />;
+  //   // return <Redirect to={{
+  //   //   pathname:'/',
+  //   //   token:{userToken}
+  //   // }} />;
+  // }
 
   // return (
   //   <div className="login-container">
@@ -103,7 +137,7 @@ const Login = ({ history }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleLogin}>
+        <form className={classes.form} noValidate onSubmit={loginFlask}>
           <TextField
             variant="outlined"
             margin="normal"

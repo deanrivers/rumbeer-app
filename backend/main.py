@@ -17,6 +17,7 @@ load_dotenv(find_dotenv())
 
 config = {
     "apiKey": os.environ['FIREBASE_API_KEY'],
+    # "apiKey": 'AIzaSyB_f99ugu1_kTHQR8ABGVdWGBq5Gqvrvqc',
     "authDomain": "rumbeer-dda6f.firebaseapp.com",
     "databaseURL": "https://rumbeer-dda6f.firebaseio.com",
     "projectId": "rumbeer-dda6f",
@@ -123,6 +124,7 @@ def login():
     data = request.get_json()
     email = data["email"]
     password = data["password"]
+    
 
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400

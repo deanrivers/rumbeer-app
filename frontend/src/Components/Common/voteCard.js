@@ -47,7 +47,8 @@ const VoteCard = (props) => {
         'PHY':physicalValue},
       player:props.player
     }
-    // console.log('Data in Vote Card',data)
+
+    //push data back up to parent for this card
     props.update(data)
   },[paceValue,shotValue,passValue,dribbleValue,defenseValue,physicalValue])
 
@@ -228,19 +229,16 @@ const VoteCard = (props) => {
             })}
           </div>
 
-
-
-
         </CardContent>
         <CardActions>
           <Button
             size="small"
-            color="primary"
+            // color="primary"
             variant="contained"
             className={classes.rateButton}
             onClick={()=>updateIsFlipped(!isFlipped)}
           >
-            Flip
+            Done
           </Button>
           <Button
             size="small"
