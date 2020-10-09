@@ -7,7 +7,6 @@ from dotenv import load_dotenv, find_dotenv  # ignore-error
 from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
-from requests.exceptions import HTTPError
 
 app = Flask(__name__,
             static_url_path="",
@@ -208,22 +207,28 @@ def allStats():
             "uid": "1234"
             "stats": 
             {
-                "defense": 1,
-                "speed": 1,
-                "shot": 2,
-                "offense": 4
-                "pass": 3
+                "pace": 60,
+                "defense": 60,
+                "dribbling": 60,
+                "physical": 60,
+                "overall": 60,
+                "position": 60,
+                "shot": 60,
+                "pass": 60
             }
         },
         {
             "uid": "3456"
             "stats": 
             {
-                "defense": 1,
-                "speed": 1,
-                "shot": 2,
-                "offense": 4
-                "pass": 3
+                "pace": 60,
+                "defense": 60,
+                "dribbling": 60,
+                "physical": 60,
+                "overall": 60,
+                "position": 60,
+                "shot": 60,
+                "pass": 60
             }
          },
      ]
