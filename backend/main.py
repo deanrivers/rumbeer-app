@@ -124,6 +124,8 @@ def login():
     data = request.get_json()
     email = data["email"]
     password = data["password"]
+
+    print(email,password)
     
 
     if email is None or password is None:
@@ -132,8 +134,9 @@ def login():
         user = pb.auth().sign_in_with_email_and_password(email, password)
         jwt = user["idToken"]
         return {"token": jwt}, 200
-    except:
-        return {"message": "There was an error logging in"}, 400
+    except Exception as e:
+        return e
+        # return {"message": "There was an error logging in"}, 400
 
 
 @app.route("/api/weekData", methods=["GET"])

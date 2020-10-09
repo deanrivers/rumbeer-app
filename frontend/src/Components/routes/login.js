@@ -59,19 +59,19 @@ const Login = ({ history }) => {
   }));
   const classes = useStyles();
 
-  const handleLogin = useCallback(
-    async event => {
-      event.preventDefault();
-      const { email, password } = event.target.elements;
-      console.log(email.value,password.value)
-      try {
-        await app.auth().signInWithEmailAndPassword(email.value, password.value)
+  // const handleLogin = useCallback(
+  //   async event => {
+  //     event.preventDefault();
+  //     const { email, password } = event.target.elements;
+  //     console.log(email.value,password.value)
+  //     try {
+  //       await app.auth().signInWithEmailAndPassword(email.value, password.value)
 
-        history.push("/");
-      } catch (error) {
-        alert(error);
-      }
-    },[history]);
+  //       history.push("/");
+  //     } catch (error) {
+  //       alert(error);
+  //     }
+  //   },[history]);
 
 
 
@@ -140,7 +140,7 @@ const Login = ({ history }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleLogin}>
+        <form className={classes.form} noValidate onSubmit={loginFlask}>
           <TextField
             variant="outlined"
             margin="normal"
