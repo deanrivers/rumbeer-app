@@ -15,9 +15,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {NavLink} from 'react-router-dom'
 
 
-const SignUp = ({ history }) => {
+const SignUp = ({ history,...props }) => {
   const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -73,47 +74,44 @@ const SignUp = ({ history }) => {
     })
 
     let data = await response.json()
-    console.log('Data ->',data)
+    
+    let [token,responseStatus] = await getToken(email.value,password.value)
 
-    if(response.status==200){
+    if(responseStatus==200&&response.status==200){
         // console.log('A response ->',response)
 
         //try and login with the credentials returned by flask
         try {
-          await app
-            .auth()
-            .signInWithEmailAndPassword(email.value, password.value);
+          props.setToken(token)
+          await app.auth().signInWithEmailAndPassword(email.value, password.value);
           history.push("/");
         } catch (error) {
           alert(error);
         }
     }
 
-    //firebase signup
-    // try {
-    //   await app.auth().createUserWithEmailAndPassword(email.value, password.value);
-    //   history.push("/");
-    // } catch (error) {
-    //   alert(error);
-    // }
+    
+
+   
   }, [history]);
 
-  // return (
-  //   <div className="signup-container">
-  //     <h1>Sign up</h1>
-  //     <form onSubmit={handleSignUp}>
-  //       <label>
-  //         Email
-  //         <input name="email" type="email" placeholder="Email" />
-  //       </label>
-  //       <label>
-  //         Password
-  //         <input name="password" type="password" placeholder="Password" />
-  //       </label>
-  //       <button type="submit">Sign Up</button>
-  //     </form>
-  //   </div>
-  // );
+  const getToken = async (e,p) =>{
+    let response = await fetch('/api/token',{
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email:e,
+        password:p,
+      })
+    })
+    let data = await response.json()
+    return [data.token,response.status]
+  }
+
+  
 
 
   return (
@@ -192,9 +190,11 @@ const SignUp = ({ history }) => {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
+              <NavLink to="/login">
+                <Link href="#" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </NavLink>
             </Grid>
           </Grid>
         </form>

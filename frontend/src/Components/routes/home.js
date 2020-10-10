@@ -7,10 +7,12 @@ import { css } from "@emotion/core";
 import {PulseLoader} from "react-spinners";
 import { AuthContext } from "../../Auth";
 
+
+
 import FUTCard from '../Common/futCard'
 
 
-const Home = () =>{
+const Home = (props) =>{
 
     const [cardsLoading,updateCardsLoading] = useState(true)
     const [isLoading,updateIsLoading] = useState(true)
@@ -28,43 +30,33 @@ const Home = () =>{
     useEffect(()=>{
 
         console.log('Home Mounted')
-        console.log('Home Mounted')
-        console.log('Home Mounted')
-        // console.log(currentUser.email)
 
-        //get token
-
-
+        let token = props.userToken
+        let name = 'Dean'
 
         //fetch league standings
-        //getLeagueStandings()
+        getLeagueStandings(token)
 
         //fetch FUT card info
 
 
     },[])
 
-    // const getToken = async () =>{
-    //     let response = await fetch('/api/token',{
-    //         method: "GET",
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
-
-    //         body: JSON.stringify({
-    //             email: email.value,
-    //             password: password.value
-    //         })
-    //     })
-    // }
-
-    const getLeagueStandings = async () =>{
-        console.log('func')
-        let response = await fetch('/api/sheetStandings')
+    const getLeagueStandings = async (token) =>{
+        console.log('Getting League Standings')
+        console.log('This is the token in home--->',token)
+        let response = await fetch('/api/sheetStandings',{
+            method: "GET",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic'+token
+            },
+      
+            //make sure to serialize your JSON body
+        })
         let data = await response.json()
-        console.log('Data->',data)
-
+        console.log('Data for League Standings->',data)
     }
 
     const getFUTData = () =>{
@@ -129,5 +121,7 @@ const Home = () =>{
 
     ])
 }
+
+
 
 export default Home

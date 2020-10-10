@@ -8,6 +8,9 @@ from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
 
+import requests.exceptions
+# error types
+
 app = Flask(__name__,
             static_url_path="",
             static_folder="../frontend/build",
@@ -17,7 +20,7 @@ load_dotenv(find_dotenv())
 
 config = {
     "apiKey": os.environ['FIREBASE_API_KEY'],
-    # "apiKey": 'AIzaSyB_f99ugu1_kTHQR8ABGVdWGBq5Gqvrvqc',
+    # "apiKey": "AIzaSyBWtxXs1VVgSsKUKNIvUOmMgpuSagD9pv8",
     "authDomain": "rumbeer-dda6f.firebaseapp.com",
     "databaseURL": "https://rumbeer-dda6f.firebaseio.com",
     "projectId": "rumbeer-dda6f",
@@ -127,14 +130,18 @@ def login():
 
     print(email,password)
     
-
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400
     try:
         user = pb.auth().sign_in_with_email_and_password(email, password)
         jwt = user["idToken"]
         return {"token": jwt}, 200
+
+#     except requests.exceptions.HTTPError as httpErr:
+#         error_message = json.loads(httpErr.args[1])['error']['message']
+
     except Exception as e:
+        print('Error =>',e)
         return e
         # return {"message": "There was an error logging in"}, 400
 
