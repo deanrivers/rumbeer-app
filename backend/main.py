@@ -44,7 +44,8 @@ def check_token(f):
         try:
             user = auth.verify_id_token(request.headers["Authorization"])
             request.user = user
-        except:
+        except Exception as e:
+            print('error',e)
             return {"message": "Invalid token provided."}, 400
         return f(*args, **kwargs)
     return wrap

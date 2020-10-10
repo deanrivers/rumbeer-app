@@ -26,7 +26,7 @@ const App = () => {
   const [isSignedIn,updateIsSignedIn] = useState(false)
 
   useEffect(()=>{
-    console.log('Token ->',userToken)
+    console.log('Token ->',typeof(userToken))
   },[userToken])
   
   const setToken = (token) =>{

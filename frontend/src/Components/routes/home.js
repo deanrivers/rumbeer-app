@@ -43,20 +43,23 @@ const Home = (props) =>{
     },[])
 
     const getLeagueStandings = async (token) =>{
+        let bearer = 'Bearer' + token
         console.log('Getting League Standings')
         console.log('This is the token in home--->',token)
         let response = await fetch('/api/sheetStandings',{
             method: "GET",
+            withCredentials: true,
+            credentials: 'include',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': 'Basic'+token
+              'Authorization': bearer
             },
       
             //make sure to serialize your JSON body
         })
         let data = await response.json()
-        console.log('Data for League Standings->',data)
+        console.log('Data for League Standings 2->',data)
     }
 
     const getFUTData = () =>{
