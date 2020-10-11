@@ -20,7 +20,6 @@ load_dotenv(find_dotenv())
 
 config = {
     "apiKey": os.environ['FIREBASE_API_KEY'],
-    # "apiKey": "AIzaSyBWtxXs1VVgSsKUKNIvUOmMgpuSagD9pv8",
     "authDomain": "rumbeer-dda6f.firebaseapp.com",
     "databaseURL": "https://rumbeer-dda6f.firebaseio.com",
     "projectId": "rumbeer-dda6f",
@@ -193,13 +192,16 @@ def standing_stats():
 @app.route("/api/userStats", methods=["GET"])
 @check_token
 def userinfo():
+    
     try:
+        # print('User ->',request.user)
+        user_stats = db.child("Players").child(request.user["uid"]).get()
         user_stats = db.child("Players").child(request.user["uid"]).get()
         return user_stats.val(), 200
 
-    except:
+    except Exception as e:
+        print('ERROR',e)
         return {"message": "There was an error retrieving stats"}, 400
-
 
 @app.route("/api/allStats", methods=["GET"])
 @check_token

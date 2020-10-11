@@ -25,6 +25,7 @@ const App = () => {
   const [userToken,updateUserToken] = useState(null)
   
   const [isSignedIn,updateIsSignedIn] = useState(false)
+  const [playerName,updatePlayerName] = useState('')
 
   useEffect(()=>{
     console.log('Frontend Sign in status',isSignedIn)
@@ -41,8 +42,9 @@ const App = () => {
       
       // // remove
       // localStorage.removeItem('myData');
-      
 
+      //get the players name and update state to be passed as a prop
+      getPlayerName(userToken)
     }
   },[userToken])
   
@@ -53,6 +55,10 @@ const App = () => {
 
   const logoutUser = () =>{
     updateIsSignedIn(false)
+  }
+
+  const getPlayerName = () =>{
+
   }
 
 

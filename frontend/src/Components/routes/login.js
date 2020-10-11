@@ -59,24 +59,27 @@ const Login = ({history,...props}) => {
   const classes = useStyles();
 
   const handleLogin = useCallback(
-
     async (event) => {
       event.preventDefault()
       const { email, password } = event.target.elements;
 
+
       //get token from backend flask server
-      let [token,responseStatus] = await getToken(email.value,password.value)
-      
-      if(responseStatus==200){
-        try {
-          props.setToken(token)
-          await app.auth().signInWithEmailAndPassword(email.value, password.value)
-          history.push("/");
-        } catch (error) {
-          alert('An error occured.')
-          console.log(error);
+
+      if(email.value!==''&&password.value!==''){
+        
+        let [token,responseStatus] = await getToken(email.value,password.value)
+        if(responseStatus==200){
+          try {
+            props.setToken(token)
+            await app.auth().signInWithEmailAndPassword(email.value, password.value)
+            history.push("/");
+          } catch (error) {
+            alert('An error occured.')
+            console.log(error);
+          }
         }
-      }
+    }
       
     },[history]);
 
@@ -110,7 +113,7 @@ const Login = ({history,...props}) => {
           <LockOutlinedIcon />
         </Avatar>
 
-        <form className={classes.form} noValidate onSubmit={handleLogin}>
+        <form className={classes.form}  onSubmit={handleLogin} >
           <TextField
             variant="outlined"
             margin="normal"
@@ -121,6 +124,7 @@ const Login = ({history,...props}) => {
             name="email"
             autoComplete="email"
             autoFocus
+            
           />
           <TextField
             variant="outlined"
@@ -132,6 +136,7 @@ const Login = ({history,...props}) => {
             type="password"
             id="password"
             autoComplete="current-password"
+            
           />
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
