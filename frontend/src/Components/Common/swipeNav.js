@@ -17,8 +17,10 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import HowToVoteIcon from '@material-ui/icons/HowToVote';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeIcon from '@material-ui/icons/Home';
 
 import {NavLink} from 'react-router-dom'
 import app from '../../base'
@@ -96,18 +98,22 @@ const SwipeNav = ({history,...props}) => {
       {     
         text:'Home',
         route:'/home',
+        icon:<HomeIcon/>
       },
       {     
         text:'Stats',
         route:'/stats',
+        icon:<EqualizerIcon/>
       },
       {     
         text:'Vote',
         route:'/vote',
+        icon:<HowToVoteIcon/>
       },
       {
         text:'Logout',
-        route:'/'
+        route:'/',
+        icon:<ExitToAppIcon/>
       }
   ]
 
@@ -155,7 +161,7 @@ const SwipeNav = ({history,...props}) => {
           {routes.map((route, index) => (
             <ListItem button key={index} onClick={()=>handleClick(route.text)}>
                 <NavLink to={route.route} className="nav-link">
-                    <ListItemIcon><MailIcon/></ListItemIcon>
+                    <ListItemIcon>{route.icon}</ListItemIcon>
                     <ListItemText primary={route.text}/>
                 </NavLink>
             </ListItem>
