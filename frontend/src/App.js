@@ -23,15 +23,26 @@ import PrivateRoute from "./PrivateRoute";
 const App = () => {
 
   const [userToken,updateUserToken] = useState('')
+  
   const [isSignedIn,updateIsSignedIn] = useState(false)
 
   useEffect(()=>{
-    console.log('Token ->',typeof(userToken))
+    console.log('Token from App.js ->',userToken)
   },[userToken])
   
   const setToken = (token) =>{
     updateUserToken(token)
+    updateIsSignedIn(true)
   }
+
+  const logoutUser = () =>{
+    updateIsSignedIn(false)
+  }
+
+
+  let home = isSignedIn?<Route exact path="/">
+                                  <Redirect to="/home" />
+                                </Route>:null
 
   return (
     
@@ -40,19 +51,25 @@ const App = () => {
           <Switch>
 
             {/* Home screen is private and should only render on authentication success. */}
-            <PrivateRoute exact path="/" component={Home} />
+            <PrivateRoute exact path="/" component={Home} userToken={userToken}/>
+            
 
             {/* The rest of the routes are only accessible after hitting the home page */}
             <Route exact path="/login" render={(props) => (<Login {...props} setToken={setToken}/>)} />
             <Route exact path="/signup" render={(props) => (<SignUp {...props} setToken={setToken}/>)} />
-            <Route path="/vote" exact component={Vote}></Route>
-            <Route path="/stats" exact component={Stats}></Route>
+            <Route path="/vote" exact render={(props) => (<Vote {...props} userToken={userToken}/>)}></Route>
+            <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken}/>)}></Route>
             <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}/>)}></Route>
-
+            
+          
 
           </Switch>
           {/* <Nav/> */}
-          <SwipeNav/>
+          <SwipeNav logout={logoutUser}/>
+
+
+          {home}
+
 
       </Router>
     </AuthProvider>

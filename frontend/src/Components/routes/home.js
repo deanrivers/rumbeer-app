@@ -4,7 +4,7 @@ import React, {useEffect,useState,useContext} from 'react'
 import {Carousel} from 'react-responsive-carousel'
 import Standings from '../Common/standings'
 import { css } from "@emotion/core";
-import {PulseLoader} from "react-spinners";
+
 import { AuthContext } from "../../Auth";
 
 
@@ -16,51 +16,28 @@ const Home = (props) =>{
 
     const [cardsLoading,updateCardsLoading] = useState(true)
     const [isLoading,updateIsLoading] = useState(true)
+    const [dataLeagueStandings,updateDataLeagueStandings] = useState(null)
 
     const { currentUser } = useContext(AuthContext);
 
-    const override = css`
-    display: block;
-    margin: 0 auto;
-    border-color: red;
-    `;
-
-
-    //component didi mount
     useEffect(()=>{
+        console.log('League Standings',dataLeagueStandings)
+    },[dataLeagueStandings])
 
-        console.log('Home Mounted')
 
+
+    //component did mount
+    useEffect(()=>{
         let token = props.userToken
-        let name = 'Dean'
 
         //fetch league standings
-        getLeagueStandings(token)
+        // getLeagueStandings(token)
 
         //fetch FUT card info
 
-
     },[])
 
-    const getLeagueStandings = async (token) =>{
-        let bearer = 'Bearer' + token
-        console.log('Getting League Standings')
-        console.log('This is the token in home--->',token)
-        let response = await fetch('/api/sheetStandings',{
-            method: "GET",
-            withCredentials: true,
-            credentials: 'include',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': bearer
-            },
-      
-            //make sure to serialize your JSON body
-        })
-        let data = await response.json()
-        console.log('Data for League Standings 2->',data)
-    }
+
 
     const getFUTData = () =>{
 
@@ -85,14 +62,9 @@ const Home = (props) =>{
             <div className="highlights-container grid-section">
                 <h1 className="sub-header">League Standings.</h1>
                 <div className="video-container">
-                    {/* <PulseLoader
-                        css={override}
-                        size={10}
-                        color={"#FF0062"}
-                        loading={isLoading}
-                        
-                    /> */}
-                    <Standings/>
+                    <Standings token={props.userToken}/>
+                    
+                    
                 </div>
                 
             </div>

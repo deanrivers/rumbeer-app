@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
  
 }));
 
-const SwipeNav = ({history}) => {
+const SwipeNav = ({history,...props}) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -86,6 +86,7 @@ const SwipeNav = ({history}) => {
   const handleClick = (route) =>{
       if(route==='Logout'){
         app.auth().signOut();
+        props.logout()
         history.push("/");
       }      
   }

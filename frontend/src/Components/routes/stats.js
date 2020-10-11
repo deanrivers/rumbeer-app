@@ -5,7 +5,7 @@ import Standings from '../Common/standings'
 import PlayerStats from '../Common/playerStats'
 import Roster from '../Common/roster'
 
-const Stats = () =>{
+const Stats = (props) =>{
 
     return(
         <div id="stats-main-container">
@@ -24,7 +24,7 @@ const Stats = () =>{
 
             <div className="stats-section">
                 <h1 className="sub-header">Standings.</h1>
-                <Standings/>
+                <Standings token={props.userToken}/>
             </div>
 
 
