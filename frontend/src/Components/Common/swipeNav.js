@@ -86,6 +86,7 @@ const SwipeNav = ({history,...props}) => {
   const handleClick = (route) =>{
       if(route==='Logout'){
         app.auth().signOut();
+        localStorage.clear();
         props.logout()
         history.push("/");
       }      

@@ -21,7 +21,7 @@ const Home = (props) =>{
     const { currentUser } = useContext(AuthContext);
 
     useEffect(()=>{
-        console.log('League Standings',dataLeagueStandings)
+        // console.log('League Standings',dataLeagueStandings)
     },[dataLeagueStandings])
 
 
@@ -29,6 +29,9 @@ const Home = (props) =>{
     //component did mount
     useEffect(()=>{
         let token = props.userToken
+
+
+
 
         //fetch league standings
         // getLeagueStandings(token)

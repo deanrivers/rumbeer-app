@@ -22,12 +22,28 @@ import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
 
-  const [userToken,updateUserToken] = useState('')
+  const [userToken,updateUserToken] = useState(null)
   
   const [isSignedIn,updateIsSignedIn] = useState(false)
 
   useEffect(()=>{
+    console.log('Frontend Sign in status',isSignedIn)
+  },[isSignedIn])
+
+  useEffect(()=>{
     console.log('Token from App.js ->',userToken)
+    if(userToken!==null){
+
+      //session storage for token
+      //setter
+      localStorage.setItem('TOKEN', userToken);
+
+      
+      // // remove
+      // localStorage.removeItem('myData');
+      
+
+    }
   },[userToken])
   
   const setToken = (token) =>{

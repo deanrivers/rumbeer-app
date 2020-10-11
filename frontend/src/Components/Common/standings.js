@@ -36,7 +36,9 @@ const Standings = (props) => {
   const [isLoading,updateIsLoading] = useState(true)
 
   useEffect(()=>{
-    console.log('Leage Standings Props ->',props)
+    // console.log('Leage Standings Props ->',props)
+    let tokenSession = localStorage.getItem('TOKEN');
+    console.log('Local storage in standings',tokenSession)
     
 
     if(leaguStandings){
@@ -46,7 +48,9 @@ const Standings = (props) => {
       updateLeagueRows(rows)
       updateIsLoading(false)
     } else{
-      getLeagueStandings(props.token)
+      
+      //pass token from flask or session storage
+      getLeagueStandings(props.token?props.token:tokenSession)
     }
 
   },[leaguStandings])
