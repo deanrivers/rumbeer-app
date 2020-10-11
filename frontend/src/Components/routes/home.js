@@ -30,6 +30,9 @@ const Home = (props) =>{
     useEffect(()=>{
         let token = props.userToken
 
+        
+        
+
 
 
 
@@ -46,11 +49,15 @@ const Home = (props) =>{
 
     }
 
+    let playerNameLocal = localStorage.getItem('NAME');
+    // let playerNameLocal = 'BOB';
+
     return([
         <div className="home-container-grid">
                 
             <div className="header-container">
-                <h1>WELCOME, <br/>{props.playerName}.</h1>
+                {props.isPlayer?<h1>WELCOME, <br/>{props.playerName?props.playerName:playerNameLocal}</h1>:<h1>WELCOME.</h1>}
+                
             </div>
 
             <div className="highlights-container grid-section">

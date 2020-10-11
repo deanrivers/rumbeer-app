@@ -77,6 +77,8 @@ const SwipeNav = ({history,...props}) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -94,7 +96,7 @@ const SwipeNav = ({history,...props}) => {
       }      
   }
 
-  const routes = [
+  const playerRoutes = [
       {     
         text:'Home',
         route:'/home',
@@ -116,6 +118,37 @@ const SwipeNav = ({history,...props}) => {
         icon:<ExitToAppIcon/>
       }
   ]
+
+  const visitorRoutes = [
+    {     
+      text:'Home',
+      route:'/home',
+      icon:<HomeIcon/>
+    },
+    {
+      text:'Logout',
+      route:'/',
+      icon:<ExitToAppIcon/>
+    }
+]
+
+  const playerRender = playerRoutes.map((route, index) => (
+    <ListItem button key={index} onClick={()=>handleClick(route.text)}>
+        <NavLink to={route.route} className="nav-link">
+            <ListItemIcon>{route.icon}</ListItemIcon>
+            <ListItemText primary={route.text}/>
+        </NavLink>
+    </ListItem>
+  ))
+
+  const visitorRender = visitorRoutes.map((route, index) => (
+    <ListItem button key={index} onClick={()=>handleClick(route.text)}>
+        <NavLink to={route.route} className="nav-link">
+            <ListItemIcon>{route.icon}</ListItemIcon>
+            <ListItemText primary={route.text}/>
+        </NavLink>
+    </ListItem>
+  ))
 
   return (
     <div className={classes.root}>
@@ -158,14 +191,7 @@ const SwipeNav = ({history,...props}) => {
         </div>
         <Divider />
         <List>
-          {routes.map((route, index) => (
-            <ListItem button key={index} onClick={()=>handleClick(route.text)}>
-                <NavLink to={route.route} className="nav-link">
-                    <ListItemIcon>{route.icon}</ListItemIcon>
-                    <ListItemText primary={route.text}/>
-                </NavLink>
-            </ListItem>
-          ))}
+          {props.isPlayer?playerRender:visitorRender}
         </List>
       </Drawer>
     </div>

@@ -10,7 +10,7 @@ const Stats = (props) =>{
     return(
         <div id="stats-main-container">
             <div className="header-container">
-                <h1 style={{marginBottom:'2%'}}>Hi, Player! <br/>Here are your <br/>stats.</h1>
+    <h1 style={{marginBottom:'2%'}}>Hi, {props.playerName}! <br/>Here are your <br/>stats.</h1>
             </div>
 
             <div className="stats-section">

@@ -26,7 +26,7 @@ const App = () => {
   
   const [isSignedIn,updateIsSignedIn] = useState(false)
   const [playerName,updatePlayerName] = useState('')
-
+  const [isPlayer,updateIsPlayer] = useState(true)
 
   useEffect(()=>{
     console.log('Frontend Sign in status',isSignedIn)
@@ -41,24 +41,27 @@ const App = () => {
 
   useEffect(()=>{
     console.log('Token from App.js ->',userToken)
-    if(userToken!==null){
+    if(userToken!==null&&playerName!==''){
 
+      
       //session storage for token
       //setter
-      localStorage.setItem('TOKEN', userToken);
+      // localStorage.setItem('TOKEN', userToken);
+      setLocalStorage(userToken,playerName)
 
       
       // // remove
       // localStorage.removeItem('myData');
 
       //get the players name and update state to be passed as a prop
-      getPlayerName(userToken)
+      // getPlayerName(userToken)
     }
   },[userToken])
   
   const setToken = (token) =>{
-    updateUserToken(token)
     updatePlayerName('Dean')
+    updateUserToken(token)
+    
     updateIsSignedIn(true)
   }
 
@@ -70,10 +73,25 @@ const App = () => {
 
   }
 
+  const setLocalStorage = (userToken,playerName) =>{
+    localStorage.setItem('TOKEN', userToken);
+    localStorage.setItem('NAME', playerName);
+  }
+
 
   let home = isSignedIn?<Route exact path="/">
                                   <Redirect to="/home" />
-                                </Route>:null
+                        </Route>:null
+
+  let redirects = isPlayer?null:<div>
+                                <Route exact path="/vote">
+                                    <Redirect to="/home" />
+                                </Route>
+                                <Route exact path="/stats">
+                                    <Redirect to="/home" />
+                                </Route>
+
+                                </div>
 
   return (
     
@@ -82,27 +100,34 @@ const App = () => {
           <Switch>
 
             {/* Home screen is private and should only render on authentication success. */}
-            <PrivateRoute exact path="/" component={Home} userToken={userToken} playerName={playerName}/>
+            <PrivateRoute exact path="/" component={Home} userToken={userToken} playerName={playerName} isPlayer={isPlayer}/>
+            <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}  playerName={playerName} isPlayer={isPlayer}/>)}></Route>
             
 
             {/* The rest of the routes are only accessible after hitting the home page */}
             <Route exact path="/login" render={(props) => (<Login {...props} setToken={setToken}/>)} />
             <Route exact path="/signup" render={(props) => (<SignUp {...props} setToken={setToken}/>)} />
-            <Route path="/vote" exact render={(props) => (<Vote {...props} userToken={userToken}/>)}></Route>
-            <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken}/>)}></Route>
-            <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}  playerName={playerName}/>)}></Route>
-            
-          
+
+            {/* create certain routes only if you are a player */}
+            {isPlayer?<div>
+            <Route path="/vote" exact render={(props) => (<Vote {...props} userToken={userToken}/>)}/>
+            <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken} playerName={playerName}/>)}/>
+            </div>
+            :null
+          }
 
           </Switch>
           {/* <Nav/> */}
 
-          {isSignedIn?<SwipeNav logout={logoutUser}/>:null}
-          {/* <SwipeNav logout={logoutUser}/> */}
+          {/* {isSignedIn?<SwipeNav logout={logoutUser}/>:null} */}
+          <SwipeNav logout={logoutUser} isPlayer={isPlayer}/>
           
 
-
+          {/* this allows the app to redirect to '/home' instead of '/' */}
           {home}
+
+          {/* add redirects if not a player */}
+          {redirects}
 
 
       </Router>

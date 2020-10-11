@@ -113,7 +113,8 @@ def signup():
             )
 
         return {"message": f"Successfully created user {user.uid} using email {email}"}, 200
-    except:
+    except Exception as e:
+        print('ERROR',e)
         return {"message": "Error creating user"}, 400
 
 
