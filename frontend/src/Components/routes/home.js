@@ -50,7 +50,7 @@ const Home = (props) =>{
         <div className="home-container-grid">
                 
             <div className="header-container">
-                <h1>WELCOME, <br/>PLAYER.</h1>
+                <h1>WELCOME, <br/>{props.playerName}.</h1>
             </div>
 
             <div className="highlights-container grid-section">
