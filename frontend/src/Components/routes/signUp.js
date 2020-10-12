@@ -55,8 +55,8 @@ const SignUp = ({ history,...props }) => {
 
   const handleSignUp = useCallback(async event => {
     event.preventDefault();
-    const { email, password } = event.target.elements;
-    console.log(email.value,password.value)
+    const { email, password, firstname } = event.target.elements;
+    console.log(email.value,password.value,firstname.value)
 
     //flask signup
     let response = await fetch('/api/signup',{
@@ -69,7 +69,8 @@ const SignUp = ({ history,...props }) => {
       //make sure to serialize your JSON body
       body: JSON.stringify({
         email: email.value,
-        password: password.value
+        password: password.value,
+        firstname:firstname.value
       })
     })
 
@@ -126,7 +127,7 @@ const SignUp = ({ history,...props }) => {
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSignUp}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <TextField
                 autoComplete="fname"
                 name="firstName"
@@ -138,7 +139,7 @@ const SignUp = ({ history,...props }) => {
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
@@ -148,7 +149,7 @@ const SignUp = ({ history,...props }) => {
                 name="lastName"
                 autoComplete="lname"
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"

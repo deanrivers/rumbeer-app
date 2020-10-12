@@ -65,17 +65,19 @@ def signup():
     data = request.get_json()
     email = data['email']
     password = data['password']
+    firstname = data['firstname']
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400
     try:
         user = auth.create_user(
             email=email,
-            password=password
+            password=password,
         )
 
         SHEET_STATS_UID = "1D_KECY_BEbw70UR8gvXuUZIrKy9xsEkJ7hbdeREyZpY"
         sheet_stats = db.child(SHEET_STATS_UID).child("Player Stats").get()
         sheet_stats = sheet_stats.val()[1:]
+        
 
         isPlayer = False
 
@@ -87,6 +89,7 @@ def signup():
             db.child("Players").child(user.uid).set(
                 {
                     "email": email,
+                    "firstname":firstname,
                     "uid": user.uid,
                     "voteCounter": 0,
                     "isPlayer": isPlayer,
@@ -107,6 +110,7 @@ def signup():
             db.child("Players").child(user.uid).set(
                 {
                     "email": email,
+                    "firstname":firstname,
                     "uid": user.uid,
                     "isPlayer": isPlayer,
                 }
@@ -195,8 +199,7 @@ def standing_stats():
 def userinfo():
     
     try:
-        # print('User ->',request.user)
-        user_stats = db.child("Players").child(request.user["uid"]).get()
+        print('User ->',request.user)
         user_stats = db.child("Players").child(request.user["uid"]).get()
         return user_stats.val(), 200
 
