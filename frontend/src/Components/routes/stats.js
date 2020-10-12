@@ -7,10 +7,12 @@ import Roster from '../Common/roster'
 
 const Stats = (props) =>{
 
+    let nameSession = localStorage.getItem('NAME')
+
     return(
         <div id="stats-main-container">
             <div className="header-container">
-    <h1 style={{marginBottom:'2%'}}>Hi, {props.playerName}! <br/>Here are your <br/>stats.</h1>
+    <h1 style={{marginBottom:'2%'}}>Hi, {props.playerName?props.playerName:nameSession}! <br/>Here are your <br/>stats.</h1>
             </div>
 
             <div className="stats-section">

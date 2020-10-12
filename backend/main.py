@@ -218,7 +218,7 @@ def allStats():
         return {"message": "There was an error retrieving stats"}, 400
 
 
-"""
+'''
  body format:
  {
      updates: [
@@ -250,10 +250,10 @@ def allStats():
                 "pass": 60
             }
          },
-     ]
+     ], 
+     uid:'123456'
 }
-"""
-
+'''
 
 @app.route("/api/updateStats", methods=["POST"])
 @check_token
@@ -261,13 +261,15 @@ def update_stats():
     data = request.get_json()
     data_list = data["updates"]
     user_uid = request.user["uid"]
+    
+    # user_entry = db.child("Players").child(user_uid).get().val()
+    # print(user_entry)
 
     try:
 
         for entry in data_list:
             uid = entry["uid"]
             stat_updates = {"stats": entry["stats"]}
-
             db.child("Players").child(uid).update(stat_updates)
         
         user_entry = db.child("Players").child(user_uid).get().val()

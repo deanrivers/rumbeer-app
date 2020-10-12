@@ -34,6 +34,7 @@ const VoteCard = (props) => {
   const [dribbleValue, updateDribbleValue] = useState('');
   const [defenseValue, updateDefenseValue] = useState('');
   const [physicalValue, updatePhysicalValue] = useState('');
+  const [firstLoad,updateFirstLoad] = useState(true)
 
   //hook for sending back data
   useEffect(()=>{
@@ -50,7 +51,8 @@ const VoteCard = (props) => {
     }
 
     //push data back up to parent for this card
-    props.update(data)
+    if(!firstLoad) props.update(data)
+    else updateFirstLoad(false)
   },[paceValue,shotValue,passValue,dribbleValue,defenseValue,physicalValue])
 
 
@@ -211,19 +213,21 @@ const VoteCard = (props) => {
               return(
                 <div className="form-content" key={index}>
                   <Radio
-                  checked={item.stateVariable === '-1'}
-                  onChange={handleChange}
-                  value="-1"
-                  name={item.name}
-                  inputProps={{ 'aria-label': '-1' }}
+                    checked={item.stateVariable === '-1'}
+                    onChange={handleChange}
+                    value="-1"
+                    name={item.name}
+                    inputProps={{ 'aria-label': '-1' }}
+                    disabled={props.disableAll}
                   />
                   <FormLabel component="legend">{item.name}</FormLabel>
                   <Radio
-                  checked={item.stateVariable === '1'}
-                  onChange={handleChange}
-                  value="1"
-                  name={item.name}
-                  inputProps={{ 'aria-label': '1' }}
+                    checked={item.stateVariable === '1'}
+                    onChange={handleChange}
+                    value="1"
+                    name={item.name}
+                    inputProps={{ 'aria-label': '1' }}
+                    disabled={props.disableAll}
                   />
                 </div>
               )

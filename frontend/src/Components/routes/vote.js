@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -15,6 +15,8 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 
 import VoteCard from '../Common/voteCard'
+
+import { AuthContext } from "../../Auth";
 
 
 const Copyright = () => {
@@ -131,10 +133,20 @@ const playerCards = [
 
 
 const Vote = (props) => {
-  const [clearDisabled,updatedClearDisabled] = useState(true) 
 
+  const {currentUser} = useContext(AuthContext);
+
+
+  
+  const [userUID,updateUserUID] = useState(currentUser["uid"])
   const [playersData,updatePlayersData] = useState(null)
-  // const [voteData,updateVoteData] = useState(playerStats)
+
+  //frontend logic for buttons and counter
+  const [numVotes,updateNumVotes] = useState(10)
+  const [submitDisabled,updateSubmitDisabled] = useState(true)
+  const [clearDisabled,updatedClearDisabled] = useState(true) 
+  const [disableAll,updateDisableAll] = useState(false)
+  
   const [voteData,updateVoteData] = useState({})
   const [newPlayerStats,updateNewPlayerStats] = useState({})
 
@@ -175,16 +187,23 @@ const Vote = (props) => {
         uid = data[property]["uid"]
         obj ={uid:uid}
 
-        console.log(uid)
+        
         filteredArr.push({...data[property]})
       }
     }
 
-    console.log('Filtered Arr ->',filteredArr)
+    // console.log('Filtered Arr ->',filteredArr)
 
     updatePlayersData(filteredArr)
 
   }
+
+  // useEffect(()=>{
+    
+  //   if(currentUser){
+  //     updateUserUID(currentUser["uid"])
+  //   }
+  // },[userUID])
 
   //listen to player data from flask
   useEffect(()=>{
@@ -200,34 +219,65 @@ const Vote = (props) => {
   //listen to voteData
   useEffect(()=>{
     // console.log('Player Vote Data from effect Hook',voteData)
+    updateVoteCounter({voteData})
   },[voteData])
 
+  //listen to the number of votes
+  useEffect(()=>{
+    console.log('Number of votes left',numVotes)
+    if(numVotes === 0){
+      updateDisableAll(true)
+    }
+
+    if(numVotes<10){
+      updatedClearDisabled(false)
+      updateSubmitDisabled(false)
+    } else if(numVotes===10){
+      updatedClearDisabled(true)
+      updateSubmitDisabled(true)
+    }
+
+    if(numVotes>0){
+      
+      updateDisableAll(false)
+    } 
+
+
+  },[numVotes])
 
   //functions
   const submitRatings = async () =>{
+    console.log("UID Vote",userUID)
+    let tokenSession = localStorage.getItem('TOKEN')
     let updatedStats = await updatePlayerStats()
 
     console.log('Await',updatedStats)
     
-    // let response = fetch('/api/updateStats',{
-    //   method: "POST",
-    //   withCredentials: true,
-    //   credentials: 'include',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //     'Authorization': token
-    //   },
-    //   body: JSON.stringify({
-    //     data:updatedStats
-    //   })
-    // })
+    let response = fetch('/api/updateStats',{
+      method: "POST",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': props.token?props.token:tokenSession
+      },
+      body: JSON.stringify({
+        updates:updatedStats,
+        uid: userUID
+      })
+    })
+
+
+    let data = await response.json()
+
+    console.log('Player Upload ->',data)
   }
 
   const updatePlayerStats = async () =>{
     let currentPlayerStats = playersData
     let votedPlayerStats = voteData
-    let comparedStats = {updates:[]}
+    let comparedStats = []
     
 
     //compare and update
@@ -268,7 +318,7 @@ const Vote = (props) => {
 
       // }
 
-      comparedStats['updates'].push({
+      comparedStats.push({
         uid:uid,
         firstname:currentPlayerStats[i]["firstname"],
         stats:{
@@ -280,38 +330,42 @@ const Vote = (props) => {
           "pass": pass?pass:currentPass
         }
       })
-
- 
-
-
-
-      // comparedStats['updates'] = [
-      //   {
-      //     uid:uid,
-      //     stats:{
-      //       "pace": pace?pace:currentPace,
-      //       "defense": defense?defense:currentDefense,
-      //       "dribbling": dribbling?dribbling:currentDribbling,
-      //       "physical": physical?physical:currentPhysical,
-      //       "shot": shot?shot:currentShot,
-      //       "pass": pass?pass:currentPass
-      //     }
-      //   }
-      // ]
     }
 
-    // console.log('Pass this to ',comparedStats)
-    //update state
-    // updateNewPlayerStats(comparedStats)
+    
     return comparedStats
   }
   
-  const updateVoteCounter = () =>{
+  const updateVoteCounter = (data) =>{
+    // console.log('Data in vote counter ->',data)
+    // updateNumVotes(numVotes-1)
 
+    let voteData = data["voteData"]
+    let arr = []
 
+    // for(const property in voteData){
+      
+    // }
+
+    
+    //determine how many "1"s and "-1"s there
+    for(const property in voteData){
+      console.log(voteData[property]["stats"])
+      for(const innerProperty in voteData[property]["stats"]){
+        if(voteData[property]["stats"][innerProperty]==="1" || voteData[property]["stats"][innerProperty]==="-1" ){
+          arr.push('Vote')
+        }
+      }
+    }
+
+    updateNumVotes(10-arr.length)  
   }
 
   const resetRatings = () =>{
+    updateDisableAll(false)
+    updateSubmitDisabled(true)
+    updatedClearDisabled(true)
+    updateDisableAll(false)
 
   }
 
@@ -323,6 +377,7 @@ const Vote = (props) => {
     // console.log('Player Data ->',playerData)
     playerDataObj[uid] = {stats:{...playerData.values},firstname:player}
     updateVoteData({...playerDataObj})
+    
   }
 
   let cardRender = playersData?playersData.map((card,index)=>{
@@ -332,6 +387,7 @@ const Vote = (props) => {
           player={card.firstname}
           uid={card.uid}
           update={updateVoteDataState}
+          disableAll={disableAll}
         />
       </Grid>
     )
@@ -348,18 +404,18 @@ const Vote = (props) => {
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
               Below you will see every player that is currently enrolled in the Rum and Beer League.
-              Please Submit your ratings for last week's performance. You have a total of 5 Ratings.
+              Please Submit your ratings for last week's performance. You have a total of {numVotes} Ratings.
               Use them wisely!
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" className={classes.submitButton} onClick={()=>submitRatings()}>
+                  <Button variant="contained" color="primary" disabled={submitDisabled} className={classes.submitButton} onClick={()=>submitRatings()}>
                     Submit Ratings
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" className={classes.clearButton} disabled={clearDisabled}>
+                  <Button variant="outlined" className={classes.clearButton} disabled={clearDisabled} onClick={()=>resetRatings()}>
                     Clear All Ratings
                   </Button>
                 </Grid>

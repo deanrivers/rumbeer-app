@@ -74,7 +74,7 @@ const SignUp = ({ history,...props }) => {
       })
     })
 
-    let data = await response.json()
+    // let data = await response.json()
     
     let [token,responseStatus] = await getToken(email.value,password.value)
 
