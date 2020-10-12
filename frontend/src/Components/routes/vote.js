@@ -132,8 +132,12 @@ const playerCards = [
 
 const Vote = (props) => {
   const [clearDisabled,updatedClearDisabled] = useState(true) 
+
   const [playersData,updatePlayersData] = useState(null)
-  const [voteData,updateVoteData] = useState(playerStats)
+  // const [voteData,updateVoteData] = useState(playerStats)
+  const [voteData,updateVoteData] = useState({})
+  const [newPlayerStats,updateNewPlayerStats] = useState({})
+
   const classes = useStyles();
 
   const getAllStats = async (token) =>{
@@ -152,18 +156,27 @@ const Vote = (props) => {
     let data = await response.json()
     
     let filteredArr = []
-    let criteria = {'stats':{
-      'PACE':'0',
-      'SHO':'',
-      'PAS':'',
-      'DRI':'',
-      'DEF':'',
-      'PHY':'',
-    }}
+    // let criteria = {'stats':{
+    //   'PACE':'0',
+    //   'SHO':'',
+    //   'PAS':'',
+    //   'DRI':'',
+    //   'DEF':'',
+    //   'PHY':'',
+    // }}
+
+    let uid
+    let obj = {}
+
 
     for (const property in data){
       if(data[property]["isPlayer"]===true){
-        filteredArr.push({...data[property],criteria})
+        // filteredArr.push({...data[property]})
+        uid = data[property]["uid"]
+        obj ={uid:uid}
+
+        console.log(uid)
+        filteredArr.push({...data[property]})
       }
     }
 
@@ -171,18 +184,14 @@ const Vote = (props) => {
 
     updatePlayersData(filteredArr)
 
-
-
   }
 
   //listen to player data from flask
   useEffect(()=>{
     let tokenSession = localStorage.getItem('TOKEN')
-    console.log('Token State',props.token)
-    console.log('Token Session',tokenSession)
 
     if(playersData){
-      console.log('Vote.js Players',playersData)
+      // console.log('Vote.js Players',playersData)
     } else{
       getAllStats(props.token?props.token:tokenSession)
     }
@@ -190,34 +199,129 @@ const Vote = (props) => {
 
   //listen to voteData
   useEffect(()=>{
-    // console.log('Vote Data in effect',voteData)
-    console.log('Player Stats from effect Hook',playerStats)
+    // console.log('Player Vote Data from effect Hook',voteData)
   },[voteData])
 
 
   //functions
-  const submitRatings = () =>{
+  const submitRatings = async () =>{
+    let updatedStats = await updatePlayerStats()
 
+    console.log('Await',updatedStats)
+    
+    // let response = fetch('/api/updateStats',{
+    //   method: "POST",
+    //   withCredentials: true,
+    //   credentials: 'include',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //     'Authorization': token
+    //   },
+    //   body: JSON.stringify({
+    //     data:updatedStats
+    //   })
+    // })
+  }
+
+  const updatePlayerStats = async () =>{
+    let currentPlayerStats = playersData
+    let votedPlayerStats = voteData
+    let comparedStats = {updates:[]}
+    
+
+    //compare and update
+    // console.log('current stats',currentPlayerStats)
+    // console.log('voted stats',votedPlayerStats)
+
+    let uid,currentPlayer
+
+    
+    //loop through and compare uids
+    for(let i=0;i<currentPlayerStats.length;i++){
+      uid = currentPlayerStats[i]["uid"]
+
+      currentPlayer = votedPlayerStats[uid] 
+      // console.log('Current Player Being Evaluated ->',currentPlayer)
+
+
+      let {pace:currentPace,shot:currentShot,pass:currentPass,dribbling:currentDribbling,defense:currentDefense,physical:currentPhysical} = currentPlayerStats[i]["stats"]
+      let {pace:updatePace,shot:updateShot,pass:updatePass,dribbling:updateDribbling,defense:updateDefense,physical:updatePhysical} = currentPlayer["stats"]
+
+    
+      // console.log('Update',updatePace,updateShot,updatePass,updateDribbling,updateDefense,updatePhysical)
+      // console.log('Old',currentPace,currentShot,currentPass,currentDribbling,currentDefense,currentPhysical)
+
+
+      let pace,defense,dribbling,physical,shot,pass
+      pace = currentPace+parseInt(updatePace)
+      defense = currentDefense+parseInt(updateDefense)
+      dribbling = currentDribbling+parseInt(updateDribbling)
+      physical = currentPhysical+parseInt(updatePhysical)
+      shot = currentShot+parseInt(updateShot)
+      pass = currentPass+parseInt(updatePass)
+      
+      // comparedStats[updates] = {
+
+        
+
+
+      // }
+
+      comparedStats['updates'].push({
+        uid:uid,
+        firstname:currentPlayerStats[i]["firstname"],
+        stats:{
+          "pace": pace?pace:currentPace,
+          "defense": defense?defense:currentDefense,
+          "dribbling": dribbling?dribbling:currentDribbling,
+          "physical": physical?physical:currentPhysical,
+          "shot": shot?shot:currentShot,
+          "pass": pass?pass:currentPass
+        }
+      })
+
+ 
+
+
+
+      // comparedStats['updates'] = [
+      //   {
+      //     uid:uid,
+      //     stats:{
+      //       "pace": pace?pace:currentPace,
+      //       "defense": defense?defense:currentDefense,
+      //       "dribbling": dribbling?dribbling:currentDribbling,
+      //       "physical": physical?physical:currentPhysical,
+      //       "shot": shot?shot:currentShot,
+      //       "pass": pass?pass:currentPass
+      //     }
+      //   }
+      // ]
+    }
+
+    // console.log('Pass this to ',comparedStats)
+    //update state
+    // updateNewPlayerStats(comparedStats)
+    return comparedStats
   }
   
   const updateVoteCounter = () =>{
-    
+
+
   }
 
   const resetRatings = () =>{
 
   }
 
+  //update ratings object for submission
   const updateVoteDataState = (playerData) =>{
     let playerDataObj = voteData
     let player = playerData.player
-
-    // console.log('Player Data from vote.js',playerData)
-    // console.log('Object->',playerStats)
-    // console.log(playerDataObj.player.values)
-    // console.log('Player->',playerDataObj[player])
-
-    playerDataObj[player]['stats'] = {...playerData.values}
+    let uid = playerData.uid
+    // console.log('Player Data ->',playerData)
+    playerDataObj[uid] = {stats:{...playerData.values},firstname:player}
     updateVoteData({...playerDataObj})
   }
 
@@ -226,8 +330,8 @@ const Vote = (props) => {
       <Grid item key={index} xs={12} sm={6} md={4}>
         <VoteCard
           player={card.firstname}
-          // update={updateVoteDataState}
-          update={(data)=>console.log(data)}
+          uid={card.uid}
+          update={updateVoteDataState}
         />
       </Grid>
     )
@@ -250,7 +354,7 @@ const Vote = (props) => {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" className={classes.submitButton}>
+                  <Button variant="contained" color="primary" className={classes.submitButton} onClick={()=>submitRatings()}>
                     Submit Ratings
                   </Button>
                 </Grid>
