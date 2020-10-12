@@ -17,8 +17,6 @@ import Link from '@material-ui/core/Link';
 import VoteCard from '../Common/voteCard'
 
 
-
-
 const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -75,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+
 // const playerStats = {
 //   'Ronaldo':{
 //     stats:[],
@@ -85,6 +84,8 @@ const useStyles = makeStyles((theme) => ({
     
 //   }
 // }
+
+
 
 const playerStats = {
   'Ronaldo':{
@@ -129,10 +130,63 @@ const playerCards = [
 
 
 
-const Vote = (currentUser,) => {
+const Vote = (props) => {
   const [clearDisabled,updatedClearDisabled] = useState(true) 
+  const [playersData,updatePlayersData] = useState(null)
   const [voteData,updateVoteData] = useState(playerStats)
   const classes = useStyles();
+
+  const getAllStats = async (token) =>{
+    let response = await fetch('/api/allStats',{
+      method: "GET",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+
+    })
+
+    let data = await response.json()
+    
+    let filteredArr = []
+    let criteria = {'stats':{
+      'PACE':'0',
+      'SHO':'',
+      'PAS':'',
+      'DRI':'',
+      'DEF':'',
+      'PHY':'',
+    }}
+
+    for (const property in data){
+      if(data[property]["isPlayer"]===true){
+        filteredArr.push({...data[property],criteria})
+      }
+    }
+
+    console.log('Filtered Arr ->',filteredArr)
+
+    updatePlayersData(filteredArr)
+
+
+
+  }
+
+  //listen to player data from flask
+  useEffect(()=>{
+    let tokenSession = localStorage.getItem('TOKEN')
+    console.log('Token State',props.token)
+    console.log('Token Session',tokenSession)
+
+    if(playersData){
+      console.log('Vote.js Players',playersData)
+    } else{
+      getAllStats(props.token?props.token:tokenSession)
+    }
+  },[playersData])
 
   //listen to voteData
   useEffect(()=>{
@@ -166,6 +220,18 @@ const Vote = (currentUser,) => {
     playerDataObj[player]['stats'] = {...playerData.values}
     updateVoteData({...playerDataObj})
   }
+
+  let cardRender = playersData?playersData.map((card,index)=>{
+    return(
+      <Grid item key={index} xs={12} sm={6} md={4}>
+        <VoteCard
+          player={card.firstname}
+          // update={updateVoteDataState}
+          update={(data)=>console.log(data)}
+        />
+      </Grid>
+    )
+  }):null
 
   return (
     <React.Fragment>
@@ -204,14 +270,16 @@ const Vote = (currentUser,) => {
 
 
             {/* create a card for each player */}
-            {playerCards.map((card,index) => (
+            {/* {playerCards.map((card,index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
                 <VoteCard
                   player={card}
                   update={updateVoteDataState}
                 />
               </Grid>
-            ))}
+            ))} */}
+            
+            {cardRender}
 
 
           </Grid>

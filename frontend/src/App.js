@@ -111,7 +111,7 @@ const App = () => {
             {/* create certain routes only if you are a player */}
             {isPlayer?<div>
             <Route path="/vote" exact render={(props) => (<Vote {...props} userToken={userToken}/>)}/>
-            <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken} playerName={playerName}/>)}/>
+            <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken} playerName={playerName} uid={'uid'}/>)}/>
             </div>
             :null
           }
