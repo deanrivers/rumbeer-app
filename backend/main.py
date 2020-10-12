@@ -197,13 +197,12 @@ def standing_stats():
 def userinfo():
     
     try:
-        print('User ->',request.user)
         user_stats = db.child("Players").child(request.user["uid"]).get()
         return user_stats.val(), 200
 
     except Exception as e:
         print('ERROR',e)
-        return {"message": "There was an error retrieving stats"}, 400
+        return {"message": "There was an error retrieving user stats"}, 400
 
 @app.route("/api/allStats", methods=["GET"])
 @check_token
@@ -213,7 +212,7 @@ def allStats():
         return user_stats.val(), 200
 
     except:
-        return {"message": "There was an error retrieving stats"}, 400
+        return {"message": "There was an error retrieving all stats"}, 400
 
 
 """
