@@ -28,8 +28,6 @@ const Home = () =>{
     useEffect(()=>{
 
         console.log('Home Mounted')
-        console.log('Home Mounted')
-        console.log('Home Mounted')
         console.log(currentUser.email)
 
         //get token

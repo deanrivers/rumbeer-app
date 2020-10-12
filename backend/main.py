@@ -125,7 +125,6 @@ def login():
     email = data["email"]
     password = data["password"]
     
-
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400
     try:
