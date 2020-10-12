@@ -4,76 +4,60 @@ import React, {useEffect,useState,useContext} from 'react'
 import {Carousel} from 'react-responsive-carousel'
 import Standings from '../Common/standings'
 import { css } from "@emotion/core";
-import {PulseLoader} from "react-spinners";
+
 import { AuthContext } from "../../Auth";
+
+
 
 import FUTCard from '../Common/futCard'
 
 
-const Home = () =>{
+const Home = (props) =>{
 
     const [cardsLoading,updateCardsLoading] = useState(true)
     const [isLoading,updateIsLoading] = useState(true)
+    const [dataLeagueStandings,updateDataLeagueStandings] = useState(null)
 
     const { currentUser } = useContext(AuthContext);
 
-    const override = css`
-    display: block;
-    margin: 0 auto;
-    border-color: red;
-    `;
-
-
-    //component didi mount
     useEffect(()=>{
+        // console.log('League Standings',dataLeagueStandings)
+    },[dataLeagueStandings])
 
-        console.log('Home Mounted')
-        console.log(currentUser.email)
 
-        //get token
+
+    //component did mount
+    useEffect(()=>{
+        let token = props.userToken
+
+        
+        
+
 
 
 
         //fetch league standings
-        //getLeagueStandings()
+        // getLeagueStandings(token)
 
         //fetch FUT card info
 
-
     },[])
 
-    // const getToken = async () =>{
-    //     let response = await fetch('/api/token',{
-    //         method: "GET",
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
 
-    //         body: JSON.stringify({
-    //             email: email.value,
-    //             password: password.value
-    //         })
-    //     })
-    // }
-
-    const getLeagueStandings = async () =>{
-        console.log('func')
-        let response = await fetch('/api/sheetStandings')
-        let data = await response.json()
-        console.log('Data->',data)
-
-    }
 
     const getFUTData = () =>{
 
     }
 
+    let playerNameLocal = localStorage.getItem('NAME');
+    // let playerNameLocal = 'BOB';
+
     return([
         <div className="home-container-grid">
                 
             <div className="header-container">
-                <h1>WELCOME, <br/>PLAYER.</h1>
+                {props.isPlayer?<h1>WELCOME, <br/>{props.playerName?props.playerName:playerNameLocal}</h1>:<h1>WELCOME.</h1>}
+                
             </div>
 
             <div className="highlights-container grid-section">
@@ -88,14 +72,9 @@ const Home = () =>{
             <div className="highlights-container grid-section">
                 <h1 className="sub-header">League Standings.</h1>
                 <div className="video-container">
-                    {/* <PulseLoader
-                        css={override}
-                        size={10}
-                        color={"#FF0062"}
-                        loading={isLoading}
-                        
-                    /> */}
-                    <Standings/>
+                    <Standings token={props.userToken}/>
+                    
+                    
                 </div>
                 
             </div>
@@ -127,5 +106,7 @@ const Home = () =>{
 
     ])
 }
+
+
 
 export default Home

@@ -39,13 +39,14 @@ const VoteCard = (props) => {
   useEffect(()=>{
     let data = {
       values:{
-        'PACE':paceValue,
-        'SHO':shotValue,
-        'PAS':passValue,
-        'DRI':dribbleValue,
-        'DEF':defenseValue,
-        'PHY':physicalValue},
-      player:props.player
+        'pace':paceValue,
+        'shot':shotValue,
+        'pass':passValue,
+        'dribbling':dribbleValue,
+        'defense':defenseValue,
+        'physical':physicalValue},
+      player:props.player,
+      uid:props.uid
     }
 
     //push data back up to parent for this card

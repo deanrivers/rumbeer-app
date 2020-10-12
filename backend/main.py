@@ -8,6 +8,9 @@ from functools import wraps
 from flask import (Flask, render_template, request, jsonify, make_response)
 from firebase_admin import credentials, auth
 
+import requests.exceptions
+# error types
+
 app = Flask(__name__,
             static_url_path="",
             static_folder="../frontend/build",
@@ -17,7 +20,6 @@ load_dotenv(find_dotenv())
 
 config = {
     "apiKey": os.environ['FIREBASE_API_KEY'],
-    # "apiKey": 'AIzaSyB_f99ugu1_kTHQR8ABGVdWGBq5Gqvrvqc',
     "authDomain": "rumbeer-dda6f.firebaseapp.com",
     "databaseURL": "https://rumbeer-dda6f.firebaseio.com",
     "projectId": "rumbeer-dda6f",
@@ -41,7 +43,8 @@ def check_token(f):
         try:
             user = auth.verify_id_token(request.headers["Authorization"])
             request.user = user
-        except:
+        except Exception as e:
+            print('error',e)
             return {"message": "Invalid token provided."}, 400
         return f(*args, **kwargs)
     return wrap
@@ -62,17 +65,19 @@ def signup():
     data = request.get_json()
     email = data['email']
     password = data['password']
+    firstname = data['firstname']
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400
     try:
         user = auth.create_user(
             email=email,
-            password=password
+            password=password,
         )
 
         SHEET_STATS_UID = "1D_KECY_BEbw70UR8gvXuUZIrKy9xsEkJ7hbdeREyZpY"
         sheet_stats = db.child(SHEET_STATS_UID).child("Player Stats").get()
         sheet_stats = sheet_stats.val()[1:]
+        
 
         isPlayer = False
 
@@ -84,6 +89,7 @@ def signup():
             db.child("Players").child(user.uid).set(
                 {
                     "email": email,
+                    "firstname":firstname,
                     "uid": user.uid,
                     "voteCounter": 0,
                     "isPlayer": isPlayer,
@@ -104,13 +110,15 @@ def signup():
             db.child("Players").child(user.uid).set(
                 {
                     "email": email,
+                    "firstname":firstname,
                     "uid": user.uid,
                     "isPlayer": isPlayer,
                 }
             )
 
         return {"message": f"Successfully created user {user.uid} using email {email}"}, 200
-    except:
+    except Exception as e:
+        print('ERROR',e)
         return {"message": "Error creating user"}, 400
 
 
@@ -131,8 +139,14 @@ def login():
         user = pb.auth().sign_in_with_email_and_password(email, password)
         jwt = user["idToken"]
         return {"token": jwt}, 200
-    except:
-        return {"message": "There was an error logging in"}, 400
+
+#     except requests.exceptions.HTTPError as httpErr:
+#         error_message = json.loads(httpErr.args[1])['error']['message']
+
+    except Exception as e:
+        print('Error =>',e)
+        return e
+        # return {"message": "There was an error logging in"}, 400
 
 
 @app.route("/api/weekData", methods=["GET"])
@@ -181,13 +195,15 @@ def standing_stats():
 @app.route("/api/userStats", methods=["GET"])
 @check_token
 def userinfo():
+    
     try:
+        print('User ->',request.user)
         user_stats = db.child("Players").child(request.user["uid"]).get()
         return user_stats.val(), 200
 
-    except:
+    except Exception as e:
+        print('ERROR',e)
         return {"message": "There was an error retrieving stats"}, 400
-
 
 @app.route("/api/allStats", methods=["GET"])
 @check_token

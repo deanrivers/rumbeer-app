@@ -1,7 +1,9 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useState, useEffect } from "react";
 import { withRouter, Redirect } from "react-router";
 import app from '../../base';
 import { AuthContext } from "../../Auth";
+import {NavLink} from 'react-router-dom'
+
 
 
 //material
@@ -19,7 +21,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-const Login = ({ history }) => {
+
+const Login = ({history,...props}) => {
 
   function Copyright() {
     return (
@@ -33,8 +36,6 @@ const Login = ({ history }) => {
       </Typography>
     );
   }
-
-  const [userToken,updateUserToken] = useState('')
 
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -57,76 +58,53 @@ const Login = ({ history }) => {
   }));
   const classes = useStyles();
 
-  // const handleLogin = useCallback(
-  //   async event => {
-  //     event.preventDefault();
-  //     const { email, password } = event.target.elements;
-  //     console.log(email.value,password.value)
-  //     try {
-  //       await app.auth().signInWithEmailAndPassword(email.value, password.value)
-
-  //       history.push("/");
-  //     } catch (error) {
-  //       alert(error);
-  //     }
-  //   },[history]);
+  const handleLogin = useCallback(
+    async (event) => {
+      event.preventDefault()
+      const { email, password } = event.target.elements;
 
 
-  const loginFlask = async (event) =>{
-    event.preventDefault();
-    
-    const { email, password } = event.target.elements;
-    console.log(email.value,password.value)
+      //get token from backend flask server
+
+      if(email.value!==''&&password.value!==''){
+        
+        let [token,responseStatus] = await getToken(email.value,password.value)
+        if(responseStatus==200){
+          try {
+            props.setToken(token)
+            await app.auth().signInWithEmailAndPassword(email.value, password.value)
+            history.push("/");
+          } catch (error) {
+            alert('An error occured.')
+            console.log(error);
+          }
+        }
+    }
+      
+    },[history]);
+
+  const getToken = async (e,p) =>{
     let response = await fetch('/api/token',{
       method: "POST",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-
-      //make sure to serialize your JSON body
       body: JSON.stringify({
-        email: email.value,
-        password: password.value
+        email:e,
+        password:p,
       })
     })
-
     let data = await response.json()
-    console.log('Token',data)
-
-
-    
-
-    // updateUserToken()
+    return [data.token,response.status]
   }
 
   const { currentUser } = useContext(AuthContext);
 
-  // if (currentUser) {
-  //   return <Redirect to="/" />;
-  //   // return <Redirect to={{
-  //   //   pathname:'/',
-  //   //   token:{userToken}
-  //   // }} />;
-  // }
+  if (currentUser) {
+    return <Redirect to="/" />
+  }
 
-  // return (
-  //   <div className="login-container">
-  //     <h1>Log in</h1>
-  //     <form onSubmit={handleLogin}>
-  //       <label>
-  //         Email
-  //         <input name="email" type="email" placeholder="Email" />
-  //       </label>
-  //       <label>
-  //         Password
-  //         <input name="password" type="password" placeholder="Password" />
-  //       </label>
-  //       <button type="submit">Log in</button>
-  //     </form>
-  //   </div>
-  // );
-  
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -134,10 +112,8 @@ const Login = ({ history }) => {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={loginFlask}>
+
+        <form className={classes.form}  onSubmit={handleLogin} >
           <TextField
             variant="outlined"
             margin="normal"
@@ -148,7 +124,6 @@ const Login = ({ history }) => {
             name="email"
             autoComplete="email"
             autoFocus
-            
             
           />
           <TextField
@@ -161,6 +136,7 @@ const Login = ({ history }) => {
             type="password"
             id="password"
             autoComplete="current-password"
+            
           />
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -173,7 +149,7 @@ const Login = ({ history }) => {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Sign In 
           </Button>
           <Grid container>
             <Grid item xs>
@@ -182,9 +158,12 @@ const Login = ({ history }) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
+              <NavLink to="/signup">
+                <Link variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </NavLink>
+              
             </Grid>
           </Grid>
         </form>
@@ -192,11 +171,15 @@ const Login = ({ history }) => {
       <Box mt={8}>
         <Copyright />
       </Box>
+      
     </Container>
   );
 
 };
 
+
+
+// export default connect(mapStateToProps)(withRouter(Login));
 export default withRouter(Login);
 
 
