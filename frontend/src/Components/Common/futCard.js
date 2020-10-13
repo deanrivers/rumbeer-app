@@ -1,8 +1,13 @@
 import '../../Styles/FUT.css'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const FUTCard = (props) => {
+
+    useEffect(()=>{
+      console.log('Props in futCard.js',props)
+    },[])
+
     return (
       <div class="wrapper">
         {/* <!-- *** fut-player-card ***--> */}
@@ -45,36 +50,36 @@ const FUTCard = (props) => {
             <div class="player-info">
               {/* <!-- Player Name--> */}
               <div class="player-name">
-                <span>MESSI</span>
+                <span>{props.name}</span>
               </div>
               {/* <!-- Player Features--> */}
               <div class="player-features">
                 <div class="player-features-col">
                   <span>
-                    <div class="player-feature-value">97</div>
+                    <div class="player-feature-value">{props.stats["pace"]}</div>
                     <div class="player-feature-title">PAC</div>
                   </span>
 
                   <span>
-                    <div class="player-feature-value">95</div>
+                    <div class="player-feature-value">{props.stats["shot"]}</div>
                     <div class="player-feature-title">SHO</div>
                   </span>
                   <span>
-                    <div class="player-feature-value">94</div>
+                    <div class="player-feature-value">{props.stats["pass"]}</div>
                     <div class="player-feature-title">PAS</div>
                   </span>
                 </div>
                 <div class="player-features-col">
                   <span>
-                    <div class="player-feature-value">99</div>
+                    <div class="player-feature-value">{props.stats["dribbling"]}</div>
                     <div class="player-feature-title">DRI</div>
                   </span>
                   <span>
-                    <div class="player-feature-value">35</div>
+                    <div class="player-feature-value">{props.stats["defense"]}</div>
                     <div class="player-feature-title">DEF</div>
                   </span>
                   <span>
-                    <div class="player-feature-value">68</div>
+                    <div class="player-feature-value">{props.stats["physical"]}</div>
                     <div class="player-feature-title">PHY</div>
                   </span>
                 </div>

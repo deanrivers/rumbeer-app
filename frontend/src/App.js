@@ -43,7 +43,6 @@ const App = () => {
   //listen to user stats
   useEffect(()=>{
     if(userStats){
-      console.log('Updaing User Stats with->',userStats)
       localStorage.setItem('NAME', userStats["firstname"]);
       localStorage.setItem('IS_PLAYER', userStats["isPlayer"]);
       localStorage.setItem('IS_SIGNED_IN', true);
@@ -62,7 +61,6 @@ const App = () => {
   //listen to user token
   useEffect(()=>{
     if(userToken!==null){
-      // console.log('Setting local storage',userToken)
       localStorage.setItem('TOKEN', userToken);
       getUserStats(userToken)
       updateIsSignedIn(true)
@@ -71,7 +69,6 @@ const App = () => {
 
 
   const setToken = (token) =>{
-    console.log(token)
     updateUserToken(token)
   }
 
@@ -87,9 +84,7 @@ const App = () => {
       },
   })
     let data = await response.json()
-    console.log('User Stats from App.js',data)
     updateUserStats(data)
-    // return data
   }
 
     const logoutUser = () =>{
