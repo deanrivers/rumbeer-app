@@ -28,18 +28,10 @@ const Home = (props) =>{
 
     //component did mount
     useEffect(()=>{
-        let token = props.userToken
+        console.log('Props in home.js ->',props)
 
-        
-        
+        //fetch FUT info...'api/allStats
 
-
-
-
-        //fetch league standings
-        // getLeagueStandings(token)
-
-        //fetch FUT card info
 
     },[])
 
@@ -49,14 +41,22 @@ const Home = (props) =>{
 
     }
 
-    let playerNameLocal = localStorage.getItem('NAME');
+    let localName = localStorage.getItem('NAME')
+    let renderHeader
+
+    if(props.isPlayer || localStorage.getItem("IS_PLAYER")==="true"){
+        renderHeader = <h1>Welcome {props.playerName?props.playerName:localName}</h1>
+    } else{
+        renderHeader = <h1>Welcome.</h1>
+    }
+
+    
     // let playerNameLocal = 'BOB';
 
     return([
         <div className="home-container-grid">
-                
             <div className="header-container">
-                {props.isPlayer?<h1>WELCOME, <br/>{props.playerName?props.playerName:playerNameLocal}</h1>:<h1>WELCOME.</h1>}
+                {renderHeader}
                 
             </div>
 

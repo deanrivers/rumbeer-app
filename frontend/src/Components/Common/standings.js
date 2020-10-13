@@ -38,7 +38,7 @@ const Standings = (props) => {
   useEffect(()=>{
     // console.log('Leage Standings Props ->',props)
     let tokenSession = localStorage.getItem('TOKEN');
-    console.log('Local storage in standings',tokenSession)
+    //console.log('Local storage in standings',tokenSession)
     
 
     if(leaguStandings){

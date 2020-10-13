@@ -65,10 +65,8 @@ const Login = ({history,...props}) => {
 
 
       //get token from backend flask server
-
       if(email.value!==''&&password.value!==''){
-        
-        let [token,responseStatus] = await getToken(email.value,password.value)
+        let [token,responseStatus,userStats] = await getToken(email.value,password.value)
         if(responseStatus==200){
           try {
             props.setToken(token)
@@ -96,8 +94,28 @@ const Login = ({history,...props}) => {
       })
     })
     let data = await response.json()
+
+    //get user stats using token you just got
+    // let userStats = await getUserStats(data.token)
+    
     return [data.token,response.status]
   }
+
+  // const getUserStats = async (token) =>{
+  //   let response = await fetch('/api/userStats',{
+  //     method: "GET",
+  //     withCredentials: true,
+  //     credentials: 'include',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //       'Authorization': token
+  //     },
+  // })
+  //   let data = await response.json()
+  //   console.log('User Stats from login',data)
+  //   return data
+  // }
 
   const { currentUser } = useContext(AuthContext);
 

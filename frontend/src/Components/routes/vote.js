@@ -366,7 +366,6 @@ const Vote = (props) => {
     updateSubmitDisabled(true)
     updatedClearDisabled(true)
     updateDisableAll(false)
-
   }
 
   //update ratings object for submission

@@ -23,61 +23,78 @@ import PrivateRoute from "./PrivateRoute";
 const App = () => {
 
   const [userToken,updateUserToken] = useState(null)
-  
   const [isSignedIn,updateIsSignedIn] = useState(false)
+  const [isPlayer,updateIsPlayer] = useState(false)
+  const [userStats,updateUserStats] = useState(null)
   const [playerName,updatePlayerName] = useState('')
-  const [isPlayer,updateIsPlayer] = useState(true)
 
+  //general component did mount
+  useEffect(()=>{
+
+    //local storage will handle refresh
+    if(localStorage.getItem("IS_PLAYER")==="true"){
+      updateIsPlayer(true)
+    }
+    if(localStorage.getItem("IS_SIGNED_IN")==="true"){
+      updateIsSignedIn(true)
+    }
+  },[])
+
+  //listen to user stats
+  useEffect(()=>{
+    if(userStats){
+      console.log('Updaing User Stats with->',userStats)
+      localStorage.setItem('NAME', userStats["firstname"]);
+      localStorage.setItem('IS_PLAYER', userStats["isPlayer"]);
+      localStorage.setItem('IS_SIGNED_IN', true);
+      updateIsPlayer(userStats["isPlayer"])
+      updatePlayerName(userStats["firstname"])
+    }
+  },[userStats])
+
+
+  //listen to isSignedIn
   useEffect(()=>{
     console.log('Frontend Sign in status',isSignedIn)
   },[isSignedIn])
 
+
+  //listen to user token
   useEffect(()=>{
-    if(playerName){
-      console.log(playerName)
-
-    }
-  },[playerName])
-
-  useEffect(()=>{
-    console.log('Token from App.js ->',userToken)
-    if(userToken!==null&&playerName!==''){
-
-      
-      //session storage for token
-      //setter
-      // localStorage.setItem('TOKEN', userToken);
-      setLocalStorage(userToken,playerName)
-
-      
-      // // remove
-      // localStorage.removeItem('myData');
-
-      //get the players name and update state to be passed as a prop
-      // getPlayerName(userToken)
+    if(userToken!==null){
+      // console.log('Setting local storage',userToken)
+      localStorage.setItem('TOKEN', userToken);
+      getUserStats(userToken)
+      updateIsSignedIn(true)
     }
   },[userToken])
-  
+
+
   const setToken = (token) =>{
-    updatePlayerName('Dean')
+    console.log(token)
     updateUserToken(token)
-    
-    updateIsSignedIn(true)
   }
 
-  const logoutUser = () =>{
-    updateIsSignedIn(false)
+  const getUserStats = async (token) =>{
+    let response = await fetch('/api/userStats',{
+      method: "GET",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+  })
+    let data = await response.json()
+    console.log('User Stats from App.js',data)
+    updateUserStats(data)
+    // return data
   }
 
-  const getPlayerName = () =>{
-
+    const logoutUser = () =>{
+      updateIsSignedIn(false)
   }
-
-  const setLocalStorage = (userToken,playerName) =>{
-    localStorage.setItem('TOKEN', userToken);
-    localStorage.setItem('NAME', playerName);
-  }
-
 
   let home = isSignedIn?<Route exact path="/">
                                   <Redirect to="/home" />
@@ -93,6 +110,8 @@ const App = () => {
 
                                 </div>
 
+
+
   return (
     
     <AuthProvider>
@@ -100,8 +119,8 @@ const App = () => {
           <Switch>
 
             {/* Home screen is private and should only render on authentication success. */}
-            <PrivateRoute exact path="/" component={Home} userToken={userToken} playerName={playerName} isPlayer={isPlayer}/>
-            <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}  playerName={playerName} isPlayer={isPlayer}/>)}></Route>
+            <PrivateRoute exact path="/" component={Home} userToken={userToken} isPlayer={isPlayer} playerName={playerName}/>
+            <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}  isPlayer={isPlayer} playerName={playerName}/>)}></Route>
             
 
             {/* The rest of the routes are only accessible after hitting the home page */}
@@ -111,7 +130,7 @@ const App = () => {
             {/* create certain routes only if you are a player */}
             {isPlayer?<div>
             <Route path="/vote" exact render={(props) => (<Vote {...props} userToken={userToken}/>)}/>
-            <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken} playerName={playerName} uid={'uid'}/>)}/>
+            <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken} uid={'uid'}/>)}/>
             </div>
             :null
           }

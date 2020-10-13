@@ -150,6 +150,14 @@ const SwipeNav = ({history,...props}) => {
     </ListItem>
   ))
 
+  let navRender
+
+  if(props.isPlayer || localStorage.getItem("IS_PLAYER")==="true"){
+    navRender = playerRender
+  } else{
+    navRender = visitorRender
+  }
+
   return (
     <div className={classes.root}>
       {/* <CssBaseline /> */}
@@ -191,7 +199,8 @@ const SwipeNav = ({history,...props}) => {
         </div>
         <Divider />
         <List>
-          {props.isPlayer?playerRender:visitorRender}
+          {/* {props.isPlayer?playerRender:visitorRender} */}
+          {navRender}
         </List>
       </Drawer>
     </div>

@@ -55,8 +55,11 @@ const SignUp = ({ history,...props }) => {
 
   const handleSignUp = useCallback(async event => {
     event.preventDefault();
-    const { email, password, firstname } = event.target.elements;
-    console.log(email.value,password.value,firstname.value)
+    const { email, password, firstName } = event.target.elements;
+    console.log('Email',email.value)
+    console.log('Password',password.value)
+    console.log(firstName.value)
+    console.log(email.value,password.value,firstName.value)
 
     //flask signup
     let response = await fetch('/api/signup',{
@@ -70,7 +73,7 @@ const SignUp = ({ history,...props }) => {
       body: JSON.stringify({
         email: email.value,
         password: password.value,
-        firstname:firstname.value
+        firstname:firstName.value
       })
     })
 
@@ -79,8 +82,6 @@ const SignUp = ({ history,...props }) => {
     let [token,responseStatus] = await getToken(email.value,password.value)
 
     if(responseStatus==200&&response.status==200){
-        // console.log('A response ->',response)
-
         //try and login with the credentials returned by flask
         try {
           props.setToken(token)
