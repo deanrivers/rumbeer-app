@@ -55,7 +55,6 @@ const VoteCard = (props) => {
     else updateFirstLoad(false)
   },[paceValue,shotValue,passValue,dribbleValue,defenseValue,physicalValue])
 
-
   const useStyles = makeStyles((theme) => ({
     cardGrid: {
       paddingTop: theme.spacing(8),
@@ -65,8 +64,6 @@ const VoteCard = (props) => {
       height: "100%",
       display: "flex",
       flexDirection: "column",
-      
-      
     },
     cardMedia: {
       paddingTop: "56.25%", // 16:9

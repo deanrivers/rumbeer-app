@@ -71,67 +71,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-//const cards = [1, 2, 3,4,5,6,7,8,9,10];
-
-
-
-
-// const playerStats = {
-//   'Ronaldo':{
-//     stats:[],
-    
-//   },
-//   'Messi':{
-//     stats:[],
-    
-//   }
-// }
-
-
-
-const playerStats = {
-  'Ronaldo':{
-    'stats':{
-      'PACE':'',
-      'SHO':'',
-      'PAS':'',
-      'DRI':'',
-      'DEF':'',
-      'PHY':'',
-    }
-  },
-  'Messi':{
-    'stats':{
-      'PACE':'0',
-      'SHO':'',
-      'PAS':'',
-      'DRI':'',
-      'DEF':'',
-      'PHY':'',
-    }
-  },
-  'Pogba':{
-    'stats':{
-      'PACE':'0',
-      'SHO':'',
-      'PAS':'',
-      'DRI':'',
-      'DEF':'',
-      'PHY':'',
-    }
-  }
-}
-
-const playerCards = [
-  'Ronaldo','Messi','Pogba'
-]
-
-
-
-
-
-
-
 const Vote = (props) => {
 
   const {currentUser} = useContext(AuthContext);
@@ -162,7 +101,6 @@ const Vote = (props) => {
         'Content-Type': 'application/json',
         'Authorization': token
       },
-
     })
 
     let data = await response.json()
@@ -187,7 +125,6 @@ const Vote = (props) => {
         uid = data[property]["uid"]
         obj ={uid:uid}
 
-        
         filteredArr.push({...data[property]})
       }
     }
@@ -198,12 +135,6 @@ const Vote = (props) => {
 
   }
 
-  // useEffect(()=>{
-    
-  //   if(currentUser){
-  //     updateUserUID(currentUser["uid"])
-  //   }
-  // },[userUID])
 
   //listen to player data from flask
   useEffect(()=>{
@@ -247,13 +178,10 @@ const Vote = (props) => {
 
   //functions
   const submitRatings = async () =>{
-    console.log("UID Vote",userUID)
     let tokenSession = localStorage.getItem('TOKEN')
     let updatedStats = await updatePlayerStats()
-
-    console.log('Await',updatedStats)
     
-    let response = fetch('/api/updateStats',{
+    fetch('/api/updateStats',{
       method: "POST",
       withCredentials: true,
       credentials: 'include',
@@ -266,18 +194,18 @@ const Vote = (props) => {
         updates:updatedStats,
         uid: userUID
       })
-    })
-
-
-    let data = await response.json()
-
-    console.log('Player Upload ->',data)
+    }).then(response=>response.json())
+    .then(data=>console.log(data))
   }
 
   const updatePlayerStats = async () =>{
     let currentPlayerStats = playersData
     let votedPlayerStats = voteData
     let comparedStats = []
+
+    console.log('Current Stats of players displayed ->',currentPlayerStats)
+    console.log('Voted players ->',votedPlayerStats)
+    
     
 
     //compare and update
@@ -292,47 +220,53 @@ const Vote = (props) => {
       uid = currentPlayerStats[i]["uid"]
 
       currentPlayer = votedPlayerStats[uid] 
-      // console.log('Current Player Being Evaluated ->',currentPlayer)
+      console.log('Current Player Being Evaluated ->',i,currentPlayer)
+
+      try{
+        let {pace:currentPace,shot:currentShot,pass:currentPass,dribbling:currentDribbling,defense:currentDefense,physical:currentPhysical,position} = currentPlayerStats[i]["stats"]
+        let {pace:updatePace,shot:updateShot,pass:updatePass,dribbling:updateDribbling,defense:updateDefense,physical:updatePhysical} = currentPlayer["stats"]
 
 
-      let {pace:currentPace,shot:currentShot,pass:currentPass,dribbling:currentDribbling,defense:currentDefense,physical:currentPhysical} = currentPlayerStats[i]["stats"]
-      let {pace:updatePace,shot:updateShot,pass:updatePass,dribbling:updateDribbling,defense:updateDefense,physical:updatePhysical} = currentPlayer["stats"]
-
-    
-      // console.log('Update',updatePace,updateShot,updatePass,updateDribbling,updateDefense,updatePhysical)
-      // console.log('Old',currentPace,currentShot,currentPass,currentDribbling,currentDefense,currentPhysical)
-
-
-      let pace,defense,dribbling,physical,shot,pass
-      pace = currentPace+parseInt(updatePace)
-      defense = currentDefense+parseInt(updateDefense)
-      dribbling = currentDribbling+parseInt(updateDribbling)
-      physical = currentPhysical+parseInt(updatePhysical)
-      shot = currentShot+parseInt(updateShot)
-      pass = currentPass+parseInt(updatePass)
-      
-      // comparedStats[updates] = {
-
+        let pace,defense,dribbling,physical,shot,pass
+        pace = currentPace+parseInt(updatePace)
+        defense = currentDefense+parseInt(updateDefense)
+        dribbling = currentDribbling+parseInt(updateDribbling)
+        physical = currentPhysical+parseInt(updatePhysical)
+        shot = currentShot+parseInt(updateShot)
+        pass = currentPass+parseInt(updatePass)
         
+        //calculate overall based on average of stats
+        let statsArr = [pace?pace:currentPace,defense?defense:currentDefense,dribbling?dribbling:currentDribbling,physical?physical:currentPhysical,shot?shot:currentShot,pass?pass:currentPass]
+
+        let statsSum = statsArr.reduce((a,b)=>{
+          return a + b 
+        })
+        
+        let overall = Math.floor(statsSum/statsArr.length)
+
+       
 
 
-      // }
 
-      comparedStats.push({
-        uid:uid,
-        firstname:currentPlayerStats[i]["firstname"],
-        stats:{
-          "pace": pace?pace:currentPace,
-          "defense": defense?defense:currentDefense,
-          "dribbling": dribbling?dribbling:currentDribbling,
-          "physical": physical?physical:currentPhysical,
-          "shot": shot?shot:currentShot,
-          "pass": pass?pass:currentPass
-        }
-      })
+        comparedStats.push({
+          uid:uid,
+          firstname:currentPlayerStats[i]["firstname"],
+          stats:{
+            "pace": pace?pace:currentPace,
+            "defense": defense?defense:currentDefense,
+            "dribbling": dribbling?dribbling:currentDribbling,
+            "physical": physical?physical:currentPhysical,
+            "shot": shot?shot:currentShot,
+            "pass": pass?pass:currentPass,
+            "overall":overall,
+            "position":position
+          }
+        })
+      } catch(error){
+        // console.log(error)
+      }
     }
 
-    
     return comparedStats
   }
   

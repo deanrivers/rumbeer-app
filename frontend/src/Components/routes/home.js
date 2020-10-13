@@ -81,7 +81,7 @@ const Home = (props) =>{
     let renderHeader
 
     if(props.isPlayer || localStorage.getItem("IS_PLAYER")==="true"){
-        renderHeader = <h1>Welcome {props.playerName?props.playerName:localName}</h1>
+        renderHeader = <h1>Welcome to the league, {props.playerName?props.playerName:localName}.</h1>
     } else{
         renderHeader = <h1>Welcome.</h1>
     }
@@ -96,8 +96,8 @@ const Home = (props) =>{
                     key={index}
                     name={card.firstname}
                     stats={card.stats}
-                    // overall={card.stats["overall"]}
-                    // position = {card.stats["position"]}
+                    overall={card.stats["overall"]}
+                    position = {card.stats["position"]}
                 />
             )
         }
@@ -128,10 +128,7 @@ const Home = (props) =>{
                 <h1 className="sub-header">League Standings.</h1>
                 <div className="video-container">
                     <Standings token={props.userToken}/>
-                    
-                    
                 </div>
-                
             </div>
 
             {/* <div className="vote-container grid-section">

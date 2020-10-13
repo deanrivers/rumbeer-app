@@ -16,10 +16,10 @@ const FUTCard = (props) => {
           <div class="player-card-top">
             <div class="player-master-info">
               <div class="player-rating">
-                <span>97</span>
+                <span>{props.stats["overall"]}</span>
               </div>
               <div class="player-position">
-                <span>RW</span>
+                <span>{props.stats["position"]}</span>
               </div>
               <div class="player-nation">
                 <img

@@ -99,7 +99,7 @@ def signup():
                         "dribbling": 60,
                         "physical": 60,
                         "overall": 60,
-                        "position": 60,
+                        "position": 'CM',
                         "shot": 60,
                         "pass": 60
                     }
