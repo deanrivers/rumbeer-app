@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
-#main-login-container{
+/* #main-login-container{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -12,15 +12,27 @@
     font-size: 1rem;
     background-color: #606060;
     color: white;
-}
+} */
 
 .login-container{
     /* background-color: red; */
-    width: 40%;
+    /* width: 40%; */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("../../src/assets/images/image_5.JPG"); /* The image used */
+    background-color: #cccccc; /* Used if the image is unavailable */
+    
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; 
+
     
 }
 
-.buttons-container{
+/* .buttons-container{
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -59,5 +71,5 @@
 #register-button{
     background-color: #606060;
     border: 5px solid #FF0062;
-}
+} */
 

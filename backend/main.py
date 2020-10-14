@@ -88,7 +88,7 @@ def signup():
                 isPlayer = True
                 position_value = entry["position"]
                 team_value = entry["team"]
-                country_value = entry["flag"]
+                country_value = entry["country"]
 
 
         if isPlayer:

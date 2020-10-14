@@ -1,3 +1,6 @@
+import '../../Styles/Login.css'
+
+
 import React, { useCallback, useContext, useState, useEffect } from "react";
 import { withRouter, Redirect } from "react-router";
 import app from '../../base';
@@ -43,6 +46,10 @@ const Login = ({history,...props}) => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      backgroundColor:'#FF0062',
+      backgroundColor:'white',
+      padding:'10%',
+      borderRadius:5,
     },
     avatar: {
       margin: theme.spacing(1),
@@ -124,73 +131,78 @@ const Login = ({history,...props}) => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+    <div className="login-container">
+      <Container component="main" maxWidth="xs">
+        {/* <CssBaseline /> */}
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Please login to enter.
+          </Typography>
 
-        <form className={classes.form}  onSubmit={handleLogin} >
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            
-          />
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In 
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <NavLink to="/signup">
-                <Link variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </NavLink>
+          <form className={classes.form}  onSubmit={handleLogin} >
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
               
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              
+            />
+            {/* <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            /> */}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In 
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <NavLink to="/signup">
+                  <Link variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </NavLink>
+                
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-      
-    </Container>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+        
+      </Container>
+    </div>
   );
 
 };
