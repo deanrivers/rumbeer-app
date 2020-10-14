@@ -99,29 +99,29 @@ const Home = (props) =>{
 
 
     const countryFlags = {
-        argentina:imageArgentina,
-        barbados:imageBarbados,
-        colombia:imageColombia,
-        costarica:imageCostarica,
-        elsalvador:imageElsalvador,
-        france:imageFrance,
-        guyana:imageGuyana,
-        haiti:imageHaiti,
-        honduras:imageHonduras,
-        italy:imageItaly,
-        jamaica:imageJamaica,
-        puertorico:imagePuertorico,
-        russia:imageRussia,
-        tanzania:imageTanzania,
-        trinidad:imageTrinidad,
-        usa:imageUsa,
+        'ARGENTINA':imageArgentina,
+        'BARBADOS':imageBarbados,
+        'COLOMBIA':imageColombia,
+        'COSTARICA':imageCostarica,
+        'EL SALVADOR':imageElsalvador,
+        'FRANCE':imageFrance,
+        'GUYANA':imageGuyana,
+        'HAITI':imageHaiti,
+        'HONDURAS':imageHonduras,
+        'ITALY':imageItaly,
+        'JAMAICA':imageJamaica,
+        'PUERTO RICO':imagePuertorico,
+        'RUSSIA':imageRussia,
+        'TANZANI':imageTanzania,
+        'TRINIDAD & TOBAGO':imageTrinidad,
+        'USA':imageUsa,
     }
 
     const teamLogos = {
-        ballers:ballersImage,
-        flatbush:flatbushImage,
-        beer_munich:beerMunichImage,
-        real_tobago:realTobagoImage,
+        'BALLERS FOR LIFE FC':ballersImage,
+        'FLATBUSH UNITED':flatbushImage,
+        'BEER N MUNICH':beerMunichImage,
+        'REAL TOBAGO FC':realTobagoImage,
     }
 
     
@@ -152,11 +152,12 @@ const Home = (props) =>{
                     name={card.firstname}
                     stats={card.stats}
                     overall={card.stats["overall"]}
-                    position = {card.stats["position"]}
-                    team={teamLogos.ballers}
-                    country={countryFlags.trinidad}
-                    // country={countryFlags[card.country]}
-                    // team={teamLogos[card.team]}
+                    position = {card.position}
+                    // team={teamLogos.ballers}
+                    // country={countryFlags.trinidad}
+                    country={countryFlags[card["country"].trim()]}
+                
+                    team={teamLogos[card["team"].trim()]}
                     // image={playerImages[card["email"]]}
                 />
             )

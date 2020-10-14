@@ -19,13 +19,13 @@ const FUTCard = (props) => {
                 <span>{props.stats["overall"]}</span>
               </div>
               <div class="player-position">
-                <span>{props.stats["position"]}</span>
+                <span>{props.position}</span>
               </div>
               <div class="player-nation">
                 <img
                   // src="https://selimdoyranli.com/cdn/fut-player-card/img/argentina.svg"
                   src={props.country}
-                  alt="Argentina"
+                  // alt="Argentina"
                   draggable="false"
                 />
               </div>
@@ -33,7 +33,7 @@ const FUTCard = (props) => {
                 <img
                   // src=""
                   src={props.team}
-                  alt="Barcelona"
+                  // alt="Barcelona"
                   draggable="false"
                 />
               </div>
