@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -16,7 +16,7 @@ import Link from '@material-ui/core/Link';
 
 import VoteCard from '../Common/voteCard'
 
-
+import { AuthContext } from "../../Auth";
 
 
 const Copyright = () => {
@@ -71,23 +71,263 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const cards = [1, 2, 3,4,5,6,7,8,9,10];
+const Vote = (props) => {
 
-const Vote = () => {
+  const {currentUser} = useContext(AuthContext);
+
+
+  
+  const [userUID,updateUserUID] = useState(currentUser["uid"])
+  const [playersData,updatePlayersData] = useState(null)
+
+  //frontend logic for buttons and counter
+  const [numVotes,updateNumVotes] = useState(10)
+  const [submitDisabled,updateSubmitDisabled] = useState(true)
   const [clearDisabled,updatedClearDisabled] = useState(true) 
+  const [disableAll,updateDisableAll] = useState(false)
+  
+  const [voteData,updateVoteData] = useState({})
+  const [newPlayerStats,updateNewPlayerStats] = useState({})
+
   const classes = useStyles();
+
+  const getAllStats = async (token) =>{
+    let response = await fetch('/api/allStats',{
+      method: "GET",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+    })
+
+    let data = await response.json()
+    
+    let filteredArr = []
+    // let criteria = {'stats':{
+    //   'PACE':'0',
+    //   'SHO':'',
+    //   'PAS':'',
+    //   'DRI':'',
+    //   'DEF':'',
+    //   'PHY':'',
+    // }}
+
+    let uid
+    let obj = {}
+
+
+    for (const property in data){
+      if(data[property]["isPlayer"]===true){
+        // filteredArr.push({...data[property]})
+        uid = data[property]["uid"]
+        obj ={uid:uid}
+
+        filteredArr.push({...data[property]})
+      }
+    }
+
+    // console.log('Filtered Arr ->',filteredArr)
+
+    updatePlayersData(filteredArr)
+
+  }
+
+
+  //listen to player data from flask
+  useEffect(()=>{
+    let tokenSession = localStorage.getItem('TOKEN')
+
+    if(playersData){
+      // console.log('Vote.js Players',playersData)
+    } else{
+      getAllStats(props.token?props.token:tokenSession)
+    }
+  },[playersData])
+
+  //listen to voteData
+  useEffect(()=>{
+    // console.log('Player Vote Data from effect Hook',voteData)
+    updateVoteCounter({voteData})
+  },[voteData])
+
+  //listen to the number of votes
+  useEffect(()=>{
+    console.log('Number of votes left',numVotes)
+    if(numVotes === 0){
+      updateDisableAll(true)
+    }
+
+    if(numVotes<10){
+      updatedClearDisabled(false)
+      updateSubmitDisabled(false)
+    } else if(numVotes===10){
+      updatedClearDisabled(true)
+      updateSubmitDisabled(true)
+    }
+
+    if(numVotes>0){
+      
+      updateDisableAll(false)
+    } 
+
+
+  },[numVotes])
+
+  //functions
+  const submitRatings = async () =>{
+    let tokenSession = localStorage.getItem('TOKEN')
+    let updatedStats = await updatePlayerStats()
+    
+    fetch('/api/updateStats',{
+      method: "POST",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': props.token?props.token:tokenSession
+      },
+      body: JSON.stringify({
+        updates:updatedStats,
+        uid: userUID
+      })
+    }).then(response=>response.json())
+    .then(data=>console.log(data))
+  }
+
+  const updatePlayerStats = async () =>{
+    let currentPlayerStats = playersData
+    let votedPlayerStats = voteData
+    let comparedStats = []
+
+    console.log('Current Stats of players displayed ->',currentPlayerStats)
+    console.log('Voted players ->',votedPlayerStats)
+    
+    
+
+    //compare and update
+    // console.log('current stats',currentPlayerStats)
+    // console.log('voted stats',votedPlayerStats)
+
+    let uid,currentPlayer
+
+    
+    //loop through and compare uids
+    for(let i=0;i<currentPlayerStats.length;i++){
+      uid = currentPlayerStats[i]["uid"]
+
+      currentPlayer = votedPlayerStats[uid] 
+      console.log('Current Player Being Evaluated ->',i,currentPlayer)
+
+      try{
+        let {pace:currentPace,shot:currentShot,pass:currentPass,dribbling:currentDribbling,defense:currentDefense,physical:currentPhysical,position} = currentPlayerStats[i]["stats"]
+        let {pace:updatePace,shot:updateShot,pass:updatePass,dribbling:updateDribbling,defense:updateDefense,physical:updatePhysical} = currentPlayer["stats"]
+
+
+        let pace,defense,dribbling,physical,shot,pass
+        pace = currentPace+parseInt(updatePace)
+        defense = currentDefense+parseInt(updateDefense)
+        dribbling = currentDribbling+parseInt(updateDribbling)
+        physical = currentPhysical+parseInt(updatePhysical)
+        shot = currentShot+parseInt(updateShot)
+        pass = currentPass+parseInt(updatePass)
+        
+        //calculate overall based on average of stats
+        let statsArr = [pace?pace:currentPace,defense?defense:currentDefense,dribbling?dribbling:currentDribbling,physical?physical:currentPhysical,shot?shot:currentShot,pass?pass:currentPass]
+
+        let statsSum = statsArr.reduce((a,b)=>{
+          return a + b 
+        })
+        
+        let overall = Math.floor(statsSum/statsArr.length)
+
+       
+
+
+
+        comparedStats.push({
+          uid:uid,
+          firstname:currentPlayerStats[i]["firstname"],
+          stats:{
+            "pace": pace?pace:currentPace,
+            "defense": defense?defense:currentDefense,
+            "dribbling": dribbling?dribbling:currentDribbling,
+            "physical": physical?physical:currentPhysical,
+            "shot": shot?shot:currentShot,
+            "pass": pass?pass:currentPass,
+            "overall":overall,
+            "position":position
+          }
+        })
+      } catch(error){
+        // console.log(error)
+      }
+    }
+
+    return comparedStats
+  }
+  
+  const updateVoteCounter = (data) =>{
+    // console.log('Data in vote counter ->',data)
+    // updateNumVotes(numVotes-1)
+
+    let voteData = data["voteData"]
+    let arr = []
+
+    // for(const property in voteData){
+      
+    // }
+
+    
+    //determine how many "1"s and "-1"s there
+    for(const property in voteData){
+      console.log(voteData[property]["stats"])
+      for(const innerProperty in voteData[property]["stats"]){
+        if(voteData[property]["stats"][innerProperty]==="1" || voteData[property]["stats"][innerProperty]==="-1" ){
+          arr.push('Vote')
+        }
+      }
+    }
+
+    updateNumVotes(10-arr.length)  
+  }
+
+  const resetRatings = () =>{
+    updateDisableAll(false)
+    updateSubmitDisabled(true)
+    updatedClearDisabled(true)
+    updateDisableAll(false)
+  }
+
+  //update ratings object for submission
+  const updateVoteDataState = (playerData) =>{
+    let playerDataObj = voteData
+    let player = playerData.player
+    let uid = playerData.uid
+    // console.log('Player Data ->',playerData)
+    playerDataObj[uid] = {stats:{...playerData.values},firstname:player}
+    updateVoteData({...playerDataObj})
+    
+  }
+
+  let cardRender = playersData?playersData.map((card,index)=>{
+    return(
+      <Grid item key={index} xs={12} sm={6} md={4}>
+        <VoteCard
+          player={card.firstname}
+          uid={card.uid}
+          update={updateVoteDataState}
+          disableAll={disableAll}
+        />
+      </Grid>
+    )
+  }):null
 
   return (
     <React.Fragment>
-      {/* <CssBaseline /> */}
-      {/* <AppBar position="relative">
-        <Toolbar>
-          <CameraIcon className={classes.icon} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Album layout
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
@@ -97,18 +337,18 @@ const Vote = () => {
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
               Below you will see every player that is currently enrolled in the Rum and Beer League.
-              Please Submit your ratings for last week's performance. You have a total of 5 Ratings.
+              Please Submit your ratings for last week's performance. You have a total of {numVotes} Ratings.
               Use them wisely!
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" className={classes.submitButton}>
+                  <Button variant="contained" color="primary" disabled={submitDisabled} className={classes.submitButton} onClick={()=>submitRatings()}>
                     Submit Ratings
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" className={classes.clearButton} disabled={clearDisabled}>
+                  <Button variant="outlined" className={classes.clearButton} disabled={clearDisabled} onClick={()=>resetRatings()}>
                     Clear All Ratings
                   </Button>
                 </Grid>
@@ -122,12 +362,19 @@ const Vote = () => {
 
 
 
-            
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <VoteCard/>
+            {/* create a card for each player */}
+            {/* {playerCards.map((card,index) => (
+              <Grid item key={index} xs={12} sm={6} md={4}>
+                <VoteCard
+                  player={card}
+                  update={updateVoteDataState}
+                />
               </Grid>
-            ))}
+            ))} */}
+            
+            {cardRender}
+
+
           </Grid>
         </Container>
       </main>

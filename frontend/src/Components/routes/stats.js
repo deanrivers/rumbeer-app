@@ -5,12 +5,14 @@ import Standings from '../Common/standings'
 import PlayerStats from '../Common/playerStats'
 import Roster from '../Common/roster'
 
-const Stats = () =>{
+const Stats = (props) =>{
+
+    let nameSession = localStorage.getItem('NAME')
 
     return(
         <div id="stats-main-container">
             <div className="header-container">
-                <h1 style={{marginBottom:'2%'}}>Hi, Player! <br/>Here are your <br/>stats.</h1>
+    <h1 style={{marginBottom:'2%'}}>Hi, {props.playerName?props.playerName:nameSession}! <br/>Here are your <br/>stats.</h1>
             </div>
 
             <div className="stats-section">
@@ -24,7 +26,7 @@ const Stats = () =>{
 
             <div className="stats-section">
                 <h1 className="sub-header">Standings.</h1>
-                <Standings/>
+                <Standings token={props.userToken}/>
             </div>
 
 
