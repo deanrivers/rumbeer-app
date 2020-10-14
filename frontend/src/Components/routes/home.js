@@ -12,6 +12,32 @@ import { AuthContext } from "../../Auth";
 
 import FUTCard from '../Common/futCard'
 
+//images for FUT
+//countries
+import imageArgentina from '../../assets/flags/argentina.png'
+import imageBarbados from '../../assets/flags/barbados.png'
+import imageColombia from '../../assets/flags/colombia.png'
+import imageCostarica from '../../assets/flags/costarica.png'
+import imageElsalvador from '../../assets/flags/elsalvador.png'
+import imageFrance from '../../assets/flags/france.png'
+import imageGuyana from '../../assets/flags/guyana.png'
+import imageHaiti from '../../assets/flags/haiti.png'
+import imageHonduras from '../../assets/flags/honduras.png'
+import imageItaly from '../../assets/flags/italy.png'
+import imageJamaica from '../../assets/flags/jamaica.png'
+import imagePuertorico from '../../assets/flags/puertorico.png'
+import imageRussia from '../../assets/flags/russia.png'
+import imageTanzania from '../../assets/flags/tanzania.png'
+import imageTrinidad from '../../assets/flags/trinidad.png'
+import imageUsa from '../../assets/flags/usa.png'
+
+//team logos
+import ballersImage from '../../assets/teams/ballers.png'
+import beerMunichImage from '../../assets/teams/beer_munich.png'
+import flatbushImage from '../../assets/teams/flatbush.png'
+import realTobagoImage from '../../assets/teams/real_tobago.png'
+
+
 
 const Home = (props) =>{
 
@@ -72,6 +98,35 @@ const Home = (props) =>{
     }
 
 
+    const countryFlags = {
+        argentina:imageArgentina,
+        barbados:imageBarbados,
+        colombia:imageColombia,
+        costarica:imageCostarica,
+        elsalvador:imageElsalvador,
+        france:imageFrance,
+        guyana:imageGuyana,
+        haiti:imageHaiti,
+        honduras:imageHonduras,
+        italy:imageItaly,
+        jamaica:imageJamaica,
+        puertorico:imagePuertorico,
+        russia:imageRussia,
+        tanzania:imageTanzania,
+        trinidad:imageTrinidad,
+        usa:imageUsa,
+    }
+
+    const teamLogos = {
+        ballers:ballersImage,
+        flatbush:flatbushImage,
+        beer_munich:beerMunichImage,
+        real_tobago:realTobagoImage,
+    }
+
+    
+
+    
 
 
 
@@ -98,6 +153,11 @@ const Home = (props) =>{
                     stats={card.stats}
                     overall={card.stats["overall"]}
                     position = {card.stats["position"]}
+                    team={teamLogos.ballers}
+                    country={countryFlags.trinidad}
+                    // country={countryFlags[card.country]}
+                    // team={teamLogos[card.team]}
+                    // image={playerImages[card["email"]]}
                 />
             )
         }
@@ -143,6 +203,7 @@ const Home = (props) =>{
                         size={10}
                         color={"#FF0062"}
                         loading={futDataFetched}
+                        
                     />
                     
                     

@@ -1,0 +1,13 @@
+.signup-container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("../../src/assets/images/image_3.JPG"); /* The image used */
+    background-color: #cccccc; /* Used if the image is unavailable */
+    
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; 
+}

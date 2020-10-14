@@ -23,14 +23,16 @@ const FUTCard = (props) => {
               </div>
               <div class="player-nation">
                 <img
-                  src="https://selimdoyranli.com/cdn/fut-player-card/img/argentina.svg"
+                  // src="https://selimdoyranli.com/cdn/fut-player-card/img/argentina.svg"
+                  src={props.country}
                   alt="Argentina"
                   draggable="false"
                 />
               </div>
               <div class="player-club">
                 <img
-                  src="https://selimdoyranli.com/cdn/fut-player-card/img/barcelona.svg"
+                  // src=""
+                  src={props.team}
                   alt="Barcelona"
                   draggable="false"
                 />
