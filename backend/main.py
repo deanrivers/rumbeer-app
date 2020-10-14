@@ -13,6 +13,9 @@ app = Flask(__name__,
 cred = credentials.Certificate('rumbeer-firebase-creds.json')
 firebase = firebase_admin.initialize_app(cred)
 pb = pyrebase.initialize_app(json.load(open('fbConfig.json')))
+db = pb.database()
+
+print(db.child().get().val())
 
 def check_token(f):
     @wraps(f)
@@ -47,6 +50,7 @@ def signup():
                email=email,
                password=password
         )
+
         return {'message': f'Successfully created user {user.uid}'},200
     except:
         return {'message': 'Error creating user'},400
@@ -73,6 +77,7 @@ def userinfo():
     return {"data": request.user}, 200
 
 @app.route("/api/updateStats")
+@check_token
 def update_stats():
     return {"success": True}, 200
 
