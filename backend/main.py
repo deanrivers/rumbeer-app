@@ -5,7 +5,7 @@ import sys
 import os
 from dotenv import load_dotenv, find_dotenv  # ignore-error
 from functools import wraps
-from flask import (Flask, render_template, request, jsonify, make_response)
+from flask import (Flask, render_template, request)
 from firebase_admin import credentials, auth
 
 import requests.exceptions
@@ -78,12 +78,18 @@ def signup():
         sheet_stats = db.child(SHEET_STATS_UID).child("Player Stats").get()
         sheet_stats = sheet_stats.val()[1:]
         
-
         isPlayer = False
+        position_value = ""
+        team_value = ""
+        country_value = ""
 
         for entry in sheet_stats:
             if entry["email"] == email:
                 isPlayer = True
+                position_value = entry["position"]
+                team_value = entry["team"]
+                country_value = entry["flag"]
+
 
         if isPlayer:
             db.child("Players").child(user.uid).set(
@@ -93,16 +99,18 @@ def signup():
                     "uid": user.uid,
                     "voteCounter": 0,
                     "isPlayer": isPlayer,
+                    "position": position_value,
+                    "team": team_value,
+                    "country": country_value,
                     "stats": {
                         "pace": 60,
                         "defense": 60,
                         "dribbling": 60,
                         "physical": 60,
                         "overall": 60,
-                        "position": 'CM',
                         "shot": 60,
                         "pass": 60
-                    }
+                    },
 
                 }
             )
