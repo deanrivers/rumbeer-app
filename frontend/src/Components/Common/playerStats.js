@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React , {useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -33,11 +33,40 @@ const useStyles = makeStyles((theme) => ({
 //   );
 // }
 
-const PlayerStats = () =>{
+const PlayerStats = (props) =>{
+
+  useEffect(()=>{
+    console.log('Props in playerStats.js ->',props)
+  },[])
+
   const classes = useStyles();
   const [dense, setDense] = useState(false);
   const [secondary, setSecondary] = useState(false);
   const arr = ["Matches Played","Goals Scored","Assists","Nutmegs","Hat Tricks"]
+
+  const playerStats = [
+    {
+      attr:"Matches Played",
+      value:props.matchesPlayed
+    },
+    {
+      attr:"Goals Scored",
+      value:props.goals
+    },
+    {
+      attr:"Assists",
+      value:props.assists
+    },
+    {
+      attr:"Nutmegs",
+      value:props.nutMegs
+    },
+    {
+      attr:"Blocks",
+      value:props.blocks
+    },
+
+  ]
 
   return (
     <div className={classes.root}>
@@ -49,13 +78,18 @@ const PlayerStats = () =>{
           <div className={classes.demo}>
             <List dense={dense}>
 
-            {arr.map((item,index)=>{
+            {playerStats.map((item,index)=>{
                 return(
                     <ListItem key={index}>
                         <ListItemText
-                            primary={`${item}`}
-                            secondary={secondary ? 'Secondary text' : null}
+                            primary={`${item.attr}: ${item.value}`}
+                            
                         />
+                        {/* <ListItemText
+                            primary={`${item.value}`}
+                            
+                        /> */}
+                        {/* <span>- {item.value}</span> */}
                     </ListItem>
                 )
             })}

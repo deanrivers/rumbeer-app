@@ -89,6 +89,9 @@ const Vote = (props) => {
   const [voteData,updateVoteData] = useState({})
   const [newPlayerStats,updateNewPlayerStats] = useState({})
 
+  //can the player vote?
+  const [canVote,updateCanVote] = useState(false)
+
   const classes = useStyles();
 
   const getAllStats = async (token) =>{
@@ -172,9 +175,12 @@ const Vote = (props) => {
       
       updateDisableAll(false)
     } 
-
-
   },[numVotes])
+
+      //listen to whether or not the player can vote
+  useEffect(()=>{
+    console('Can Vote?',canVote)
+  },[canVote])
 
   //functions
   const submitRatings = async () =>{

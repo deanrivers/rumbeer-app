@@ -141,6 +141,7 @@ let tokenModal = tokenExpired?<TokenModal/>:null
 
             {/* Home screen is private and should only render on authentication success. */}
             <PrivateRoute exact path="/" component={Home} userToken={userToken} isPlayer={isPlayer} playerName={playerName}/>
+
             <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}  isPlayer={isPlayer} playerName={playerName}/>)}></Route>
             
 

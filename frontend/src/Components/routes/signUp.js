@@ -30,7 +30,8 @@ const SignUp = ({ history,...props }) => {
       alignItems: 'center',
       backgroundColor:'white',
       padding:'10%',
-      borderRadius:5,
+      border:'3px solid #FF0062',
+      borderRadius:0,
     },
     avatar: {
       margin: theme.spacing(1),
@@ -42,7 +43,15 @@ const SignUp = ({ history,...props }) => {
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
+      background:'#FF0062',
+      color:'white'
     },
+    header:{
+      fontWeight:'bold'
+    },
+    link:{
+      color:'black'
+    }
   }));
   const classes = useStyles();
 
@@ -132,7 +141,7 @@ const SignUp = ({ history,...props }) => {
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" className={classes.header}>
             Sign up
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleSignUp}>
@@ -194,7 +203,7 @@ const SignUp = ({ history,...props }) => {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              // color="primary"
               className={classes.submit}
             >
               Sign Up
@@ -202,7 +211,7 @@ const SignUp = ({ history,...props }) => {
             <Grid container justify="flex-end">
               <Grid item>
                 <NavLink to="/login">
-                  <Link href="#" variant="body2">
+                  <Link href="#" variant="body2" className={classes.link}>
                     Already have an account? Sign in
                   </Link>
                 </NavLink>

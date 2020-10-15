@@ -48,7 +48,7 @@ const Login = ({history,...props}) => {
       alignItems: 'center',
       // backgroundColor:'#FF0062',
       border:'3px solid #FF0062',
-      // backgroundColor:'white',
+      backgroundColor:'white',
       padding:'10%',
       borderRadius:0,
     },
@@ -62,18 +62,41 @@ const Login = ({history,...props}) => {
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
+      background:'#FF0062',
+      color:'white'
     },
     header:{
       color:'#FF0062',
-      color:'white',
+      color:'black',
       fontWeight:'bold'
     },
     link:{
-      color:'white',
+      color:'black',
     },
-    textField:{
-      borderColor:'white'
-    }
+    // textField:{
+    //   borderColor:'white',
+    //   // backgroundColor:'red',
+    //   color:'white',
+    // },
+    // root: {
+    //   '& label.Mui-focused': {
+    //     color: 'white',
+    //   },
+    //   '& .MuiInput-underline:after': {
+    //     borderBottomColor: 'white',
+    //   },
+    //   '& .MuiOutlinedInput-root': {
+    //     '& fieldset': {
+    //       borderColor: 'red',
+    //     },
+    //     '&:hover fieldset': {
+    //       borderColor: 'yellow',
+    //     },
+    //     '&.Mui-focused fieldset': {
+    //       borderColor: 'green',
+    //     },
+    //   },
+    // },
   }));
   const classes = useStyles();
 
@@ -154,7 +177,7 @@ const Login = ({history,...props}) => {
             Please login to enter.
           </Typography>
 
-          <form className={classes.form}  onSubmit={handleLogin} >
+          <form className={classes.form}  onSubmit={handleLogin} className={classes.root}>
             <TextField
               variant="standard"
               margin="normal"
@@ -165,7 +188,12 @@ const Login = ({history,...props}) => {
               name="email"
               autoComplete="email"
               autoFocus
-              className={classes.textField}
+              // className={classes.textField}
+              InputProps={{
+                className:classes.textField,
+                border:'10px sold white'
+              }}
+
               
             />
             <TextField
@@ -188,7 +216,7 @@ const Login = ({history,...props}) => {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              // color="primary"
               className={classes.submit}
             >
               Sign In 
