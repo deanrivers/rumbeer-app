@@ -68,7 +68,7 @@ api route to sign up a new user
 @app.route("/api/signup", methods=["POST"])
 def signup():
     data = request.get_json()
-    email = data['email']
+    email = data['email'].lower()
     password = data['password']
     firstname = data['firstname']
     if email is None or password is None:
@@ -89,7 +89,7 @@ def signup():
         country_value = ""
 
         for entry in sheet_stats:
-            if entry["email"] == email:
+            if entry["email"].lower() == email:
                 isPlayer = True
                 position_value = entry["position"]
                 team_value = entry["team"]
@@ -167,14 +167,26 @@ def login():
 def week_data():
     try:
         week_dates = db.child("Weeks").get()
-
-        print(week_dates.val())
-
         response = {"weeks": week_dates.val()}
         return response, 200
 
     except:
         return {"message": "There was an error retrieving week data"}, 400
+
+
+@app.route("/api/weeklyResults", methods=["GET"])
+@check_token
+def week_results_data():
+    try:
+
+        WEEK_RESULT_UID = "15rZ-GRErVv3fjMnhaDMLbYmjDp6_Zm-rs_MYHeWWiB4"
+        week_result_stats = db.child(WEEK_RESULT_UID).child("Game Results").get()
+
+        response = {"weekResults": week_result_stats.val()[1:]}
+        return response, 200
+
+    except:
+        return {"message": "There was an error retrieving week results data"}, 400
 
 
 @app.route("/api/sheetStats", methods=["GET"])
