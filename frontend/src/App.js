@@ -1,7 +1,7 @@
 import React, { useEffect,useContext, useState } from 'react'
 import './Styles/App.css';
 
-import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect, useLocation, useHistory } from "react-router-dom";
 
 import Login from './Components/routes/login'
 import Home from './Components/routes/home'
@@ -14,6 +14,7 @@ import SwipeNav from './Components/Common/swipeNav'
 import { AuthContext, AuthProvider } from './Auth'
 import PrivateRoute from "./PrivateRoute";
 
+import TokenModal from './Components/Common/tokenModal'
 
 
 
@@ -27,6 +28,20 @@ const App = () => {
   const [isPlayer,updateIsPlayer] = useState(false)
   const [userStats,updateUserStats] = useState(null)
   const [playerName,updatePlayerName] = useState('')
+
+  const [tokenExpired,updateTokenExpired] = useState(false)
+
+  const history = useHistory();
+
+  
+
+      //listen to token expired
+  useEffect(()=>{
+    if(tokenExpired){
+        console.log('Listener -> Your session token has expired.',tokenExpired)
+        // alert('Your session token has expired. Please logout and back in.')
+    }
+  },[tokenExpired])
 
   //general component did mount
   useEffect(()=>{
@@ -60,11 +75,13 @@ const App = () => {
 
   //listen to user token
   useEffect(()=>{
+    
     if(userToken!==null){
+      
       localStorage.setItem('TOKEN', userToken);
       getUserStats(userToken)
       updateIsSignedIn(true)
-    }
+    } 
   },[userToken])
 
 
@@ -73,7 +90,7 @@ const App = () => {
   }
 
   const getUserStats = async (token) =>{
-    let response = await fetch('/api/userStats',{
+    fetch('/api/userStats',{
       method: "GET",
       withCredentials: true,
       credentials: 'include',
@@ -82,12 +99,20 @@ const App = () => {
         'Content-Type': 'application/json',
         'Authorization': token
       },
-  })
-    let data = await response.json()
+  }).then(response=>response.json())
+  .then(data=>{
+    console.log('data from app.js',data)
     updateUserStats(data)
+  })
+    // let data = await response.json()
+    // console.log('data from app.js',data)
+    
   }
 
     const logoutUser = () =>{
+      
+      console.log('History from logout',history)
+      // history.push("/")
       updateIsSignedIn(false)
   }
 
@@ -105,6 +130,7 @@ const App = () => {
 
                                 </div>
 
+let tokenModal = tokenExpired?<TokenModal/>:null
 
 
   return (
@@ -145,6 +171,7 @@ const App = () => {
 
 
       </Router>
+      {tokenModal}
     </AuthProvider>
     
     

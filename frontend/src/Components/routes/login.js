@@ -46,10 +46,11 @@ const Login = ({history,...props}) => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      backgroundColor:'#FF0062',
-      backgroundColor:'white',
+      // backgroundColor:'#FF0062',
+      border:'3px solid #FF0062',
+      // backgroundColor:'white',
       padding:'10%',
-      borderRadius:5,
+      borderRadius:0,
     },
     avatar: {
       margin: theme.spacing(1),
@@ -62,6 +63,17 @@ const Login = ({history,...props}) => {
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    header:{
+      color:'#FF0062',
+      color:'white',
+      fontWeight:'bold'
+    },
+    link:{
+      color:'white',
+    },
+    textField:{
+      borderColor:'white'
+    }
   }));
   const classes = useStyles();
 
@@ -138,13 +150,13 @@ const Login = ({history,...props}) => {
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" className={classes.header}>
             Please login to enter.
           </Typography>
 
           <form className={classes.form}  onSubmit={handleLogin} >
             <TextField
-              variant="outlined"
+              variant="standard"
               margin="normal"
               required
               fullWidth
@@ -153,10 +165,11 @@ const Login = ({history,...props}) => {
               name="email"
               autoComplete="email"
               autoFocus
+              className={classes.textField}
               
             />
             <TextField
-              variant="outlined"
+              variant="standard"
               margin="normal"
               required
               fullWidth
@@ -181,15 +194,15 @@ const Login = ({history,...props}) => {
               Sign In 
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
+              {/* <Grid item xs>
+                <Link href="#" variant="body2" className={classes.link}>
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <NavLink to="/signup">
-                  <Link variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link variant="body2" className={classes.link}>
+                    Don't have an account? Sign Up
                   </Link>
                 </NavLink>
                 

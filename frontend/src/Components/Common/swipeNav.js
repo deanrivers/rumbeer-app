@@ -158,6 +158,8 @@ const SwipeNav = ({history,...props}) => {
     navRender = visitorRender
   }
 
+  
+
   return (
     <div className={classes.root}>
       {/* <CssBaseline /> */}

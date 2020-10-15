@@ -40,8 +40,9 @@ const FUTCard = (props) => {
             </div>
             <div class="player-picture">
               <img
-                src="https://selimdoyranli.com/cdn/fut-player-card/img/messi.png"
-                alt="Messi"
+                // src="https://selimdoyranli.com/cdn/fut-player-card/img/messi.png"
+                // alt="Messi"
+                src={props.image}
                 draggable="false"
               />
 
