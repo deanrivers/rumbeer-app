@@ -13,8 +13,8 @@ import requests.exceptions
 
 app = Flask(__name__,
             static_url_path="",
-            static_folder="../frontend/build",
-            template_folder="../frontend/build")
+            static_folder="./frontend/build",
+            template_folder="./frontend/build")
 
 load_dotenv(find_dotenv())
 
@@ -48,6 +48,11 @@ def check_token(f):
             return {"message": "Invalid token provided."}, 400
         return f(*args, **kwargs)
     return wrap
+
+
+@app.route("/test")
+def test_route():
+    return {"message": "Hello World!"}, 200
 
 
 @app.route("/")
