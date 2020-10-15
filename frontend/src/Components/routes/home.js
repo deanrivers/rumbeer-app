@@ -147,7 +147,7 @@ const Home = (props) =>{
     const [dataLeagueStandings,updateDataLeagueStandings] = useState(null)
 
 
-    const [futData,updateFutData] = useState([])
+    const [futData,updateFutData] = useState(null)
     const [futDataFetched,updateFutDataFetched] = useState(false)
 
     const { currentUser } = useContext(AuthContext);
@@ -166,7 +166,7 @@ const Home = (props) =>{
     useEffect(()=>{
 
 
-        if(futData.length!==0){
+        if(futData){
             
 
             console.log('Fut data in home.js ->',futData)

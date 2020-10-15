@@ -138,6 +138,62 @@ const Vote = (props) => {
 
   }
 
+  const getWeekData = token =>{
+    fetch('/api/weekData',{
+      method: "GET",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+    }).then(response=>response.json())
+    .then(data=>console.log('Week Data',data))
+
+    //todays values
+    let today = new Date()
+    let month = today.getMonth()+1
+    let day = today.getDay()
+    let year = today.getFullYear()
+
+    //date values from data
+    let dataDates = [
+      {
+        week1:{
+          month:'',
+          day:'',
+          year:''
+        },
+        week2:{
+          month:'',
+          day:'',
+          year:''
+        },
+        week3:{
+          month:'',
+          day:'',
+          year:''
+        },
+        week4:{
+          month:'',
+          day:'',
+          year:''
+        },
+      }
+    ]
+
+    // for(const property in data){
+
+    // }
+    
+    
+
+  }
+
+  //listen to week data
+  
+
 
   //listen to player data from flask
   useEffect(()=>{
@@ -147,6 +203,7 @@ const Vote = (props) => {
       // console.log('Vote.js Players',playersData)
     } else{
       getAllStats(props.token?props.token:tokenSession)
+      getWeekData(props.token?props.token:tokenSession)
     }
   },[playersData])
 
@@ -179,7 +236,7 @@ const Vote = (props) => {
 
       //listen to whether or not the player can vote
   useEffect(()=>{
-    console('Can Vote?',canVote)
+    console.log('Can Vote?',canVote)
   },[canVote])
 
   //functions
