@@ -13,8 +13,8 @@ import requests.exceptions
 
 app = Flask(__name__,
             static_url_path="",
-            static_folder="../frontend/build",
-            template_folder="../frontend/build")
+            static_folder="./frontend/build",
+            template_folder="./frontend/build")
 
 load_dotenv(find_dotenv())
 
@@ -48,6 +48,11 @@ def check_token(f):
             return {"message": "Invalid token provided."}, 400
         return f(*args, **kwargs)
     return wrap
+
+
+@app.route("/test")
+def test_route():
+    return {"message": "Hello World!"}, 200
 
 
 @app.route("/")
@@ -152,9 +157,9 @@ def login():
 #         error_message = json.loads(httpErr.args[1])['error']['message']
 
     except Exception as e:
-        print('Error =>',e)
-        return e
-        # return {"message": "There was an error logging in"}, 400
+        # print('Error =>',e)
+        # return e
+        return {"message": "There was an error logging in"}, 400
 
 
 @app.route("/api/weekData", methods=["GET"])
@@ -231,32 +236,31 @@ def allStats():
             "uid": "1234"
             "stats": 
             {
-                "pace": 60,
-                "defense": 60,
-                "dribbling": 60,
-                "physical": 60,
-                "overall": 60,
-                "position": 60,
-                "shot": 60,
-                "pass": 60
+                "pace": "plus",
+                "defense": "minus",
+                "dribbling": "neutral",
+                "physical": "minus",
+                "overall": "plus",
+                "position": "plus",
+                "shot": "neutral",
+                "pass": "neutral"
             }
         },
         {
             "uid": "3456"
             "stats": 
             {
-                "pace": 60,
-                "defense": 60,
-                "dribbling": 60,
-                "physical": 60,
-                "overall": 60,
-                "position": "CM,
-                "shot": 60,
-                "pass": 60
+                "pace": "plus",
+                "defense": "minus",
+                "dribbling": "neutral",
+                "physical": "minus",
+                "overall": "plus",
+                "position": "plus",
+                "shot": "neutral",
+                "pass": "neutral"
             }
          },
      ], 
-     uid:'123456'
 }
 '''
 
