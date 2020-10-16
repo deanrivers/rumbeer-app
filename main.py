@@ -1,12 +1,12 @@
+from typing import NoReturn
 import firebase_admin
+from pyasn1.type.univ import Null
 import pyrebase
-import json
-import sys
 import os
 from dotenv import load_dotenv, find_dotenv  # ignore-error
 from functools import wraps
 from flask import (Flask, render_template, request)
-from firebase_admin import credentials, auth
+from firebase_admin import credentials, auth, db
 
 import requests.exceptions
 # error types
@@ -30,10 +30,11 @@ config = {
 }
 
 cred = credentials.Certificate("rumbeer-firebase-creds.json")
-firebase = firebase_admin.initialize_app(cred)
+firebase = firebase_admin.initialize_app(cred, {
+    "databaseURL": "https://rumbeer-dda6f.firebaseio.com"
+})
 pb = pyrebase.initialize_app(config)
-db = pb.database()
-
+pyre_db = pb.database()
 
 def check_token(f):
     @wraps(f)
@@ -50,11 +51,6 @@ def check_token(f):
     return wrap
 
 
-@app.route("/test")
-def test_route():
-    return {"message": "Hello World!"}, 200
-
-
 @app.route("/")
 def serve_react_build():
     return render_template("index.html")
@@ -64,6 +60,13 @@ def serve_react_build():
 api route to sign up a new user
 """
 
+@app.route("/api/test")
+def test_route():
+    try:
+        return {"message": "Hello World!"}, 200
+    except Exception as e:
+        print(e)
+        return {"message": "This shouldn't be failing!"}, 400
 
 @app.route("/api/signup", methods=["POST"])
 def signup():
@@ -80,7 +83,7 @@ def signup():
         )
 
         SHEET_STATS_UID = "1D_KECY_BEbw70UR8gvXuUZIrKy9xsEkJ7hbdeREyZpY"
-        sheet_stats = db.child(SHEET_STATS_UID).child("Player Stats").get()
+        sheet_stats = pyre_db.child(SHEET_STATS_UID).child("Player Stats").get()
         sheet_stats = sheet_stats.val()[1:]
         
         isPlayer = False
@@ -97,7 +100,7 @@ def signup():
 
 
         if isPlayer:
-            db.child("Players").child(user.uid).set(
+            pyre_db.child("Players").child(user.uid).set(
                 {
                     "email": email,
                     "firstname":firstname,
@@ -120,7 +123,7 @@ def signup():
                 }
             )
         else:
-            db.child("Players").child(user.uid).set(
+            pyre_db.child("Players").child(user.uid).set(
                 {
                     "email": email,
                     "firstname":firstname,
@@ -166,7 +169,7 @@ def login():
 @check_token
 def week_data():
     try:
-        week_dates = db.child("Weeks").get()
+        week_dates = pyre_db.child("Weeks").get()
         response = {"weeks": week_dates.val()}
         return response, 200
 
@@ -180,7 +183,7 @@ def week_results_data():
     try:
 
         WEEK_RESULT_UID = "15rZ-GRErVv3fjMnhaDMLbYmjDp6_Zm-rs_MYHeWWiB4"
-        week_result_stats = db.child(WEEK_RESULT_UID).child("Game Results").get()
+        week_result_stats = pyre_db.child(WEEK_RESULT_UID).child("Game Results").get()
 
         response = {"weekResults": week_result_stats.val()[1:]}
         return response, 200
@@ -194,7 +197,7 @@ def week_results_data():
 def sheet_stats():
     try:
         SHEET_STATS_UID = "1D_KECY_BEbw70UR8gvXuUZIrKy9xsEkJ7hbdeREyZpY"
-        sheet_stats = db.child(SHEET_STATS_UID).child("Player Stats").get()
+        sheet_stats = pyre_db.child(SHEET_STATS_UID).child("Player Stats").get()
 
         response = {"stats": sheet_stats.val()[1:]}
         return response, 200
@@ -208,7 +211,7 @@ def sheet_stats():
 def standing_stats():
     try:
         SHEET_STANDINGS_UID = "1gMonxA02kvBpRK3HoJ6hz8LXEU4vt-1YC7yE8WLyCgY"
-        standings_stats = db.child(
+        standings_stats = pyre_db.child(
             SHEET_STANDINGS_UID).child("Team Standings").get()
         response = {"standings": standings_stats.val()[1:]}
         return response, 200
@@ -222,7 +225,7 @@ def standing_stats():
 def userinfo():
     
     try:
-        user_stats = db.child("Players").child(request.user["uid"]).get()
+        user_stats = pyre_db.child("Players").child(request.user["uid"]).get()
         return user_stats.val(), 200
 
     except Exception as e:
@@ -233,7 +236,7 @@ def userinfo():
 @check_token
 def allStats():
     try:
-        user_stats = db.child("Players").get()
+        user_stats = pyre_db.child("Players").get()
         return user_stats.val(), 200
 
     except:
@@ -248,28 +251,26 @@ def allStats():
             "uid": "1234"
             "stats": 
             {
-                "pace": "plus",
-                "defense": "minus",
-                "dribbling": "neutral",
-                "physical": "minus",
-                "overall": "plus",
-                "position": "plus",
-                "shot": "neutral",
-                "pass": "neutral"
+                "pace": "+1",
+                "defense": "-1",
+                "dribbling": "0",
+                "physical": "-1",
+                "overall": "+1",
+                "shot": "0",
+                "pass": "0"
             }
         },
         {
             "uid": "3456"
             "stats": 
             {
-                "pace": "plus",
-                "defense": "minus",
-                "dribbling": "neutral",
-                "physical": "minus",
-                "overall": "plus",
-                "position": "plus",
-                "shot": "neutral",
-                "pass": "neutral"
+                "pace": "+1",
+                "defense": "-1",
+                "dribbling": "0",
+                "physical": "-1",
+                "overall": "+1",
+                "shot": "0",
+                "pass": "0"
             }
          },
      ], 
@@ -283,21 +284,43 @@ def update_stats():
     data_list = data["updates"]
     user_uid = request.user["uid"]
     
-    # user_entry = db.child("Players").child(user_uid).get().val()
+    # user_entry = pyre_db.child("Players").child(user_uid).get().val()
     # print(user_entry)
 
     try:
-
+        
         for entry in data_list:
             uid = entry["uid"]
-            stat_updates = {"stats": entry["stats"]}
-            db.child("Players").child(uid).update(stat_updates)
+            user_updates = entry["stats"]
+            player_ref  = db.reference("Players/" + uid + "/stats")
+
+            def update_player_stats(current_data):
+                if not current_data:
+                    return Null
+
+                
+                updated_stats = {
+                    "pace": int(current_data["pace"]) + int(user_updates["pace"]),
+                    "defense": int(current_data["defense"]) + int(user_updates["defense"]),
+                    "dribbling": int(current_data["dribbling"]) + int(user_updates["dribbling"]),
+                    "physical": int(current_data["physical"]) + int(user_updates["physical"]),
+                    "overall": int(current_data["overall"]) + int(user_updates["overall"]),
+                    "shot": int(current_data["shot"]) + int(user_updates["shot"]),
+                    "pass": int(current_data["pass"]) + int(user_updates["pass"]),
+                }
+
+                return updated_stats
+            
+            player_ref.transaction(update_player_stats)
         
-        user_entry = db.child("Players").child(user_uid).get().val()
+        user_entry = pyre_db.child("Players").child(user_uid).get().val()
         vote_count = user_entry["voteCounter"]
-        db.child("Players").child(user_uid).update({"voteCounter": vote_count + 1 })
+        pyre_db.child("Players").child(user_uid).update({"voteCounter": vote_count + 1 })
         
         return {"message": "Updated player stats"}, 200
+    except Exception as e:
+        print(e)
+        return {"message": "There was an error updating stats"}, 400
     except:
         return {"message": "There was an error updating stats"}, 400
 
