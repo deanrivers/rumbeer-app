@@ -38,17 +38,18 @@ const App = () => {
 
   //listen to token expired
   useEffect(()=>{
-    
+    let storageToken = localStorage.getItem('TOKEN')
     if(tokenExpired){
         console.log('User Token App.js when token expired -> ',userToken)
         console.log('Listener -> Your session token has expired.',tokenExpired)
         alert('Your session has expired. Please log out and log back in.')
+    } else if(storageToken){
+      checkToken(storageToken)
     }
   },[tokenExpired])
 
   //general component did mount
   useEffect(()=>{
-    //local storage will handle refresh
     if(localStorage.getItem("IS_PLAYER")==="true"){
       updateIsPlayer(true)
     }
@@ -77,13 +78,16 @@ const App = () => {
 
   //listen to user token
   useEffect(()=>{
+    
     if(userToken!==null){
-      checkToken(userToken)
+      
       localStorage.setItem('TOKEN', userToken);
       getUserStats(userToken)
       updateIsSignedIn(true)
     } 
   },[userToken])
+
+  
 
   
 

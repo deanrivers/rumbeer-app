@@ -6,3 +6,43 @@
     position: absolute;
     
 }
+
+.side-menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 1%;
+    top: 10%;
+    right: 2%;
+    z-index: 100;
+    position: fixed;
+}
+    
+.side-menu button{
+    color: white;
+    outline: none;
+    border-radius: 5px;
+    margin-top: 5%;
+    background:#FF0062;
+    border:none;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    padding: 3%;
+    text-transform: capitalize;
+}
+
+
+.vote-count-container{
+    padding: 5%;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    text-align: center;
+
+}
+@media only screen and (max-width: 800px){
+
+    .vote-header{
+        margin-top: 20%;
+    }
+}

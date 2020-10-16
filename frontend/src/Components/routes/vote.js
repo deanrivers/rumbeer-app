@@ -618,8 +618,21 @@ const Vote = (props) => {
       
       {canVote?
       <main style={{margin: '10%'}}>
-        <div className="header-container">
-            <h1>CAST YOUR <span className="emphasized-text"><i>VOTES</i></span> FOR PLAYERS.</h1>
+
+
+        <div className="side-menu">
+          <div className="vote-count-container">
+            <span>{numVotes} votes left!</span>
+            
+          </div>
+          {!submitDisabled?
+          <button  disabled={submitDisabled}  onClick={()=>submitRatings()}>
+              {submitDisabled?'Rate Someone!':'Submit Ratings'}
+          </button>:null
+          }
+        </div>
+        <div className="header-container vote-header">
+            <h1>CAST YOUR <span className="emphasized-text"><i>VOTES</i></span> FOR THIS WEEK.</h1>
                 
         </div>
         {/* Hero unit */}
