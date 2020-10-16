@@ -1,6 +1,4 @@
-from typing import NoReturn
 import firebase_admin
-from pyasn1.type.univ import Null
 import pyrebase
 import os
 from dotenv import load_dotenv, find_dotenv  # ignore-error
@@ -103,7 +101,7 @@ def signup():
             pyre_db.child("Players").child(user.uid).set(
                 {
                     "email": email,
-                    "firstname":firstname,
+                    "firstname": firstname,
                     "uid": user.uid,
                     "voteCounter": 0,
                     "isPlayer": isPlayer,
@@ -126,7 +124,7 @@ def signup():
             pyre_db.child("Players").child(user.uid).set(
                 {
                     "email": email,
-                    "firstname":firstname,
+                    "firstname": firstname,
                     "uid": user.uid,
                     "isPlayer": isPlayer,
                 }
@@ -296,7 +294,7 @@ def update_stats():
 
             def update_player_stats(current_data):
                 if not current_data:
-                    return Null
+                    return {}
 
                 
                 updated_stats = {
