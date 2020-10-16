@@ -15,6 +15,7 @@ import { AuthContext, AuthProvider } from './Auth'
 import PrivateRoute from "./PrivateRoute";
 
 import TokenModal from './Components/Common/tokenModal'
+import app from './base'
 
 
 
@@ -35,17 +36,18 @@ const App = () => {
 
   
 
-      //listen to token expired
+  //listen to token expired
   useEffect(()=>{
+    
     if(tokenExpired){
+        console.log('User Token App.js when token expired -> ',userToken)
         console.log('Listener -> Your session token has expired.',tokenExpired)
-        // alert('Your session token has expired. Please logout and back in.')
+        alert('Your session has expired. Please log out and log back in.')
     }
   },[tokenExpired])
 
   //general component did mount
   useEffect(()=>{
-
     //local storage will handle refresh
     if(localStorage.getItem("IS_PLAYER")==="true"){
       updateIsPlayer(true)
@@ -75,14 +77,16 @@ const App = () => {
 
   //listen to user token
   useEffect(()=>{
-    
     if(userToken!==null){
-      
+      checkToken(userToken)
       localStorage.setItem('TOKEN', userToken);
       getUserStats(userToken)
       updateIsSignedIn(true)
     } 
   },[userToken])
+
+  
+
 
 
   const setToken = (token) =>{
@@ -110,10 +114,33 @@ const App = () => {
   }
 
     const logoutUser = () =>{
-      
       console.log('History from logout',history)
+
       // history.push("/")
+      // app.auth().signOut();
+      // localStorage.clear();
       updateIsSignedIn(false)
+      // history.push('/')
+  }
+
+  const checkToken = async (token) =>{
+    fetch('/api/userStats',{
+      method: "GET",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+    }).then(response=>response.json())
+    .then(data=>{
+      if(data.status==400){
+        console.log('The session token has expired')
+        updateTokenExpired(true)
+      }
+    })
+
   }
 
   let home = isSignedIn?<Route exact path="/">
@@ -131,6 +158,9 @@ const App = () => {
                                 </div>
 
 let tokenModal = tokenExpired?<TokenModal/>:null
+let tokenExpiredRender = tokenExpired?<div id="token-modal"><button onClick={()=>logoutUser()}>Please log out</button></div>:null
+
+
 
 
   return (
@@ -172,7 +202,7 @@ let tokenModal = tokenExpired?<TokenModal/>:null
 
 
       </Router>
-      {tokenModal}
+      {/* {tokenExpiredRender} */}
     </AuthProvider>
     
     

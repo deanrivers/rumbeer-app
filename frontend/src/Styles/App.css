@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tenor+Sans&display=swap');
 
 html,body{
     font-size: 16px;
+    /* font-family: 'Tenor Sans', sans-serif; */
     font-family: 'Roboto';
     /* background-color: #F0F0F0; */
     background-color: #f4f4f4;
@@ -21,3 +23,14 @@ html,body{
 /* .signup-container,.login-container{
     margin: 20%;
 } */
+
+#token-modal{
+    height: 100vh;
+    background: rgba(35,35,35,0.9);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+}

@@ -49,8 +49,13 @@
 .header-container h1{
     margin: 0 auto;
     font-size: 8rem;
+    font-weight: 100;
     
     
+}
+
+.emphasized-text{
+    font-weight: bold;
 }
 
 .highlights-container{

@@ -44,7 +44,7 @@ def check_token(f):
             request.user = user
         except Exception as e:
             print('error',e)
-            return {"message": "Invalid token provided."}, 400
+            return {"message": "Invalid token provided.","status":400}, 400
         return f(*args, **kwargs)
     return wrap
 
@@ -71,7 +71,7 @@ def signup():
     data = request.get_json()
     email = data['email'].lower()
     password = data['password']
-    firstname = data['firstname']
+    # firstname = data['firstname']
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400
     try:
@@ -95,6 +95,7 @@ def signup():
                 position_value = entry["position"]
                 team_value = entry["team"]
                 country_value = entry["country"]
+                firstname = entry["name"]
 
 
         if isPlayer:
@@ -302,7 +303,7 @@ def update_stats():
                     "defense": int(current_data["defense"]) + int(user_updates["defense"]),
                     "dribbling": int(current_data["dribbling"]) + int(user_updates["dribbling"]),
                     "physical": int(current_data["physical"]) + int(user_updates["physical"]),
-                    "overall": int(current_data["overall"]) + int(user_updates["overall"]),
+                    "overall": "60",
                     "shot": int(current_data["shot"]) + int(user_updates["shot"]),
                     "pass": int(current_data["pass"]) + int(user_updates["pass"]),
                 }
@@ -315,12 +316,11 @@ def update_stats():
         vote_count = user_entry["voteCounter"]
         pyre_db.child("Players").child(user_uid).update({"voteCounter": vote_count + 1 })
         
-        return {"message": "Updated player stats"}, 200
+        return {"message": "Updated player stats","status":200}, 200
     except Exception as e:
         print(e)
-        return {"message": "There was an error updating stats"}, 400
-    except:
-        return {"message": "There was an error updating stats"}, 400
+        return {"message": "There was an error updating stats","status":400}, 400
+ 
 
 
 """

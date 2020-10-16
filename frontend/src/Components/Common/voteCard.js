@@ -4,7 +4,8 @@ import '../../Styles/VoteCards.css'
 import React, { useState,useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import CameraIcon from "@material-ui/icons/PhotoCamera";
+import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -35,6 +36,11 @@ const VoteCard = (props) => {
   const [defenseValue, updateDefenseValue] = useState('');
   const [physicalValue, updatePhysicalValue] = useState('');
   const [firstLoad,updateFirstLoad] = useState(true)
+
+  //component did mount
+  useEffect(()=>{
+    console.log('Props in card ->',props)
+  },[])
 
   //hook for sending back data
   useEffect(()=>{
@@ -80,7 +86,10 @@ const VoteCard = (props) => {
     },
     flippedBackgroundColor:{
       backgroundColor:"FF0062"
-    }
+    },
+    avatar: {
+      // backgroundColor: 'red',
+    },
   }));
   const classes = useStyles();
 
@@ -159,6 +168,8 @@ const VoteCard = (props) => {
     updateClearDisabled(true)
   }
 
+  
+
   return (
     <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
       {/* Front */}
@@ -166,12 +177,25 @@ const VoteCard = (props) => {
       {/* Front */}
       {/* Front */}
       <Card className={classes.card}>
+        <CardHeader
+          avatar={
+            <Avatar className={classes.avatar}
+              src={props.team}
+              alt={props.teamString}
+              variant="square"
+            />
+          }
+          
+          title={`${props.player} - ${props.position}`}
+          subheader={props.teamString}
+        />
         
         <CardMedia
           className={classes.cardMedia}
           image="https://source.unsplash.com/random"
           title={`${props.player}`}
         />
+
         <CardContent className={classes.cardContent}>
           <Typography gutterBottom variant="h5" component="h2">
             {props.player}

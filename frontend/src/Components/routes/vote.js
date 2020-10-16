@@ -1,3 +1,5 @@
+import '../../Styles/vote.css'
+
 import React, {useEffect, useState, useContext} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -18,6 +20,45 @@ import VoteCard from '../Common/voteCard'
 
 import { AuthContext } from "../../Auth";
 
+import ballersImage from '../../assets/teams/ballers.png'
+import beerMunichImage from '../../assets/teams/beer_munich.png'
+import flatbushImage from '../../assets/teams/flatbush.png'
+import realTobagoImage from '../../assets/teams/real_tobago.png'
+import SimpleModal from '../Common/tokenModal'
+
+//player images
+import imageadolfo from '../../assets/players/adolfo.png'
+import imageakeem from '../../assets/players/akeem.png'
+import imageAnatoliy from '../../assets/players/Anatoliy.png'
+import imagebaba from '../../assets/players/baba.png'
+import imagebill from '../../assets/players/bill.png'
+import imagecarlton from '../../assets/players/carlton.png'
+import imagecj from '../../assets/players/cj.png'
+import imagedaley from '../../assets/players/daley.png'
+import imagedanny from '../../assets/players/danny.png'
+import imageduke from '../../assets/players/duke.png'
+import imagefernand from '../../assets/players/fernand.png'
+import imagegivmedat from '../../assets/players/givmedat.png'
+import imagehope from '../../assets/players/hope.png'
+import imageirwing from '../../assets/players/irwing.png'
+import imagejesse from '../../assets/players/jesse.png'
+import imagekhalfani from '../../assets/players/khalfani.png'
+import imagemax from '../../assets/players/max.png'
+import imagemiguel from '../../assets/players/miguel.png'
+import imagemikhail from '../../assets/players/mikhail.png'
+import imagemoise from '../../assets/players/moise.png'
+import imagePED from '../../assets/players/PED.png'
+import imagepollo from '../../assets/players/pollo.png'
+import imagereed from '../../assets/players/reed.png'
+import imageRINAL from '../../assets/players/RINAL.png'
+import imageROSHAU from '../../assets/players/ROSHAU.png'
+import imagesantos from '../../assets/players/santos.png'
+import imagescott from '../../assets/players/scott.png'
+import imagesteph from '../../assets/players/steph.png'
+import imageteeboy from '../../assets/players/teeboy.png'
+import imagetimori from '../../assets/players/timori.png'
+import imagetommy from '../../assets/players/tommy.png'
+import imageziham from '../../assets/players/ziham.png'
 
 const Copyright = () => {
   return (
@@ -38,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   heroContent: {
     backgroundColor: theme.palette.background.paper,
+    marginTop:'10%',
     padding: theme.spacing(8, 0, 6),
   },
   heroButtons: {
@@ -64,7 +106,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
   submitButton:{
-      background: 'linear-gradient(45deg, #FF0062 30%, #FF8E53 90%)',
+      // background: 'linear-gradient(45deg, #FF0062 30%, #FF8E53 90%)',
+      // background:'black',
+      background:'#FF0062'
   },
   clearButton:{
     borderColor:'black'
@@ -90,9 +134,10 @@ const Vote = (props) => {
   const [newPlayerStats,updateNewPlayerStats] = useState({})
 
   //can the player vote?
-  const [canVote,updateCanVote] = useState(false)
+  const [canVote,updateCanVote] = useState(true)
   const [userVoteCount,updateUserVoteCount] = useState(null)
   const [weekData,updateWeekData] = useState(null)
+  const [hasVoted,updateHasVoted] = useState(false)
 
   const classes = useStyles();
 //listen to week data
@@ -112,7 +157,7 @@ const Vote = (props) => {
     let tokenSession = localStorage.getItem('TOKEN')
 
     if(playersData){
-      // console.log('Vote.js Players',playersData)
+      console.log('Vote.js Players',playersData)
     } else{
       getAllStats(props.token?props.token:tokenSession)
       getWeekData(props.token?props.token:tokenSession)
@@ -149,7 +194,10 @@ const Vote = (props) => {
 
       //listen to whether or not the player can vote
   useEffect(()=>{
-    console.log('Can Vote?',canVote)
+    // console.log('Can Vote?',canVote)
+    if(canVote){
+      console.log('You are allowed to vote!',canVote)
+    }
   },[canVote])
 
 
@@ -235,7 +283,7 @@ const Vote = (props) => {
       let votesToday = userVoteCount
       
       //todays values
-      let today = new Date()
+      let today = new Date("10/22/20")
       // console.log('Today ->',today)
       let month = today.getMonth()+1
       // let day = today.getDay()
@@ -248,16 +296,16 @@ const Vote = (props) => {
       //elligibleObj
       let elligibleObj = {
         week1:{
-          count:0
-        },
-        week2:{
           count:1
         },
-        week3:{
+        week2:{
           count:2
         },
-        week4:{
+        week3:{
           count:3
+        },
+        week4:{
+          count:4
         }
       }
 
@@ -269,12 +317,20 @@ const Vote = (props) => {
         weekDate = new Date(weeks[property])
         // console.log('Week date',weekDate)
 
-        if(today<weekDate){
-          console.log(weekDate)
+        console.log(votesToday,elligibleObj[property]["count"])
 
+        ///detemine what week we are on
+        let dateArr = ["10/18/20","10/25/20","11/1/20","11/8/20"]
+        let currentWeekEndDate
+        
+
+
+        if(today>weekDate){
+
+          
 
           //check vote counter and update state accordingly
-          if(votesToday<=elligibleObj[property]["count"]){
+          if(votesToday<elligibleObj[property]["count"]){
             console.log('You are elligible!')
             console.log('Votes Today State ->',votesToday)
             console.log('Elligible Obj Count->',elligibleObj[property]["count"])
@@ -284,9 +340,6 @@ const Vote = (props) => {
             updateCanVote(false)
             break
           }
-
-
-          break
         }
       }
 
@@ -298,6 +351,8 @@ const Vote = (props) => {
   const submitRatings = async () =>{
     let tokenSession = localStorage.getItem('TOKEN')
     let updatedStats = await updatePlayerStats()
+
+    console.log('Updated Stats ->',updatedStats)
     
     fetch('/api/updateStats',{
       method: "POST",
@@ -313,7 +368,13 @@ const Vote = (props) => {
         uid: userUID
       })
     }).then(response=>response.json())
-    .then(data=>console.log(data))
+    .then(data=>{
+      console.log('Data after submit',data)
+      if(data.status==200){
+        updateCanVote(false)
+      }
+    })
+    
   }
 
   const updatePlayerStats = async () =>{
@@ -341,42 +402,107 @@ const Vote = (props) => {
       console.log('Current Player Being Evaluated ->',i,currentPlayer)
 
       try{
-        let {pace:currentPace,shot:currentShot,pass:currentPass,dribbling:currentDribbling,defense:currentDefense,physical:currentPhysical,position} = currentPlayerStats[i]["stats"]
+        let {pace:currentPace,shot:currentShot,pass:currentPass,dribbling:currentDribbling,defense:currentDefense,physical:currentPhysical} = currentPlayerStats[i]["stats"]
         let {pace:updatePace,shot:updateShot,pass:updatePass,dribbling:updateDribbling,defense:updateDefense,physical:updatePhysical} = currentPlayer["stats"]
-
-
-        let pace,defense,dribbling,physical,shot,pass
-        pace = currentPace+parseInt(updatePace)
-        defense = currentDefense+parseInt(updateDefense)
-        dribbling = currentDribbling+parseInt(updateDribbling)
-        physical = currentPhysical+parseInt(updatePhysical)
-        shot = currentShot+parseInt(updateShot)
-        pass = currentPass+parseInt(updatePass)
+        let position = currentPlayerStats[i]["position"]
         
-        //calculate overall based on average of stats
-        let statsArr = [pace?pace:currentPace,defense?defense:currentDefense,dribbling?dribbling:currentDribbling,physical?physical:currentPhysical,shot?shot:currentShot,pass?pass:currentPass]
+        console.log('Position ->',position)
 
-        let statsSum = statsArr.reduce((a,b)=>{
-          return a + b 
-        })
-        
-        let overall = Math.floor(statsSum/statsArr.length)
+        // let pace,defense,dribbling,physical,shot,pass
+        // pace = currentPace+parseInt(updatePace)
+        // defense = currentDefense+parseInt(updateDefense)
+        // dribbling = currentDribbling+parseInt(updateDribbling)
+        // physical = currentPhysical+parseInt(updatePhysical)
+        // shot = currentShot+parseInt(updateShot)
+        // pass = currentPass+parseInt(updatePass)
+
+        //1 should be "+1"
+        //-1 should be "-1"
+        //"" should be "0"
+
+        //pace
+        if(updatePace==="1"){
+          updatePace = "+1"
+        } else if(updatePace==="-1"){
+          updatePace = "-1"
+        } else{
+          updatePace = "0"
+        }
+
+        //shot
+        if(updateShot==="1"){
+          updateShot = "+1"
+        } else if(updateShot==="-1"){
+          updateShot = "-1"
+        } else{
+          updateShot = "0"
+        }
+
+        //pass
+        if(updatePass==="1"){
+          updatePass = "+1"
+        } else if(updatePass==="-1"){
+          updatePass = "-1"
+        } else{
+          updatePass = "0"
+        }
+
+        //dribbling
+        if(updateDribbling==="1"){
+          updateDribbling = "+1"
+        } else if(updateDribbling==="-1"){
+          updateDribbling = "-1"
+        } else{
+          updateDribbling = "0"
+        }
+
+        //defense
+        if(updateDefense==="1"){
+          updateDefense = "+1"
+        } else if(updateDefense==="-1"){
+          updateDefense = "-1"
+        } else{
+          updateDefense = "0"
+        }
+
+        //physical
+        if(updatePhysical==="1"){
+          updatePhysical = "+1"
+        } else if(updatePhysical==="-1"){
+          updatePhysical = "-1"
+        } else{
+          updatePhysical = "0"
+        }
+      
 
        
 
 
 
+        // comparedStats.push({
+        //   uid:uid,
+        //   firstname:currentPlayerStats[i]["firstname"],
+        //   stats:{
+        //     "pace": pace?pace:currentPace,
+        //     "defense": defense?defense:currentDefense,
+        //     "dribbling": dribbling?dribbling:currentDribbling,
+        //     "physical": physical?physical:currentPhysical,
+        //     "shot": shot?shot:currentShot,
+        //     "pass": pass?pass:currentPass,
+        //     "overall":overall,
+        //     "position":position
+        //   }
+        // })
         comparedStats.push({
           uid:uid,
           firstname:currentPlayerStats[i]["firstname"],
           stats:{
-            "pace": pace?pace:currentPace,
-            "defense": defense?defense:currentDefense,
-            "dribbling": dribbling?dribbling:currentDribbling,
-            "physical": physical?physical:currentPhysical,
-            "shot": shot?shot:currentShot,
-            "pass": pass?pass:currentPass,
-            "overall":overall,
+            "pace": updatePace,
+            "defense": updateDefense,
+            "dribbling": updateDribbling,
+            "physical": updatePhysical,
+            "shot": updateShot,
+            "pass": updatePass,
             "position":position
           }
         })
@@ -384,6 +510,8 @@ const Vote = (props) => {
         // console.log(error)
       }
     }
+
+    // console.log('Compared Stats',comparedStats)
 
     return comparedStats
   }
@@ -423,27 +551,82 @@ const Vote = (props) => {
     
   }
 
+  const teamLogos = {
+    'BALLERS FOR LIFE FC':ballersImage,
+    'FLATBUSH UNITED':flatbushImage,
+    'BEER N MUNICH':beerMunichImage,
+    'REAL TOBAGO FC':realTobagoImage,
+}
+
+  const playerImages = {
+      "adolfo.lee@gmail.com":imageadolfo,
+      "akeem.fletcher13@gmail.com":imageakeem,
+      "scale49@aol.com":imageAnatoliy,
+      "ojemmott63@gmail.com":imagebaba,
+      "cantforgetthisone.cw@gmail.com":imagecarlton,
+      "cjdoherty6@gmail.com":imagecj,
+      "daley_goveia@live.com":imagedaley,
+      "damionbill@gmail.com":imagebill,
+      "dnoray03@gmail.com":imagedanny,
+      "dukecharles@icloud.com":imageduke,
+      "fernandgrisales@gmail.com":imagefernand,
+      "tassjnr@gmail.com":imagegivmedat,
+      "irwingforbes@gmail.com":imageirwing,
+      "jesses.fg@gmail.com":imagejesse,
+      "hopetondixon@gmail.com":imagehope,
+      "eriqk.alexander@gmail.com":imagekhalfani,
+      "webb.adrian.k@gmail.com":imagemax,
+      "topdon1359@gmail.com":imagemiguel,
+      "budhai@gmail.com":imagemikhail,
+      "smedlymoise@theswede.me":imagemoise,
+      "perdo4100@gmail.com":imagePED,
+      "luispollito53@gmail.com":imagepollo,
+      "reedfox3@gmail.com":imagereed,
+      "rinology@gmail.com":imageRINAL,
+      "davidsantos2416@gmail.com":imagesantos,
+      "scott_savory@live.com":imagescott,
+      "roshmore17@gmail.com":imageROSHAU,
+      "steph.beckford10@gmail.com":imagesteph,
+      "tbishop14@gmail.com":imageteeboy,
+      "timori207@gmail.com":imagetimori,
+      "tom_bom95@yahoo.com":imagetommy,
+      "ziham.ascencio@gmail.com":imageziham,
+  }
+
+
+
   let cardRender = playersData?playersData.map((card,index)=>{
     return(
+      canVote?
       <Grid item key={index} xs={12} sm={6} md={4}>
         <VoteCard
           player={card.firstname}
           uid={card.uid}
           update={updateVoteDataState}
-          disableAll={disableAll}
+          disableAll={disableAll?true:false}
+          image={playerImages[card.email]}
+          team={teamLogos[card.team]}
+          teamString={card.team}
+          position={card.position}
         />
-      </Grid>
+      </Grid>:null
     )
   }):null
 
   return (
     <React.Fragment>
-      <main>
+      
+      {canVote?
+      <main style={{margin: '10%'}}>
+        <div className="header-container">
+            <h1>CAST YOUR <span className="emphasized-text"><i>VOTES</i></span> FOR PLAYERS.</h1>
+                
+        </div>
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Player Ratings
+            <Typography component="h2" variant="h2" align="center" color="textPrimary" gutterBottom>
+              Player Ratings.
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
               Below you will see every player that is currently enrolled in the Rum and Beer League.
@@ -454,13 +637,13 @@ const Vote = (props) => {
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary" disabled={submitDisabled} className={classes.submitButton} onClick={()=>submitRatings()}>
-                    Submit Ratings
+                    {submitDisabled?'Rate Someone!':'Submit Ratings'}
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" className={classes.clearButton} disabled={clearDisabled} onClick={()=>resetRatings()}>
+                  {/* <Button variant="outlined" className={classes.clearButton} disabled={clearDisabled} onClick={()=>resetRatings()}>
                     Clear All Ratings
-                  </Button>
+                  </Button> */}
                 </Grid>
               </Grid>
             </div>
@@ -469,26 +652,24 @@ const Vote = (props) => {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-
-
-
-            {/* create a card for each player */}
-            {/* {playerCards.map((card,index) => (
-              <Grid item key={index} xs={12} sm={6} md={4}>
-                <VoteCard
-                  player={card}
-                  update={updateVoteDataState}
-                />
-              </Grid>
-            ))} */}
-            
             {cardRender}
-
-
           </Grid>
         </Container>
-      </main>
+      </main>:
+      <div className={classes.heroContent}>
+      <Container maxWidth="sm">
+        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+          You can no longer vote! Come back next week.
+        </Typography>
+        <Typography variant="h5" align="center" color="textSecondary" paragraph>
+          Each player is only allowed one voting session per week. Please come back next week.
+        </Typography>
+      </Container>
+    </div>}
+
+
       {/* Footer */}
+      
       <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
           Footer
@@ -498,7 +679,13 @@ const Vote = (props) => {
         </Typography>
         <Copyright />
       </footer>
-      {/* End footer */}
+
+      
+
+
+
+
+      
     </React.Fragment>
   );
 }

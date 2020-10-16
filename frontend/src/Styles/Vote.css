@@ -1,0 +1,8 @@
+#cant-vote-container{
+    z-index: 10;
+    height: 100vh;
+    background-color: whitesmoke;
+    z-index: 100;
+    position: absolute;
+    
+}

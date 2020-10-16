@@ -41,14 +41,14 @@ const Roster = (props) => {
   
 
   useEffect(()=>{
-    console.log('Props in roster.js ->',props)
+    // console.log('Props in roster.js ->',props)
     determineTeam(props.sheetStats.stats)
   },[])
 
 
   useEffect(()=>{
     if(teamPlayers){
-      console.log('Team Players',teamPlayers)
+      // console.log('Team Players',teamPlayers)
       const rows = teamPlayers.map( item =>{
         return createData(item.name,item.position,item.matchesPlayed,item.goals,item.assists,item.nutMegs,item.blocks)
       })

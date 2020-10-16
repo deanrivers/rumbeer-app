@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 const FUTCard = (props) => {
 
     useEffect(()=>{
-      console.log('Props in futCard.js',props)
+      // console.log('Props in futCard.js',props)
     },[])
 
     return (

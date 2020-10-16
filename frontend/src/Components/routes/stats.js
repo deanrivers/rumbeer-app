@@ -12,7 +12,6 @@ const Stats = (props) =>{
     const [sheetStats,updateSheetStats] = useState(null)
     const [userStats,updateUserStats] = useState(null)
     const [pageStats,updatePageStats] = useState(null)
-
     const [userStatsDone,updateUserStatsDone] = useState(false)
     
 
@@ -41,15 +40,17 @@ const Stats = (props) =>{
     },[sheetStats,userStats])
 
     const filterStats = (userStats,sheetStats)=>{
+        // console.log('filter triggered',userStats)
         try{
             let email = userStats.email
             let sheetStatsArr = sheetStats.stats
 
-            console.log(email,sheetStatsArr)
+            // console.log(email,sheetStatsArr)
 
             for(let i=0;i<sheetStatsArr.length;i++){
-                if(sheetStatsArr[i]["email"]===email){
-                    console.log(sheetStatsArr[i])
+                // console.log(sheetStatsArr[i])
+                if(sheetStatsArr[i]["email"].toLowerCase()===email){
+                    // console.log(sheetStatsArr[i])
                     updatePageStats(sheetStatsArr[i])
                     updateUserStatsDone(true)
                 }
@@ -71,11 +72,11 @@ const Stats = (props) =>{
                 },
             }).then(response=>response.json())
             .then(data=>{
-                console.log('Sheet Stats response ->',data)
+                // console.log('Sheet Stats response ->',data)
                 
                 updateSheetStats(data)
             })
-        }
+    }
 
     const getCurrentUser = (token) =>{
         fetch('/api/userStats',{
@@ -89,7 +90,7 @@ const Stats = (props) =>{
                 },
             }).then(response=>response.json())
             .then(data=>updateUserStats(data))
-        }
+    }
 
 
     
@@ -106,7 +107,7 @@ const Stats = (props) =>{
     return(
         <div id="stats-main-container">
             <div className="header-container">
-                <h1 style={{marginBottom:'2%'}}>Hi, {props.playerName?props.playerName:nameSession}! <br/>Here is some <br/>data.</h1>
+                <h1 style={{marginBottom:'2%'}}>SOME SPORTS <br/><span className="emphasized-text"><i>DATA</i></span>.</h1>
             </div>
 
             <div className="stats-section">

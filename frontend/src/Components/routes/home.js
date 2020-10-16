@@ -154,8 +154,12 @@ const Home = (props) =>{
 
     const [tokenExpired,updateTokenExpired] = useState(false)
 
-
-
+    //component did mount
+    useEffect(()=>{
+        //console.log('Props in home.js ->',props)
+        //fetch FUT info...'api/allStats
+        getFUTData(props.userToken?props.userToken:localStorage.getItem('TOKEN'))
+    },[])
 
     //league standings listener
     useEffect(()=>{
@@ -164,26 +168,10 @@ const Home = (props) =>{
 
     //futData listener
     useEffect(()=>{
-
-
+ 
         if(futData){
-            
-
-            console.log('Fut data in home.js ->',futData)
-
         }
     },[futData])
-
-
-
-    //component did mount
-    useEffect(()=>{
-        console.log('Props in home.js ->',props)
-        //fetch FUT info...'api/allStats
-        getFUTData(props.userToken?props.userToken:localStorage.getItem('TOKEN'))
-    },[])
-
-
 
     const getFUTData = async (token) =>{
         let response = await fetch('/api/allStats',{
@@ -198,7 +186,7 @@ const Home = (props) =>{
         })
           let data = await response.json()
           let futDataArr = []
-          console.log('All Stats for Fifa ->',data)
+        //   console.log('All Stats for Fifa ->',data)
 
         //   if(response.status==400){
         //     //console.log('Token Expired.')
@@ -244,38 +232,38 @@ const Home = (props) =>{
     }
 
     const playerImages = {
-        "ADOLFO.LEE@GMAIL.COM":imageadolfo,
-        "AKEEM.FLETCHER13@GMAIL.COM":imageakeem,
-        "SCALE49@AOL.COM":imageAnatoliy,
-        "OJEMMOTT63@GMAIL.COM":imagebaba,
-        "CANTFORGETTHISONE.CW@GMAIL.COM":imagecarlton,
-        "CJDOHERTY6@GMAIL.COM":imagecj,
-        "DALEY_GOVEIA@LIVE.COM":imagedaley,
-        "DAMIONBILL@GMAIL.COM":imagebill,
-        "DNORAY03@GMAIL.COM":imagedanny,
-        "DUKECHARLES@ICLOUD.COM":imageduke,
-        "FERNANDGRISALES@GMAIL.COM":imagefernand,
-        "TASSJNR@GMAIL.COM":imagegivmedat,
-        "IRWINGFORBES@GMAIL.COM":imageirwing,
-        "JESSES.FG@GMAIL.COM":imagejesse,
-        "HOPETONDIXON@GMAIL.COM":imagehope,
-        "ERIQK.ALEXANDER@GMAIL.COM":imagekhalfani,
-        "WEBB.ADRIAN.K@GMAIL.COM":imagemax,
-        "TOPDON1359@GMAIL.COM":imagemiguel,
-        "BUDHAI@GMAIL.COM":imagemikhail,
-        "SMEDLYMOISE@THESWEDE.ME":imagemoise,
-        "PERDO4100@GMAIL.COM":imagePED,
-        "LUISPOLLITO53@GMAIL.COM":imagepollo,
-        "REEDFOX3@GMAIL.COM":imagereed,
-        "RINOLOGY@GMAIL.COM":imageRINAL,
-        "DAVIDSANTOS2416@GMAIL.COM":imagesantos,
-        "SCOTT_SAVORY@LIVE.COM":imagescott,
-        "ROSHMORE17@GMAIL.COM":imageROSHAU,
-        "STEPH.BECKFORD10@GMAIL.COM":imagesteph,
-        "TBISHOP14@GMAIL.COM":imageteeboy,
-        "TIMORI207@GMAIL.COM":imagetimori,
-        "TOM_BOM95@YAHOO.COM":imagetommy,
-        "ZIHAM.ASCENCIO@GMAIL.COM":imageziham,
+        "adolfo.lee@gmail.com":imageadolfo,
+        "akeem.fletcher13@gmail.com":imageakeem,
+        "scale49@aol.com":imageAnatoliy,
+        "ojemmott63@gmail.com":imagebaba,
+        "cantforgetthisone.cw@gmail.com":imagecarlton,
+        "cjdoherty6@gmail.com":imagecj,
+        "daley_goveia@live.com":imagedaley,
+        "damionbill@gmail.com":imagebill,
+        "dnoray03@gmail.com":imagedanny,
+        "dukecharles@icloud.com":imageduke,
+        "fernandgrisales@gmail.com":imagefernand,
+        "tassjnr@gmail.com":imagegivmedat,
+        "irwingforbes@gmail.com":imageirwing,
+        "jesses.fg@gmail.com":imagejesse,
+        "hopetondixon@gmail.com":imagehope,
+        "eriqk.alexander@gmail.com":imagekhalfani,
+        "webb.adrian.k@gmail.com":imagemax,
+        "topdon1359@gmail.com":imagemiguel,
+        "budhai@gmail.com":imagemikhail,
+        "smedlymoise@theswede.me":imagemoise,
+        "perdo4100@gmail.com":imagePED,
+        "luispollito53@gmail.com":imagepollo,
+        "reedfox3@gmail.com":imagereed,
+        "rinology@gmail.com":imageRINAL,
+        "davidsantos2416@gmail.com":imagesantos,
+        "scott_savory@live.com":imagescott,
+        "roshmore17@gmail.com":imageROSHAU,
+        "steph.beckford10@gmail.com":imagesteph,
+        "tbishop14@gmail.com":imageteeboy,
+        "timori207@gmail.com":imagetimori,
+        "tom_bom95@yahoo.com":imagetommy,
+        "ziham.ascencio@gmail.com":imageziham,
     }
 
     //token expired render
@@ -294,7 +282,7 @@ const Home = (props) =>{
     let renderHeader
 
     if(props.isPlayer || localStorage.getItem("IS_PLAYER")==="true"){
-        renderHeader = <h1>Welcome to the league, {props.playerName?props.playerName:localName}.</h1>
+        renderHeader = <h1>WELCOME TO THE RUM & BEER LEAGUE, <span className="emphasized-text"><i>{props.playerName?props.playerName:localName}</i></span>.</h1>
     } else{
         renderHeader = <h1>Welcome.</h1>
     }
@@ -310,7 +298,7 @@ const Home = (props) =>{
             let email = card.email
             let team = card.team
             let country = card.country
-            console.log('Individual card details->',email,team,country)
+            //console.log('Individual card details->',email,team,country)
             return(
                 <FUTCard
                     key={index}

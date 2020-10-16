@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const PlayerStats = (props) =>{
 
   useEffect(()=>{
-    console.log('Props in playerStats.js ->',props)
+    // console.log('Props in playerStats.js ->',props)
   },[])
 
   const classes = useStyles();
