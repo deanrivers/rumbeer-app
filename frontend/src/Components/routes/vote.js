@@ -91,8 +91,67 @@ const Vote = (props) => {
 
   //can the player vote?
   const [canVote,updateCanVote] = useState(false)
+  const [userVoteCount,updateUserVoteCount] = useState(null)
+  const [weekData,updateWeekData] = useState(null)
 
   const classes = useStyles();
+//listen to week data
+  
+  useEffect(()=>{
+    
+    
+    if(userVoteCount!==null&&weekData){
+      console.log('Vote Counter State ->',userVoteCount)
+      determineEligibility(weekData)
+    }
+  },[userVoteCount,weekData])
+
+
+  //listen to player data from flask
+  useEffect(()=>{
+    let tokenSession = localStorage.getItem('TOKEN')
+
+    if(playersData){
+      // console.log('Vote.js Players',playersData)
+    } else{
+      getAllStats(props.token?props.token:tokenSession)
+      getWeekData(props.token?props.token:tokenSession)
+      getVoteCount(props.token?props.token:tokenSession)
+    }
+  },[playersData])
+
+  //listen to voteData
+  useEffect(()=>{
+    // console.log('Player Vote Data from effect Hook',voteData)
+    updateVoteCounter({voteData})
+  },[voteData])
+
+  //listen to the number of votes
+  useEffect(()=>{
+    console.log('Number of votes left',numVotes)
+    if(numVotes === 0){
+      updateDisableAll(true)
+    }
+
+    if(numVotes<10){
+      updatedClearDisabled(false)
+      updateSubmitDisabled(false)
+    } else if(numVotes===10){
+      updatedClearDisabled(true)
+      updateSubmitDisabled(true)
+    }
+
+    if(numVotes>0){
+      
+      updateDisableAll(false)
+    } 
+  },[numVotes])
+
+      //listen to whether or not the player can vote
+  useEffect(()=>{
+    console.log('Can Vote?',canVote)
+  },[canVote])
+
 
   const getAllStats = async (token) =>{
     let response = await fetch('/api/allStats',{
@@ -149,95 +208,91 @@ const Vote = (props) => {
         'Authorization': token
       },
     }).then(response=>response.json())
-    .then(data=>console.log('Week Data',data))
+    .then(weekData=>{
 
-    //todays values
-    let today = new Date()
-    let month = today.getMonth()+1
-    let day = today.getDay()
-    let year = today.getFullYear()
-
-    //date values from data
-    let dataDates = [
-      {
-        week1:{
-          month:'',
-          day:'',
-          year:''
-        },
-        week2:{
-          month:'',
-          day:'',
-          year:''
-        },
-        week3:{
-          month:'',
-          day:'',
-          year:''
-        },
-        week4:{
-          month:'',
-          day:'',
-          year:''
-        },
-      }
-    ]
-
-    // for(const property in data){
-
-    // }
-    
-    
+      console.log('Week data ->',weekData)
+      updateWeekData(weekData.weeks)
+    })
 
   }
 
-  //listen to week data
+  const getVoteCount = (token) =>{
+    fetch('/api/userStats',{
+      method: "GET",
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+    }).then(response=>response.json())
+    .then(data=>updateUserVoteCount(data.voteCounter))
+  }
   
-
-
-  //listen to player data from flask
-  useEffect(()=>{
-    let tokenSession = localStorage.getItem('TOKEN')
-
-    if(playersData){
-      // console.log('Vote.js Players',playersData)
-    } else{
-      getAllStats(props.token?props.token:tokenSession)
-      getWeekData(props.token?props.token:tokenSession)
-    }
-  },[playersData])
-
-  //listen to voteData
-  useEffect(()=>{
-    // console.log('Player Vote Data from effect Hook',voteData)
-    updateVoteCounter({voteData})
-  },[voteData])
-
-  //listen to the number of votes
-  useEffect(()=>{
-    console.log('Number of votes left',numVotes)
-    if(numVotes === 0){
-      updateDisableAll(true)
-    }
-
-    if(numVotes<10){
-      updatedClearDisabled(false)
-      updateSubmitDisabled(false)
-    } else if(numVotes===10){
-      updatedClearDisabled(true)
-      updateSubmitDisabled(true)
-    }
-
-    if(numVotes>0){
+  const determineEligibility = (weeks) =>{
+      console.log('Determine Eligibility ->',weeks)
+      let votesToday = userVoteCount
       
-      updateDisableAll(false)
-    } 
-  },[numVotes])
+      //todays values
+      let today = new Date()
+      // console.log('Today ->',today)
+      let month = today.getMonth()+1
+      // let day = today.getDay()
+      // let year = today.getFullYear()
+      // let currentWeek
 
-      //listen to whether or not the player can vote
-  useEffect(()=>{
-    console.log('Can Vote?',canVote)
-  },[canVote])
+      //week values
+      let weekDate
+
+      //elligibleObj
+      let elligibleObj = {
+        week1:{
+          count:0
+        },
+        week2:{
+          count:1
+        },
+        week3:{
+          count:2
+        },
+        week4:{
+          count:3
+        }
+      }
+
+      //determine which week we are in.
+      //loop through  weeks...if the current date is less than, move to next week and stop
+      for(const property in weeks){
+        
+        // console.log(weeks[property])
+        weekDate = new Date(weeks[property])
+        // console.log('Week date',weekDate)
+
+        if(today<weekDate){
+          console.log(weekDate)
+
+
+          //check vote counter and update state accordingly
+          if(votesToday<=elligibleObj[property]["count"]){
+            console.log('You are elligible!')
+            console.log('Votes Today State ->',votesToday)
+            console.log('Elligible Obj Count->',elligibleObj[property]["count"])
+            updateCanVote(true)
+            break
+          } else{
+            updateCanVote(false)
+            break
+          }
+
+
+          break
+        }
+      }
+
+ 
+  
+  }
 
   //functions
   const submitRatings = async () =>{
@@ -334,16 +389,8 @@ const Vote = (props) => {
   }
   
   const updateVoteCounter = (data) =>{
-    // console.log('Data in vote counter ->',data)
-    // updateNumVotes(numVotes-1)
-
     let voteData = data["voteData"]
     let arr = []
-
-    // for(const property in voteData){
-      
-    // }
-
     
     //determine how many "1"s and "-1"s there
     for(const property in voteData){
