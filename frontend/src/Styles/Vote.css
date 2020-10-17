@@ -28,7 +28,8 @@
     border:none;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     padding: 3%;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    cursor: pointer;
 }
 
 

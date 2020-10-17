@@ -39,7 +39,7 @@ const VoteCard = (props) => {
 
   //component did mount
   useEffect(()=>{
-    console.log('Props in card ->',props)
+    // console.log('Props in card ->',props)
   },[])
 
   //hook for sending back data

@@ -140,10 +140,9 @@ const Vote = (props) => {
   const [hasVoted,updateHasVoted] = useState(false)
 
   const classes = useStyles();
-//listen to week data
   
+  //listen to week data
   useEffect(()=>{
-    
     
     if(userVoteCount!==null&&weekData){
       console.log('Vote Counter State ->',userVoteCount)
@@ -173,7 +172,7 @@ const Vote = (props) => {
 
   //listen to the number of votes
   useEffect(()=>{
-    console.log('Number of votes left',numVotes)
+    // console.log('Number of votes left',numVotes)
     if(numVotes === 0){
       updateDisableAll(true)
     }
@@ -187,7 +186,6 @@ const Vote = (props) => {
     }
 
     if(numVotes>0){
-      
       updateDisableAll(false)
     } 
   },[numVotes])
@@ -283,65 +281,90 @@ const Vote = (props) => {
       let votesToday = userVoteCount
       
       //todays values
-      let today = new Date("10/22/20")
-      // console.log('Today ->',today)
-      let month = today.getMonth()+1
-      // let day = today.getDay()
-      // let year = today.getFullYear()
-      // let currentWeek
+      let today = new Date("10/19/20")
 
       //week values
-      let weekDate
+      let weekDateStart,weekDateEnd,elligibleCount
 
       //elligibleObj
       let elligibleObj = {
-        week1:{
+        "10/18/20":{
           count:1
         },
-        week2:{
+        "10/25/20":{
           count:2
         },
-        week3:{
+        "11/1/20":{
           count:3
         },
-        week4:{
+        "11/8/20":{
           count:4
         }
+      }
+      let dateArr = ["10/18/20","10/25/20","11/1/20","11/8/20"]
+      let firstDay = new Date(dateArr[0])
+
+      for(let i=0;i<dateArr.length;i++){
+        weekDateStart = new Date(dateArr[i])
+        weekDateEnd = new Date(dateArr[i+1])
+
+        if(today<firstDay){
+          elligibleCount = 0
+          console.log(today,firstDay)
+          console.log('League hasnt started yet!')
+          updateCanVote(false)
+          break
+        }
+
+        if(today>weekDateStart&&today<weekDateEnd){
+          elligibleCount = elligibleObj[dateArr[i]]
+          break
+        } else if(dateArr[i]=="11/8/20"){
+          elligibleCount = elligibleObj[dateArr[i]]
+          console.log('Else triggered',weekDateStart,weekDateEnd)
+          break
+        } 
+      }
+
+      console.log('Votes as of today ->',votesToday)
+      console.log('Votes elligible ->',elligibleCount)
+
+      if(votesToday<elligibleCount.count){
+        console.log('You are eligible!')
+        updateCanVote(true)
+      } else{
+        console.log('You are not eligible.')
+        updateCanVote(false)
       }
 
       //determine which week we are in.
       //loop through  weeks...if the current date is less than, move to next week and stop
-      for(const property in weeks){
+      // for(const property in weeks){
         
-        // console.log(weeks[property])
-        weekDate = new Date(weeks[property])
-        // console.log('Week date',weekDate)
+      //   // console.log(weeks[property])
+      //   weekDate = new Date(weeks[property])
+      //   // console.log('Week date',weekDate)
 
-        console.log(votesToday,elligibleObj[property]["count"])
+      //   console.log('Votes as of today ->',votesToday)
+      //   console.log('Votes eligible for ->',elligibleObj[property]["count"])
 
-        ///detemine what week we are on
-        let dateArr = ["10/18/20","10/25/20","11/1/20","11/8/20"]
-        let currentWeekEndDate
+      //   ///detemine what week we are on
         
-
-
-        if(today>weekDate){
-
-          
-
-          //check vote counter and update state accordingly
-          if(votesToday<elligibleObj[property]["count"]){
-            console.log('You are elligible!')
-            console.log('Votes Today State ->',votesToday)
-            console.log('Elligible Obj Count->',elligibleObj[property]["count"])
-            updateCanVote(true)
-            break
-          } else{
-            updateCanVote(false)
-            break
-          }
-        }
-      }
+      //   let currentWeekEndDate
+        
+      //   if(today>weekDate){
+      //     //check vote counter and update state accordingly
+      //     if(votesToday<elligibleObj[property]["count"]){
+      //       console.log('You are elligible!')
+      //       updateCanVote(true)
+      //       break
+      //     } else{
+      //       console.log('You are not elligible.')
+      //       updateCanVote(false)
+      //       break
+      //     }
+      //   }
+      // }
 
  
   
@@ -474,25 +497,6 @@ const Vote = (props) => {
           updatePhysical = "0"
         }
       
-
-       
-
-
-
-        // comparedStats.push({
-        //   uid:uid,
-        //   firstname:currentPlayerStats[i]["firstname"],
-        //   stats:{
-        //     "pace": pace?pace:currentPace,
-        //     "defense": defense?defense:currentDefense,
-        //     "dribbling": dribbling?dribbling:currentDribbling,
-        //     "physical": physical?physical:currentPhysical,
-        //     "shot": shot?shot:currentShot,
-        //     "pass": pass?pass:currentPass,
-        //     "overall":overall,
-        //     "position":position
-        //   }
-        // })
         comparedStats.push({
           uid:uid,
           firstname:currentPlayerStats[i]["firstname"],
@@ -522,7 +526,7 @@ const Vote = (props) => {
     
     //determine how many "1"s and "-1"s there
     for(const property in voteData){
-      console.log(voteData[property]["stats"])
+      // console.log(voteData[property]["stats"])
       for(const innerProperty in voteData[property]["stats"]){
         if(voteData[property]["stats"][innerProperty]==="1" || voteData[property]["stats"][innerProperty]==="-1" ){
           arr.push('Vote')
@@ -622,12 +626,12 @@ const Vote = (props) => {
 
         <div className="side-menu">
           <div className="vote-count-container">
-            <span>{numVotes} votes left!</span>
+            <span>{numVotes} VOTES LEFT!</span>
             
           </div>
           {!submitDisabled?
           <button  disabled={submitDisabled}  onClick={()=>submitRatings()}>
-              {submitDisabled?'Rate Someone!':'Submit Ratings'}
+              SUBMIT RATINGS
           </button>:null
           }
         </div>
