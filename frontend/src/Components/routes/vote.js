@@ -27,38 +27,40 @@ import realTobagoImage from '../../assets/teams/real_tobago.png'
 import SimpleModal from '../Common/tokenModal'
 
 //player images
-import imageadolfo from '../../assets/players/adolfo.png'
-import imageakeem from '../../assets/players/akeem.png'
-import imageAnatoliy from '../../assets/players/Anatoliy.png'
-import imagebaba from '../../assets/players/baba.png'
-import imagebill from '../../assets/players/bill.png'
-import imagecarlton from '../../assets/players/carlton.png'
-import imagecj from '../../assets/players/cj.png'
-import imagedaley from '../../assets/players/daley.png'
-import imagedanny from '../../assets/players/danny.png'
-import imageduke from '../../assets/players/duke.png'
-import imagefernand from '../../assets/players/fernand.png'
-import imagegivmedat from '../../assets/players/givmedat.png'
-import imagehope from '../../assets/players/hope.png'
-import imageirwing from '../../assets/players/irwing.png'
-import imagejesse from '../../assets/players/jesse.png'
-import imagekhalfani from '../../assets/players/khalfani.png'
-import imagemax from '../../assets/players/max.png'
-import imagemiguel from '../../assets/players/miguel.png'
-import imagemikhail from '../../assets/players/mikhail.png'
-import imagemoise from '../../assets/players/moise.png'
-import imagePED from '../../assets/players/PED.png'
-import imagepollo from '../../assets/players/pollo.png'
-import imagereed from '../../assets/players/reed.png'
-import imageRINAL from '../../assets/players/RINAL.png'
-import imageROSHAU from '../../assets/players/ROSHAU.png'
-import imagesantos from '../../assets/players/santos.png'
-import imagescott from '../../assets/players/scott.png'
-import imagesteph from '../../assets/players/steph.png'
-import imageteeboy from '../../assets/players/teeboy.png'
-import imagetimori from '../../assets/players/timori.png'
-import imagetommy from '../../assets/players/tommy.png'
-import imageziham from '../../assets/players/ziham.png'
+
+
+import imagepedro from '../../assets/vote_cards/pedro.png'
+import imageadolfo from '../../assets/vote_cards/adolfo.png'
+import imageakeem from '../../assets/vote_cards/akeem.png'
+import imageanatoliy from '../../assets/vote_cards/anatoliy.png'
+import imagebaba from '../../assets/vote_cards/baba.png'
+import imagecarlton from '../../assets/vote_cards/carlton.png'
+import imagecj from '../../assets/vote_cards/cj.png'
+import imagedaley from '../../assets/vote_cards/daley.png'
+import imagedamion from '../../assets/vote_cards/damion.png'
+import imagedanny from '../../assets/vote_cards/danny.png'
+import imageduke from '../../assets/vote_cards/duke.png'
+import imagefernand from '../../assets/vote_cards/fernand.png'
+import imagegivemedat from '../../assets/vote_cards/givemedat.png'
+import imagehope from '../../assets/vote_cards/hope.png'
+import imageirwing from '../../assets/vote_cards/irwing.png'
+import imagejesse from '../../assets/vote_cards/jesse.png'
+import imagekhalfani from '../../assets/vote_cards/khalfani.png'
+import imagemax from '../../assets/vote_cards/max.png'
+import imagemiguel from '../../assets/vote_cards/miguel.png'
+import imagemikhail from '../../assets/vote_cards/mikhail.png'
+import imagemoses from '../../assets/vote_cards/moses.png'
+import imagepollo from '../../assets/vote_cards/pollo.png'
+import imagereed from '../../assets/vote_cards/reed.png'
+import imagerinaldy from '../../assets/vote_cards/Rinaldy.png'
+import imagesantos from '../../assets/vote_cards/santos.png'
+import imagescott from '../../assets/vote_cards/scott.png'
+import imageshaun from '../../assets/vote_cards/shaun.png'
+import imagestephon from '../../assets/vote_cards/stephon.png'
+import imagetheo from '../../assets/vote_cards/theo.png'
+import imagetimori from '../../assets/vote_cards/timori.png'
+import imagetommy from '../../assets/vote_cards/tommy.png'
+import imageziham from '../../assets/vote_cards/ziham.png'
 
 const Copyright = () => {
   return (
@@ -565,16 +567,16 @@ const Vote = (props) => {
   const playerImages = {
       "adolfo.lee@gmail.com":imageadolfo,
       "akeem.fletcher13@gmail.com":imageakeem,
-      "scale49@aol.com":imageAnatoliy,
+      "scale49@aol.com":imageanatoliy,
       "ojemmott63@gmail.com":imagebaba,
       "cantforgetthisone.cw@gmail.com":imagecarlton,
       "cjdoherty6@gmail.com":imagecj,
       "daley_goveia@live.com":imagedaley,
-      "damionbill@gmail.com":imagebill,
+      "damionbill@gmail.com":imagedamion,
       "dnoray03@gmail.com":imagedanny,
       "dukecharles@icloud.com":imageduke,
       "fernandgrisales@gmail.com":imagefernand,
-      "tassjnr@gmail.com":imagegivmedat,
+      "tassjnr@gmail.com":imagegivemedat,
       "irwingforbes@gmail.com":imageirwing,
       "jesses.fg@gmail.com":imagejesse,
       "hopetondixon@gmail.com":imagehope,
@@ -582,16 +584,16 @@ const Vote = (props) => {
       "webb.adrian.k@gmail.com":imagemax,
       "topdon1359@gmail.com":imagemiguel,
       "budhai@gmail.com":imagemikhail,
-      "smedlymoise@theswede.me":imagemoise,
-      "perdo4100@gmail.com":imagePED,
+      "smedlymoise@theswede.me":imagemoses,
+      "perdo4100@gmail.com":imagepedro,
       "luispollito53@gmail.com":imagepollo,
       "reedfox3@gmail.com":imagereed,
-      "rinology@gmail.com":imageRINAL,
+      "rinology@gmail.com":imagerinaldy,
       "davidsantos2416@gmail.com":imagesantos,
       "scott_savory@live.com":imagescott,
-      "roshmore17@gmail.com":imageROSHAU,
-      "steph.beckford10@gmail.com":imagesteph,
-      "tbishop14@gmail.com":imageteeboy,
+      "roshmore17@gmail.com":imageshaun,
+      "steph.beckford10@gmail.com":imagestephon,
+      "tbishop14@gmail.com":imagetheo,
       "timori207@gmail.com":imagetimori,
       "tom_bom95@yahoo.com":imagetommy,
       "ziham.ascencio@gmail.com":imageziham,
@@ -609,6 +611,7 @@ const Vote = (props) => {
           update={updateVoteDataState}
           disableAll={disableAll?true:false}
           image={playerImages[card.email]}
+          // image={imageTest}
           team={teamLogos[card.team]}
           teamString={card.team}
           position={card.position}

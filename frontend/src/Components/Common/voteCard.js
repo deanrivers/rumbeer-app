@@ -192,7 +192,8 @@ const VoteCard = (props) => {
         
         <CardMedia
           className={classes.cardMedia}
-          image="https://source.unsplash.com/random"
+          // image="https://source.unsplash.com/random"
+          image={props.image}
           title={`${props.player}`}
         />
 
