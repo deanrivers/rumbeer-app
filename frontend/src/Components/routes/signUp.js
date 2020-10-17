@@ -107,9 +107,6 @@ const SignUp = ({ history,...props }) => {
         }
     }
 
-    
-
-   
   }, [history]);
 
   const getToken = async (e,p) =>{
@@ -127,9 +124,6 @@ const SignUp = ({ history,...props }) => {
     let data = await response.json()
     return [data.token,response.status]
   }
-
-  
-
 
   return (
     <div className="signup-container">

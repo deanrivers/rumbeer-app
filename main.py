@@ -71,7 +71,7 @@ def signup():
     data = request.get_json()
     email = data['email'].lower()
     password = data['password']
-    # firstname = data['firstname']
+    firstname_form = data['firstname']
     if email is None or password is None:
         return {"message": "Error missing email or password"}, 400
     try:
@@ -125,7 +125,7 @@ def signup():
             pyre_db.child("Players").child(user.uid).set(
                 {
                     "email": email,
-                    "firstname": firstname,
+                    "firstname": firstname_form,
                     "uid": user.uid,
                     "isPlayer": isPlayer,
                 }
@@ -149,11 +149,11 @@ def login():
     password = data["password"]
     
     if email is None or password is None:
-        return {"message": "Error missing email or password"}, 400
+        return {"message": "Error missing email or password","status":400}, 400
     try:
         user = pb.auth().sign_in_with_email_and_password(email, password)
         jwt = user["idToken"]
-        return {"token": jwt}, 200
+        return {"token": jwt,"status":200}, 200
 
 #     except requests.exceptions.HTTPError as httpErr:
 #         error_message = json.loads(httpErr.args[1])['error']['message']
@@ -161,7 +161,7 @@ def login():
     except Exception as e:
         # print('Error =>',e)
         # return e
-        return {"message": "There was an error logging in"}, 400
+        return {"message": "There was an error logging in","status":400}, 400
 
 
 @app.route("/api/weekData", methods=["GET"])

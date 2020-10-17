@@ -284,7 +284,7 @@ const Home = (props) =>{
     if(props.isPlayer || localStorage.getItem("IS_PLAYER")==="true"){
         renderHeader = <h1>WELCOME TO THE RUM & BEER LEAGUE, <span className="emphasized-text"><i>{props.playerName?props.playerName:localName}</i></span>.</h1>
     } else{
-        renderHeader = <h1>Welcome.</h1>
+        renderHeader = <h1>WELCOME TO THE <span className="emphasized-text"><i>LEAGUE</i></span>.</h1>
     }
 
 

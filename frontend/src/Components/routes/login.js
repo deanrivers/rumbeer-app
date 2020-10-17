@@ -40,6 +40,12 @@ const Login = ({history,...props}) => {
     );
   }
 
+  const [displayError,updateDisplayError] = useState(false)
+
+  useEffect(()=>{
+    console.log('Login error?',displayError)
+  },[displayError])
+
   const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -73,30 +79,6 @@ const Login = ({history,...props}) => {
     link:{
       color:'black',
     },
-    // textField:{
-    //   borderColor:'white',
-    //   // backgroundColor:'red',
-    //   color:'white',
-    // },
-    // root: {
-    //   '& label.Mui-focused': {
-    //     color: 'white',
-    //   },
-    //   '& .MuiInput-underline:after': {
-    //     borderBottomColor: 'white',
-    //   },
-    //   '& .MuiOutlinedInput-root': {
-    //     '& fieldset': {
-    //       borderColor: 'red',
-    //     },
-    //     '&:hover fieldset': {
-    //       borderColor: 'yellow',
-    //     },
-    //     '&.Mui-focused fieldset': {
-    //       borderColor: 'green',
-    //     },
-    //   },
-    // },
   }));
   const classes = useStyles();
 
@@ -108,23 +90,25 @@ const Login = ({history,...props}) => {
 
       //get token from backend flask server
       if(email.value!==''&&password.value!==''){
-        let [token,responseStatus,userStats] = await getToken(email.value,password.value)
-        if(responseStatus==200){
-          try {
-            props.setToken(token)
-            await app.auth().signInWithEmailAndPassword(email.value, password.value)
-            history.push("/");
-          } catch (error) {
-            alert('An error occured.')
-            console.log(error);
-          }
-        }
+        let response = await getToken(email.value,password.value)
+        console.log('Response form login await',response)
+        // if(responseStatus==200){
+        //   try {
+        //     props.setToken(token)
+        //     await app.auth().signInWithEmailAndPassword(email.value, password.value)
+        //     history.push("/");
+        //   } catch (error) {
+        //     alert('An error occured.')
+        //     console.log(error);
+        //   }
+        // }
     }
       
     },[history]);
 
   const getToken = async (e,p) =>{
-    let response = await fetch('/api/token',{
+    console.log('Login token',e,p)
+    fetch('/api/token',{
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -134,13 +118,55 @@ const Login = ({history,...props}) => {
         email:e,
         password:p,
       })
+    }).then(response=>response.json())
+    .then(data=>{
+      console.log('data from login',data)
+      if(data.status==200){
+        console.log('Success!',data)
+        updateDisplayError(false)
+        try {
+          props.setToken(data.token)
+          app.auth().signInWithEmailAndPassword(e, p)
+          history.push("/");
+        } catch (error) {
+          alert('An error occured.')
+          console.log(error);
+        }
+      } else if(data.status==400){
+        console.log('Something is wrong')
+        alert('Something Went wrong. Please make sure your email and password are correct.')
+        updateDisplayError(true)
+      } else{
+        console.log('Not sure whats happening',data)
+      }
     })
-    let data = await response.json()
 
-    //get user stats using token you just got
-    // let userStats = await getUserStats(data.token)
-    
-    return [data.token,response.status]
+      // if(responseStatus==200){
+      //     try {
+      //       props.setToken(token)
+      //       await app.auth().signInWithEmailAndPassword(email.value, password.value)
+      //       history.push("/");
+      //     } catch (error) {
+      //       alert('An error occured.')
+      //       console.log(error);
+      //     }
+      //   }
+
+    // let response = fetch('/api/token',{
+    //     method: "POST",
+    //     headers: {
+    //       'Accept': 'application/json',
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({
+    //       email:e,
+    //       password:p,
+    //     })
+    //   })
+    // let data = await response.json()
+    // console.log('Await in token fetch',data)
+
+    // return [data.token,response.status]
   }
 
   // const getUserStats = async (token) =>{
