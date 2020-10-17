@@ -254,7 +254,6 @@ def allStats():
                 "defense": "-1",
                 "dribbling": "0",
                 "physical": "-1",
-                "overall": "+1",
                 "shot": "0",
                 "pass": "0"
             }
@@ -267,7 +266,6 @@ def allStats():
                 "defense": "-1",
                 "dribbling": "0",
                 "physical": "-1",
-                "overall": "+1",
                 "shot": "0",
                 "pass": "0"
             }
@@ -293,6 +291,17 @@ def update_stats():
             user_updates = entry["stats"]
             player_ref  = db.reference("Players/" + uid + "/stats")
 
+            def get_overall_average(current_data, user_updates):
+                sum = 0
+                total_entries = len(current_data) - 1
+                for key, value in current_data.items():
+                    if key == "overall":
+                        continue 
+
+                    sum += int(value) + int(user_updates[key])
+
+                return round(sum / total_entries)
+
             def update_player_stats(current_data):
                 if not current_data:
                     return {}
@@ -303,7 +312,7 @@ def update_stats():
                     "defense": int(current_data["defense"]) + int(user_updates["defense"]),
                     "dribbling": int(current_data["dribbling"]) + int(user_updates["dribbling"]),
                     "physical": int(current_data["physical"]) + int(user_updates["physical"]),
-                    "overall": "60",
+                    "overall": get_overall_average(current_data, user_updates),
                     "shot": int(current_data["shot"]) + int(user_updates["shot"]),
                     "pass": int(current_data["pass"]) + int(user_updates["pass"]),
                 }
