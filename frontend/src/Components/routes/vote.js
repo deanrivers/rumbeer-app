@@ -1,4 +1,4 @@
-import '../../Styles/vote.css'
+import '../../Styles/Vote.css'
 
 import React, {useEffect, useState, useContext} from 'react';
 import AppBar from '@material-ui/core/AppBar';
