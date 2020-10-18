@@ -71,6 +71,7 @@ import imageteeboy from '../../assets/players/teeboy.png'
 import imagetimori from '../../assets/players/timori.png'
 import imagetommy from '../../assets/players/tommy.png'
 import imageziham from '../../assets/players/ziham.png'
+import PlayerStats from '../Common/playerStats'
 
 
 
@@ -266,17 +267,6 @@ const Home = (props) =>{
         "ziham.ascencio@gmail.com":imageziham,
     }
 
-    //token expired render
-    
-
-
-    
-
-    
-
-
-
-
     //page header logic
     let localName = localStorage.getItem('NAME')
     let renderHeader
@@ -291,9 +281,7 @@ const Home = (props) =>{
 
     //car render logic
     let cardRender = futDataFetched?futData.map((card,index)=>{
-        
-  
-        
+
         if(card.isPlayer){
             let email = card.email
             let team = card.team
@@ -330,17 +318,21 @@ const Home = (props) =>{
             
             <div className="header-container">
                 {renderHeader}
-                
             </div>
 
-            <div className="highlights-container grid-section">
+            {/* <div className="highlights-container grid-section">
                 <h1 className="sub-header">Highlights.</h1>
                 <div className="video-container">
                     <iframe width="560" height="315" src="https://www.youtube.com/embed/l1wQKbcOpSQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
-                
-            </div>
+            </div> */}
 
+            {/* <div className="highlights-container grid-section">
+                <h1 className="sub-header">League Standings.</h1>
+                <div className="video-container">
+
+                </div>
+            </div> */}
             
             <div className="highlights-container grid-section">
                 <h1 className="sub-header">League Standings.</h1>
@@ -361,26 +353,7 @@ const Home = (props) =>{
                         size={10}
                         color={"#FF0062"}
                         loading={futDataFetched}
-                        
-                    />
-                    
-                    
-                    
-                    }
-                    
-                        
-                        {/* {futData.map((card,index)=>{
-                            return(
-                                <FUTCard
-                                    key={index}
-                                    name={card.firstname}
-                                    stats={card.stats}
-                                    overall={card.stats.overall}
-                                    position = {card.stats.position}
-                                />
-                            )
-                        })} */}
-   
+                    />}
                 </div>
                 
             </div>

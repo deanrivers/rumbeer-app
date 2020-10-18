@@ -71,13 +71,12 @@ const SignUp = ({ history,...props }) => {
   const handleSignUp = useCallback(async event => {
     event.preventDefault();
     const { email, password, firstName } = event.target.elements;
-    console.log('Email',email.value)
-    console.log('Password',password.value)
-    console.log(firstName.value)
-    console.log(email.value,password.value,firstName.value)
+    // console.log('Email',email.value)
+    // console.log('Password',password.value)
+    // console.log('First Name',firstName.value)
 
     //flask signup
-    let response = await fetch('/api/signup',{
+    fetch('/api/signup',{
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -90,27 +89,43 @@ const SignUp = ({ history,...props }) => {
         password: password.value,
         firstname:firstName.value
       })
+    }).then(response=>response.json())
+    .then(data=>{
+      console.log(data)
+      if(data.status==200){
+        // console.log('begin get token',data)
+        getToken(email.value,password.value)
+        // try {
+        //   props.setToken(token)
+        //   app.auth().signInWithEmailAndPassword(email.value, password.value);
+        //   history.push("/");
+        // } catch (error) {
+        //   alert(error);
+        // }
+      } else if(data.status==400){
+        alert('Error Signing Up. Please make sure you enter a valid email and password. Password must be at least 6 characters long.')
+      }
     })
 
     // let data = await response.json()
     
-    let [token,responseStatus] = await getToken(email.value,password.value)
+    
 
-    if(responseStatus==200&&response.status==200){
-        //try and login with the credentials returned by flask
-        try {
-          props.setToken(token)
-          await app.auth().signInWithEmailAndPassword(email.value, password.value);
-          history.push("/");
-        } catch (error) {
-          alert(error);
-        }
-    }
+    // if(responseStatus==200&&response.status==200){
+    //     //try and login with the credentials returned by flask
+    //     try {
+    //       props.setToken(token)
+    //       await app.auth().signInWithEmailAndPassword(email.value, password.value);
+    //       history.push("/");
+    //     } catch (error) {
+    //       alert(error);
+    //     }
+    // }
 
   }, [history]);
 
-  const getToken = async (e,p) =>{
-    let response = await fetch('/api/token',{
+  const getToken = (e,p) =>{
+    fetch('/api/token',{
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -120,9 +135,17 @@ const SignUp = ({ history,...props }) => {
         email:e,
         password:p,
       })
+    }).then(response=>response.json())
+    .then(async data=>{
+      console.log('Data in get sign up',data)
+      props.setToken(data.token)
+      await app.auth().signInWithEmailAndPassword(e, p);
+      history.push("/");
     })
-    let data = await response.json()
-    return [data.token,response.status]
+    // let data = await response.json()
+
+    
+    // return [data.token,response.status]
   }
 
   return (
@@ -145,28 +168,18 @@ const SignUp = ({ history,...props }) => {
                   autoComplete="fname"
                   name="firstName"
                   variant="outlined"
-                  required
+                  required="true"
                   fullWidth
                   id="firstName"
                   label="First Name"
                   autoFocus
                 />
               </Grid>
-              {/* <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
-                />
-              </Grid> */}
+
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
-                  required
+                  required="true"
                   fullWidth
                   id="email"
                   label="Email Address"

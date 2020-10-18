@@ -102,7 +102,7 @@ const Stats = (props) =>{
                                         blocks={pageStats.blocks}
                                     />:null
 
-    let rosterRender = userStatsDone?<Roster team={userStats.team} sheetStats={sheetStats}/>:null
+    let rosterRender = userStatsDone?<Roster team={userStats.team} sheetStats={sheetStats} renderAll={true}/>:null
 
     return(
         <div id="stats-main-container">

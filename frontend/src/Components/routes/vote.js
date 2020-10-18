@@ -283,7 +283,7 @@ const Vote = (props) => {
       let votesToday = userVoteCount
       
       //todays values
-      let today = new Date("10/19/20")
+      let today = new Date()
 
       //week values
       let weekDateStart,weekDateEnd,elligibleCount

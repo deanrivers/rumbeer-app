@@ -55,11 +55,6 @@ const Standings = (props) => {
 
   },[leaguStandings])
 
-  // const standings = props.data.standings
-  // console.log('S Arr',standings)
-
-
-
   const getLeagueStandings = async (token) =>{
     let response = await fetch('/api/sheetStandings',{
         method: "GET",

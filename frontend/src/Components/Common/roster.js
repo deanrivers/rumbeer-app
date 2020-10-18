@@ -34,6 +34,8 @@ const Roster = (props) => {
 
   const [teamPlayers,updateTeamPlayers] = useState(null)
   const [playerRows,updatePlayerRows] = useState(null)
+  const [allPlayers,updateAllPlayers] =useState(props.sheetStats)
+
   const [teamPlayersDone,updateTeamPlayersDone] = useState(false)
   const [isLoading,updateIsLoading] = useState(true)
   
@@ -41,7 +43,7 @@ const Roster = (props) => {
   
 
   useEffect(()=>{
-    // console.log('Props in roster.js ->',props)
+    console.log('Props in roster.js ->',props)
     determineTeam(props.sheetStats.stats)
   },[])
 
@@ -93,7 +95,6 @@ const Roster = (props) => {
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
-        
         <TableHead>
           <TableRow>
             <TableCell>Player</TableCell>
@@ -106,8 +107,8 @@ const Roster = (props) => {
           </TableRow>
         </TableHead>
 
-        <TableBody>
 
+        <TableBody>
           {isLoading?<PulseLoader
                         // css={override}
                         size={10}
@@ -115,8 +116,6 @@ const Roster = (props) => {
                         loading={teamPlayersDone}
                         
                     />:tableRender}
-
-          
         </TableBody>
 
         

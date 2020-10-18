@@ -119,21 +119,21 @@ const Login = ({history,...props}) => {
         password:p,
       })
     }).then(response=>response.json())
-    .then(data=>{
+    .then(async data=>{
       console.log('data from login',data)
       if(data.status==200){
         console.log('Success!',data)
         updateDisplayError(false)
         try {
           props.setToken(data.token)
-          app.auth().signInWithEmailAndPassword(e, p)
+          await app.auth().signInWithEmailAndPassword(e, p)
           history.push("/");
         } catch (error) {
           alert('An error occured.')
           console.log(error);
         }
       } else if(data.status==400){
-        console.log('Something is wrong')
+        // console.log('Something is wrong')
         alert('Something Went wrong. Please make sure your email and password are correct.')
         updateDisplayError(true)
       } else{

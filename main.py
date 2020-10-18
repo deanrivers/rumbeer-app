@@ -118,7 +118,6 @@ def signup():
                         "shot": 60,
                         "pass": 60
                     },
-
                 }
             )
         else:
@@ -131,10 +130,10 @@ def signup():
                 }
             )
 
-        return {"message": f"Successfully created user {user.uid} using email {email}"}, 200
+        return {"message": f"Successfully created user {user.uid} using email {email}","status":200}, 200
     except Exception as e:
         print('ERROR',e)
-        return {"message": "Error creating user"}, 400
+        return {"message": "Error creating user","status":400}, 400
 
 
 """
