@@ -285,6 +285,7 @@ const Vote = (props) => {
       //todays values
       let today = new Date()
 
+      
       //week values
       let weekDateStart,weekDateEnd,elligibleCount
 
