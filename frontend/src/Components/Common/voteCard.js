@@ -197,15 +197,12 @@ const VoteCard = (props) => {
           title={`${props.player}`}
         />
 
-        <CardContent className={classes.cardContent}>
+        {/* <CardContent className={classes.cardContent}>
           <Typography gutterBottom variant="h5" component="h2">
             {props.player}
           </Typography>
-          {/* <Typography>
-            This is a media card. You can use this section to describe the
-            content.
-          </Typography> */}
-        </CardContent>
+
+        </CardContent> */}
         <CardActions>
           <Button
             size="small"
@@ -227,6 +224,11 @@ const VoteCard = (props) => {
       <Card className={[classes.card,classes.flippedBackgroundColor]}>
 
         <CardContent className={classes.cardContent}>
+          <div className="vote-form-header">
+            <span>-1</span>
+            <span>ATTRIBUTE</span>
+            <span>+1</span>
+          </div>
 
 
           <div className="form">

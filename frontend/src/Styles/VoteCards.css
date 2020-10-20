@@ -14,3 +14,10 @@
     flex-wrap: wrap;
     width: 100%;
 }
+
+.vote-form-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    font-weight: bold;
+}

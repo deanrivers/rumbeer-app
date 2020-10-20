@@ -121,8 +121,6 @@ const Vote = (props) => {
 
   const {currentUser} = useContext(AuthContext);
 
-
-  
   const [userUID,updateUserUID] = useState(currentUser["uid"])
   const [playersData,updatePlayersData] = useState(null)
 
@@ -142,6 +140,12 @@ const Vote = (props) => {
   const [hasVoted,updateHasVoted] = useState(false)
 
   const classes = useStyles();
+
+  useEffect(()=>{
+    console.log('Props in vote js ->',props)
+    console.log('Current User in vote js',currentUser.email)
+    
+  },[])
   
   //listen to week data
   useEffect(()=>{
@@ -151,7 +155,6 @@ const Vote = (props) => {
       determineEligibility(weekData)
     }
   },[userVoteCount,weekData])
-
 
   //listen to player data from flask
   useEffect(()=>{
@@ -192,7 +195,7 @@ const Vote = (props) => {
     } 
   },[numVotes])
 
-      //listen to whether or not the player can vote
+  //listen to whether or not the player can vote
   useEffect(()=>{
     // console.log('Can Vote?',canVote)
     if(canVote){
@@ -200,7 +203,7 @@ const Vote = (props) => {
     }
   },[canVote])
 
-
+  //functions
   const getAllStats = async (token) =>{
     let response = await fetch('/api/allStats',{
       method: "GET",
@@ -338,42 +341,9 @@ const Vote = (props) => {
       } else{
         console.log('You are not eligible.')
         updateCanVote(false)
-      }
-
-      //determine which week we are in.
-      //loop through  weeks...if the current date is less than, move to next week and stop
-      // for(const property in weeks){
-        
-      //   // console.log(weeks[property])
-      //   weekDate = new Date(weeks[property])
-      //   // console.log('Week date',weekDate)
-
-      //   console.log('Votes as of today ->',votesToday)
-      //   console.log('Votes eligible for ->',elligibleObj[property]["count"])
-
-      //   ///detemine what week we are on
-        
-      //   let currentWeekEndDate
-        
-      //   if(today>weekDate){
-      //     //check vote counter and update state accordingly
-      //     if(votesToday<elligibleObj[property]["count"]){
-      //       console.log('You are elligible!')
-      //       updateCanVote(true)
-      //       break
-      //     } else{
-      //       console.log('You are not elligible.')
-      //       updateCanVote(false)
-      //       break
-      //     }
-      //   }
-      // }
-
- 
-  
+      }  
   }
 
-  //functions
   const submitRatings = async () =>{
     let tokenSession = localStorage.getItem('TOKEN')
     let updatedStats = await updatePlayerStats()
@@ -603,22 +573,25 @@ const Vote = (props) => {
 
 
   let cardRender = playersData?playersData.map((card,index)=>{
-    return(
-      canVote?
-      <Grid item key={index} xs={12} sm={6} md={4}>
-        <VoteCard
-          player={card.firstname}
-          uid={card.uid}
-          update={updateVoteDataState}
-          disableAll={disableAll?true:false}
-          image={playerImages[card.email]}
-          // image={imageTest}
-          team={teamLogos[card.team]}
-          teamString={card.team}
-          position={card.position}
-        />
-      </Grid>:null
-    )
+    if(currentUser.email!==card.email&&card.email!=="test@test.com"){
+      // console.log('Render Card ->',card)
+      return(
+        canVote?
+        <Grid item key={index} xs={12} sm={6} md={4}>
+          <VoteCard
+            player={card.firstname}
+            uid={card.uid}
+            update={updateVoteDataState}
+            disableAll={disableAll?true:false}
+            image={playerImages[card.email]}
+            // image={imageTest}
+            team={teamLogos[card.team]}
+            teamString={card.team}
+            position={card.position}
+          />
+        </Grid>:null
+      )
+  }
   }):null
 
   return (

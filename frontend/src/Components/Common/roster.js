@@ -43,7 +43,7 @@ const Roster = (props) => {
   
 
   useEffect(()=>{
-    console.log('Props in roster.js ->',props)
+    // console.log('Props in roster.js ->',props)
     determineTeam(props.sheetStats.stats)
   },[])
 

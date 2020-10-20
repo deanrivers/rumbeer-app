@@ -17,31 +17,19 @@ import PrivateRoute from "./PrivateRoute";
 import TokenModal from './Components/Common/tokenModal'
 import app from './base'
 
-
-
-
-
-
 const App = () => {
-
   const [userToken,updateUserToken] = useState(null)
   const [isSignedIn,updateIsSignedIn] = useState(false)
   const [isPlayer,updateIsPlayer] = useState(false)
   const [userStats,updateUserStats] = useState(null)
   const [playerName,updatePlayerName] = useState('')
-
   const [tokenExpired,updateTokenExpired] = useState(false)
-
   const history = useHistory();
-
-  
 
   //listen to token expired
   useEffect(()=>{
     let storageToken = localStorage.getItem('TOKEN')
     if(tokenExpired){
-        console.log('User Token App.js when token expired -> ',userToken)
-        console.log('Listener -> Your session token has expired.',tokenExpired)
         alert('Your session has expired. Please log out and log back in.')
     } else if(storageToken){
       checkToken(storageToken)
@@ -69,29 +57,19 @@ const App = () => {
     }
   },[userStats])
 
-
   //listen to isSignedIn
   useEffect(()=>{
     console.log('Frontend Sign in status',isSignedIn)
   },[isSignedIn])
 
-
   //listen to user token
   useEffect(()=>{
-    
     if(userToken!==null){
-      
       localStorage.setItem('TOKEN', userToken);
       getUserStats(userToken)
       updateIsSignedIn(true)
     } 
   },[userToken])
-
-  
-
-  
-
-
 
   const setToken = (token) =>{
     updateUserToken(token)
@@ -107,24 +85,16 @@ const App = () => {
         'Content-Type': 'application/json',
         'Authorization': token
       },
-  }).then(response=>response.json())
-  .then(data=>{
-    console.log('data from app.js',data)
-    updateUserStats(data)
-  })
-    // let data = await response.json()
-    // console.log('data from app.js',data)
-    
+    }).then(response=>response.json())
+    .then(data=>{
+      console.log('data from app.js',data)
+      updateUserStats(data)
+    })
   }
 
     const logoutUser = () =>{
       console.log('History from logout',history)
-
-      // history.push("/")
-      // app.auth().signOut();
-      // localStorage.clear();
       updateIsSignedIn(false)
-      // history.push('/')
   }
 
   const checkToken = async (token) =>{
@@ -164,20 +134,13 @@ const App = () => {
 let tokenModal = tokenExpired?<TokenModal/>:null
 let tokenExpiredRender = tokenExpired?<div id="token-modal"><button onClick={()=>logoutUser()}>Please log out</button></div>:null
 
-
-
-
   return (
-    
     <AuthProvider>
       <Router>
           <Switch>
-
             {/* Home screen is private and should only render on authentication success. */}
             <PrivateRoute exact path="/" component={Home} userToken={userToken} isPlayer={isPlayer} playerName={playerName}/>
-
             <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}  isPlayer={isPlayer} playerName={playerName}/>)}></Route>
-            
 
             {/* The rest of the routes are only accessible after hitting the home page */}
             <Route exact path="/login" render={(props) => (<Login {...props} setToken={setToken}/>)} />
@@ -190,26 +153,19 @@ let tokenExpiredRender = tokenExpired?<div id="token-modal"><button onClick={()=
             </div>
             :null
           }
-
           </Switch>
-          {/* <Nav/> */}
 
           {/* {isSignedIn?<SwipeNav logout={logoutUser}/>:null} */}
           <SwipeNav logout={logoutUser} isPlayer={isPlayer}/>
           
-
           {/* this allows the app to redirect to '/home' instead of '/' */}
           {home}
 
           {/* add redirects if not a player */}
           {redirects}
-
-
       </Router>
       {/* {tokenExpiredRender} */}
     </AuthProvider>
-    
-    
   );
 }
 

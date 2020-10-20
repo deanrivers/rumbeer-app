@@ -73,106 +73,14 @@ import imagetommy from '../../assets/players/tommy.png'
 import imageziham from '../../assets/players/ziham.png'
 import PlayerStats from '../Common/playerStats'
 
-
-
-
-// adolfo.png
-// akeem.png
-// Anatoliy.png
-// baba.png
-// bill.png
-// carlton.png
-// cj.png
-// daley.png
-// danny.png
-// duke.png
-// fernand.png
-// givmedat.png
-// hope.png
-// irwing.png
-// jesse.png
-// khalfani.png
-// max.png
-// miguel.png
-// mikhail.png
-// moise.png
-// PED.png
-// pollo.png
-// reed.png
-// RINAL.png
-// ROSHAU.png
-// santos.png
-// scott.png
-// steph.png
-// teeboy.png
-// timori.png
-// tommy.png
-// ziham.png
-
-// ADOLFO.LEE@GMAIL.COM
-// AKEEM.FLETCHER13@GMAIL.COM
-// SCALE49@AOL.COM
-// OJEMMOTT63@GMAIL.COM
-// CANTFORGETTHISONE.CW@GMAIL.COM
-// CJDOHERTY6@GMAIL.COM
-// DALEY_GOVEIA@LIVE.COM
-// DAMIONBILL@GMAIL.COM
-// DNORAY03@GMAIL.COM
-// DUKECHARLES@ICLOUD.COM
-// FERNANDGRISALES@GMAIL.COM
-// TASSJNR@GMAIL.COM
-// IRWINGFORBES@GMAIL.COM
-// JESSES.FG@GMAIL.COM
-// HOPETONDIXON@GMAIL.COM
-// ERIQK.ALEXANDER@GMAIL.COM
-// WEBB.ADRIAN.K@GMAIL.COM
-// TOPDON1359@GMAIL.COM
-// BUDHAI@GMAIL.COM
-// SMEDLYMOISE@THESWEDE.ME
-// PERDO4100@GMAIL.COM
-// LUISPOLLITO53@GMAIL.COM
-// REEDFOX3@GMAIL.COM
-// RINOLOGY@GMAIL.COM
-// DAVIDSANTOS2416@GMAIL.COM
-// SCOTT_SAVORY@LIVE.COM
-// ROSHMORE17@GMAIL.COM
-// STEPH.BECKFORD10@GMAIL.COM
-// TBISHOP14@GMAIL.COM
-// TIMORI207@GMAIL.COM
-// TOM_BOM95@YAHOO.COM
-// ZIHAM.ASCENCIO@GMAIL.COM
 const Home = (props) =>{
-
-    const [cardsLoading,updateCardsLoading] = useState(true)
-    const [isLoading,updateIsLoading] = useState(true)
-    const [dataLeagueStandings,updateDataLeagueStandings] = useState(null)
-
-
     const [futData,updateFutData] = useState(null)
     const [futDataFetched,updateFutDataFetched] = useState(false)
 
-    const { currentUser } = useContext(AuthContext);
-
-    const [tokenExpired,updateTokenExpired] = useState(false)
-
     //component did mount
     useEffect(()=>{
-        //console.log('Props in home.js ->',props)
-        //fetch FUT info...'api/allStats
         getFUTData(props.userToken?props.userToken:localStorage.getItem('TOKEN'))
     },[])
-
-    //league standings listener
-    useEffect(()=>{
-        // console.log('League Standings',dataLeagueStandings)
-    },[dataLeagueStandings])
-
-    //futData listener
-    useEffect(()=>{
- 
-        if(futData){
-        }
-    },[futData])
 
     const getFUTData = async (token) =>{
         let response = await fetch('/api/allStats',{
@@ -187,16 +95,6 @@ const Home = (props) =>{
         })
           let data = await response.json()
           let futDataArr = []
-        //   console.log('All Stats for Fifa ->',data)
-
-        //   if(response.status==400){
-        //     //console.log('Token Expired.')
-        //     //alert('Your token has expired. Please lougout and back in.')
-        //     // alert(response.status)
-        //     updateTokenExpired(true)
-        //   }
-
-          
 
           for(const property in data){
               futDataArr.push(data[property])
@@ -205,12 +103,11 @@ const Home = (props) =>{
           updateFutDataFetched(true)
     }
 
-
     const countryFlags = {
         'ARGENTINA':imageArgentina,
         'BARBADOS':imageBarbados,
         'COLOMBIA':imageColombia,
-        'COSTARICA':imageCostarica,
+        'COSTA RICA':imageCostarica,
         'EL SALVADOR':imageElsalvador,
         'FRANCE':imageFrance,
         'GUYANA':imageGuyana,
@@ -220,7 +117,7 @@ const Home = (props) =>{
         'JAMAICA':imageJamaica,
         'PUERTO RICO':imagePuertorico,
         'RUSSIA':imageRussia,
-        'TANZANI':imageTanzania,
+        'TANZANIA':imageTanzania,
         'TRINIDAD & TOBAGO':imageTrinidad,
         'USA':imageUsa,
     }
@@ -277,16 +174,12 @@ const Home = (props) =>{
         renderHeader = <h1>WELCOME TO THE <span className="emphasized-text"><i>LEAGUE</i></span>.</h1>
     }
 
-
-
     //car render logic
     let cardRender = futDataFetched?futData.map((card,index)=>{
-
-        if(card.isPlayer){
+        if(card.isPlayer&&card.email!=="test@test.com"){
             let email = card.email
             let team = card.team
             let country = card.country
-            //console.log('Individual card details->',email,team,country)
             return(
                 <FUTCard
                     key={index}
@@ -294,45 +187,19 @@ const Home = (props) =>{
                     stats={card.stats}
                     overall={card.stats["overall"]}
                     position = {card.position}
-                    // team={teamLogos.ballers}
-                    // country={countryFlags.trinidad}
                     country={countryFlags[country]}
                     team={teamLogos[team]}
                     image={playerImages[email]}
-                
-                    
-                    
                 />
             )
         }
     }):null
 
-    
-
-    
-    // let playerNameLocal = 'BOB';
-
     return([
-        ,
         <div className="home-container-grid">
-            
             <div className="header-container">
                 {renderHeader}
             </div>
-
-            {/* <div className="highlights-container grid-section">
-                <h1 className="sub-header">Highlights.</h1>
-                <div className="video-container">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/l1wQKbcOpSQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div> */}
-
-            {/* <div className="highlights-container grid-section">
-                <h1 className="sub-header">League Standings.</h1>
-                <div className="video-container">
-
-                </div>
-            </div> */}
             
             <div className="highlights-container grid-section">
                 <h1 className="sub-header">League Standings.</h1>
@@ -340,10 +207,6 @@ const Home = (props) =>{
                     <Standings token={props.userToken}/>
                 </div>
             </div>
-
-            {/* <div className="vote-container grid-section">
-                <h1><u>Cast your input for this week's ratings.</u></h1>
-            </div> */}
 
             <div className="fifa-card-container grid-section">
                 <h1>Player Ratings.</h1>
@@ -355,13 +218,8 @@ const Home = (props) =>{
                         loading={futDataFetched}
                     />}
                 </div>
-                
             </div>
-
-            
         </div>,
-        
-
     ])
 }
 
