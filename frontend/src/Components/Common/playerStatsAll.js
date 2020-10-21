@@ -1,86 +1,105 @@
-import React , {useState,useEffect} from 'react';
+import React , {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Grid from '@material-ui/core/Grid';
-import { Divider } from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { useDebugValue } from 'react';
+import {PulseLoader} from "react-spinners";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    maxWidth: 752,
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
   },
-  demo: {
-    backgroundColor: theme.palette.background.paper,
-    borderRadius:'5px',
-    boxShadow:'0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);'
-  },
-  title: {
-    margin: theme.spacing(4, 0, 2),
-    fontSize:'2rem',
-    fontWeight:'bold'
-  },
-}));
+});
 
-const PlayerStats = (props) =>{
+function createData(player, position, mp, goals, assists, nutmegs, blocks) {
+  return { player, position, mp, goals, assists, nutmegs, blocks };
+}
+
+// const rows = [
+//   createData('Bayern', 3, 3, 0, 0, 10,6,0,9),
+//   createData('Barcelona', 3, 3, 0, 0, 10,6,0,9),
+//   createData('Borussia Dortmund', 3, 3, 0, 0, 10,6,0,9),
+//   createData('PSG', 3, 3, 0, 0, 10,6,0,9),
+// ];
+
+
+
+const Roster = (props) => {
+
+
+  
+  // const [playerRows,updatePlayerRows] = useState(null)
+  const [allPlayers,updateAllPlayers] =useState(props.data)
+
+  
+  const [isLoading,updateIsLoading] = useState(true)
+  
+  
+  
 
   useEffect(()=>{
-    // console.log('Props in playerStats.js ->',props)
+    // console.log('Props in playerAllStats.js ->',props)
+
+    // determineTeam(props.sheetStats.stats)
   },[])
 
+
+
+
+
+
   const classes = useStyles();
-  const [dense, setDense] = useState(false);
-  const [secondary, setSecondary] = useState(false);
-  const arr = ["Matches Played","Goals Scored","Assists","Nutmegs","Hat Tricks"]
 
-  const playerStats = [
-    {
-      attr:"Matches Played",
-      value:props.matchesPlayed
-    },
-    {
-      attr:"Goals Scored",
-      value:props.goals
-    },
-    {
-      attr:"Assists",
-      value:props.assists
-    },
-    {
-      attr:"Nutmegs",
-      value:props.nutMegs
-    },
-    {
-      attr:"Blocks",
-      value:props.blocks
-    },
+  let tableRender = allPlayers?allPlayers.map((row,index) => {
+    if(row.points){
+      
+    return(
+    <TableRow key={index}>
+      <TableCell component="th" scope="row">
+      {row.name}
+      </TableCell>
+      <TableCell align="right">{row.team}</TableCell>
+      <TableCell align="right">{row.position}</TableCell>
+      <TableCell align="right">{row.matchesPlayed}</TableCell>
+      <TableCell align="right">{row.goals}</TableCell>
+      <TableCell align="right">{row.assists}</TableCell>
+      <TableCell align="right">{row.nutMegs}</TableCell>
 
-  ]
+      <TableCell align="right">{row.blocks}</TableCell>
+      <TableCell align="right">{Math.round((row.points + Number.EPSILON)*100)/100}</TableCell>
+    </TableRow>)}}):null
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
-          <div className={classes.demo}>
-            <List dense={dense}>
+    <TableContainer component={Paper}>
+      <Table className={classes.table} size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Player</TableCell>
+            <TableCell align="right">Team</TableCell>
+            <TableCell align="right">Position</TableCell>
+            <TableCell align="right">MP</TableCell>
+            <TableCell align="right">Goals</TableCell>
+            <TableCell align="right">Assists</TableCell>
+            <TableCell align="right">Nutmegs</TableCell>
+            <TableCell align="right">Blocks</TableCell>
+            <TableCell align="right">Points</TableCell>
+          </TableRow>
+        </TableHead>
 
-            {playerStats.map((item,index)=>{
-                return(
-                    <ListItem key={index}>
-                        <ListItemText
-                            primary={`${item.attr}: ${item.value}`}
-                        />
-                    </ListItem>
-                )
-            })}
-            </List>
-          </div>
-        </Grid>
-      </Grid>
-  
-    </div>
+
+        <TableBody>
+         {tableRender}
+        </TableBody>
+
+        
+      </Table>
+    </TableContainer>
   );
 }
 
-export default PlayerStats
+export default Roster

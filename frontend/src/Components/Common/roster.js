@@ -52,6 +52,7 @@ const Roster = (props) => {
     if(teamPlayers){
       // console.log('Team Players',teamPlayers)
       const rows = teamPlayers.map( item =>{
+        
         return createData(item.name,item.position,item.matchesPlayed,item.goals,item.assists,item.nutMegs,item.blocks)
       })
       updatePlayerRows(rows)
@@ -75,8 +76,11 @@ const Roster = (props) => {
 
   const classes = useStyles();
 
-  let tableRender = playerRows?playerRows.map((row,index) => (
-    
+  let tableRender = playerRows?playerRows.map((row,index) => {
+    // console.log('Roster rows =>',row)
+    //do not render admin
+    if(row.player!=="ADMIN"){
+    return(
     <TableRow key={index}>
       <TableCell component="th" scope="row">
       {index+1}. {row.player}
@@ -87,10 +91,8 @@ const Roster = (props) => {
       <TableCell align="right">{row.assists}</TableCell>
       <TableCell align="right">{row.nutmegs}</TableCell>
       <TableCell align="right">{row.blocks}</TableCell>
-
-
     </TableRow>
-  )):null
+  )}}):null
 
   return (
     <TableContainer component={Paper}>

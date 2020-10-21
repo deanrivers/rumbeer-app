@@ -1,14 +1,9 @@
 import '../../Styles/Home.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
-import React, {useEffect,useState,useContext} from 'react'
-import {Carousel} from 'react-responsive-carousel'
+import React, {useEffect,useState} from 'react'
 import Standings from '../Common/standings'
-import { css } from "@emotion/core";
 import {PulseLoader} from "react-spinners";
-
-import { AuthContext } from "../../Auth";
-
-
+import PlayerStatsAll from '../Common/playerStatsAll'
 
 import FUTCard from '../Common/futCard'
 
@@ -71,15 +66,19 @@ import imageteeboy from '../../assets/players/teeboy.png'
 import imagetimori from '../../assets/players/timori.png'
 import imagetommy from '../../assets/players/tommy.png'
 import imageziham from '../../assets/players/ziham.png'
-import PlayerStats from '../Common/playerStats'
+
 
 const Home = (props) =>{
     const [futData,updateFutData] = useState(null)
     const [futDataFetched,updateFutDataFetched] = useState(false)
+    const [allPlayerData,updateAllPlayerData] = useState(null)
+    const [allPlayersFetched,updateAllPlayersFetched] = useState(false)
+
 
     //component did mount
     useEffect(()=>{
         getFUTData(props.userToken?props.userToken:localStorage.getItem('TOKEN'))
+        getAllPlayerStats(props.userToken?props.userToken:localStorage.getItem('TOKEN'))
     },[])
 
     const getFUTData = async (token) =>{
@@ -101,6 +100,46 @@ const Home = (props) =>{
           }
           updateFutData(futDataArr)
           updateFutDataFetched(true)
+    }
+
+    const getAllPlayerStats = (token) =>{
+        fetch('/api/sheetStats',{
+            method: "GET",
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': token
+            },
+        }).then(response=>response.json())
+        .then(data=>{
+            // console.log("Player stats home page =>",data)
+            let statsData = data.stats
+            let dataArr = []
+
+            for(let i = 0;i<statsData.length;i++){
+                dataArr.push(statsData[i])
+            }
+
+            //used to order array by points
+            const compare = (a, b) => {
+                let pointA = a.points
+                let pointB = b.points
+                let comparison = 0;
+                if (pointA > pointB) {
+                  comparison = -1;
+                } else if (pointA < pointB) {
+                  comparison = 1;
+                }
+                return comparison;
+              }
+            
+            dataArr.sort(compare)
+
+            updateAllPlayerData(dataArr)
+            updateAllPlayersFetched(true)
+        })
     }
 
     const countryFlags = {
@@ -195,6 +234,14 @@ const Home = (props) =>{
         }
     }):null
 
+    let allStatsRender = allPlayersFetched?<PlayerStatsAll data={allPlayerData}/>
+                                            :
+                                            <PulseLoader
+                                            // css={override}
+                                            size={10}
+                                            color={"#FF0062"}
+                                            loading={allPlayersFetched}/>
+
     return([
         <div className="home-container-grid">
             <div className="header-container">
@@ -202,8 +249,14 @@ const Home = (props) =>{
             </div>
             
             <div className="highlights-container grid-section">
+                <h1 className="sub-header">All Player Stats.</h1>
+                <div className="stats-container">
+                    {allStatsRender}
+                </div>
+            </div>
+            <div className="highlights-container grid-section">
                 <h1 className="sub-header">League Standings.</h1>
-                <div className="video-container">
+                <div className="standings--container">
                     <Standings token={props.userToken}/>
                 </div>
             </div>

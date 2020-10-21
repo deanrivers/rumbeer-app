@@ -142,14 +142,13 @@ const Vote = (props) => {
   const classes = useStyles();
 
   useEffect(()=>{
-    console.log('Props in vote js ->',props)
-    console.log('Current User in vote js',currentUser.email)
+    // console.log('Props in vote js ->',props)
+    // console.log('Current User in vote js',currentUser.email)
     
   },[])
   
   //listen to week data
   useEffect(()=>{
-    
     if(userVoteCount!==null&&weekData){
       console.log('Vote Counter State ->',userVoteCount)
       determineEligibility(weekData)
@@ -177,21 +176,24 @@ const Vote = (props) => {
 
   //listen to the number of votes
   useEffect(()=>{
+    //numVotes === how many votes you have left
     // console.log('Number of votes left',numVotes)
     if(numVotes === 0){
       updateDisableAll(true)
+      updateSubmitDisabled(false)
     }
 
-    if(numVotes<10){
+    if(numVotes<20){
       updatedClearDisabled(false)
-      updateSubmitDisabled(false)
-    } else if(numVotes===10){
+      
+    } else if(numVotes===20){
       updatedClearDisabled(true)
       updateSubmitDisabled(true)
     }
 
     if(numVotes>0){
       updateDisableAll(false)
+      updateSubmitDisabled(true)
     } 
   },[numVotes])
 
@@ -507,7 +509,7 @@ const Vote = (props) => {
       }
     }
 
-    updateNumVotes(10-arr.length)  
+    updateNumVotes(20-arr.length)  
   }
 
   const resetRatings = () =>{
@@ -624,8 +626,7 @@ const Vote = (props) => {
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
               Below you will see every player that is currently enrolled in the Rum and Beer League.
-              Please Submit your ratings for last week's performance. You have a total of {numVotes} Ratings.
-              Use them wisely!
+              Please Submit your ratings for last week's performance. <b>You MUST have 20 ratings made before you can submit.</b>
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">

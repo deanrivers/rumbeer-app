@@ -55,8 +55,8 @@ const Standings = (props) => {
 
   },[leaguStandings])
 
-  const getLeagueStandings = async (token) =>{
-    let response = await fetch('/api/sheetStandings',{
+  const getLeagueStandings = token =>{
+    fetch('/api/sheetStandings',{
         method: "GET",
         withCredentials: true,
         credentials: 'include',
@@ -65,10 +65,31 @@ const Standings = (props) => {
           'Content-Type': 'application/json',
           'Authorization': token
         },
-    })
-    let data = await response.json()
+    }).then(response=>response.json())
+    .then(data=>{
+      let sortedArr = data.standings
+      // console.log('League Standing Data =>',sortedArr)
+      
+      const compare = (a, b) => {
+        let pointA = a.points
+        let pointB = b.points
+        let comparison = 0;
+        if (pointA > pointB) {
+          comparison = -1;
+        } else if (pointA < pointB) {
+          comparison = 1;
+        }
+        return comparison;
+      }
 
-    updateLeaguStandings(data.standings)
+      sortedArr.sort(compare)
+
+      // updateLeaguStandings(data.standings)
+      updateLeaguStandings(sortedArr)
+    })
+    //let data = await response.json()
+
+    
     
 }
 

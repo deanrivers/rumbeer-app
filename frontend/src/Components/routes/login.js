@@ -7,8 +7,6 @@ import app from '../../base';
 import { AuthContext } from "../../Auth";
 import {NavLink} from 'react-router-dom'
 
-
-
 //material
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -43,7 +41,7 @@ const Login = ({history,...props}) => {
   const [displayError,updateDisplayError] = useState(false)
 
   useEffect(()=>{
-    console.log('Login error?',displayError)
+    // console.log('Login error?',displayError)
   },[displayError])
 
   const useStyles = makeStyles((theme) => ({
@@ -91,7 +89,7 @@ const Login = ({history,...props}) => {
       //get token from backend flask server
       if(email.value!==''&&password.value!==''){
         let response = await getToken(email.value,password.value)
-        console.log('Response form login await',response)
+        // console.log('Response form login await',response)
         // if(responseStatus==200){
         //   try {
         //     props.setToken(token)
@@ -107,7 +105,7 @@ const Login = ({history,...props}) => {
     },[history]);
 
   const getToken = async (e,p) =>{
-    console.log('Login token',e,p)
+    // console.log('Login token',e,p)
     fetch('/api/token',{
       method: "POST",
       headers: {
@@ -120,9 +118,9 @@ const Login = ({history,...props}) => {
       })
     }).then(response=>response.json())
     .then(async data=>{
-      console.log('data from login',data)
+      // console.log('data from login',data)
       if(data.status==200){
-        console.log('Success!',data)
+        // console.log('Success!',data)
         updateDisplayError(false)
         try {
           props.setToken(data.token)

@@ -1,7 +1,7 @@
-import React, { useEffect,useContext, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Styles/App.css';
 
-import { BrowserRouter as Router, Route, Switch, Redirect, useLocation, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from "react-router-dom";
 
 import Login from './Components/routes/login'
 import Home from './Components/routes/home'
@@ -11,11 +11,10 @@ import Stats from './Components/routes/stats'
 import SignUp from './Components/routes/signUp'
 import SwipeNav from './Components/Common/swipeNav'
 
-import { AuthContext, AuthProvider } from './Auth'
+import { AuthProvider } from './Auth'
 import PrivateRoute from "./PrivateRoute";
 
 import TokenModal from './Components/Common/tokenModal'
-import app from './base'
 
 const App = () => {
   const [userToken,updateUserToken] = useState(null)
@@ -87,7 +86,7 @@ const App = () => {
       },
     }).then(response=>response.json())
     .then(data=>{
-      console.log('data from app.js',data)
+      // console.log('data from app.js',data)
       updateUserStats(data)
     })
   }
@@ -151,8 +150,7 @@ let tokenExpiredRender = tokenExpired?<div id="token-modal"><button onClick={()=
             <Route path="/vote" exact render={(props) => (<Vote {...props} userToken={userToken}/>)}/>
             <Route path="/stats" exact render={(props) => (<Stats {...props} userToken={userToken} uid={'uid'}/>)}/>
             </div>
-            :null
-          }
+            :null}
           </Switch>
 
           {/* {isSignedIn?<SwipeNav logout={logoutUser}/>:null} */}
