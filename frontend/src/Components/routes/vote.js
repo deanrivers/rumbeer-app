@@ -150,7 +150,7 @@ const Vote = (props) => {
   //listen to week data
   useEffect(()=>{
     if(userVoteCount!==null&&weekData){
-      console.log('Vote Counter State ->',userVoteCount)
+      // console.log('Vote Counter State ->',userVoteCount)
       determineEligibility(weekData)
     }
   },[userVoteCount,weekData])
@@ -160,7 +160,7 @@ const Vote = (props) => {
     let tokenSession = localStorage.getItem('TOKEN')
 
     if(playersData){
-      console.log('Vote.js Players',playersData)
+      // console.log('Vote.js Players',playersData)
     } else{
       getAllStats(props.token?props.token:tokenSession)
       getWeekData(props.token?props.token:tokenSession)
@@ -201,7 +201,7 @@ const Vote = (props) => {
   useEffect(()=>{
     // console.log('Can Vote?',canVote)
     if(canVote){
-      console.log('You are allowed to vote!',canVote)
+      // console.log('You are allowed to vote!',canVote)
     }
   },[canVote])
 
@@ -263,7 +263,7 @@ const Vote = (props) => {
     }).then(response=>response.json())
     .then(weekData=>{
 
-      console.log('Week data ->',weekData)
+      // console.log('Week data ->',weekData)
       updateWeekData(weekData.weeks)
     })
 
@@ -284,7 +284,7 @@ const Vote = (props) => {
   }
   
   const determineEligibility = (weeks) =>{
-      console.log('Determine Eligibility ->',weeks)
+      // console.log('Determine Eligibility ->',weeks)
       let votesToday = userVoteCount
       
       //todays values
