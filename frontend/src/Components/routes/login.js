@@ -25,18 +25,6 @@ import Container from '@material-ui/core/Container';
 
 const Login = ({history,...props}) => {
 
-  function Copyright() {
-    return (
-      <Typography variant="body2" color="textSecondary" align="center">
-        {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
 
   const [displayError,updateDisplayError] = useState(false)
 
@@ -77,6 +65,11 @@ const Login = ({history,...props}) => {
     link:{
       color:'black',
     },
+    guestButton:{
+      color:'white',
+      borderColor:'#FF0062',
+      // border:'2px solid #FF0062'
+    }
   }));
   const classes = useStyles();
 
@@ -88,7 +81,7 @@ const Login = ({history,...props}) => {
 
       //get token from backend flask server
       if(email.value!==''&&password.value!==''){
-        let response = await getToken(email.value,password.value)
+        getToken(email.value,password.value)
         // console.log('Response form login await',response)
         // if(responseStatus==200){
         //   try {
@@ -138,50 +131,35 @@ const Login = ({history,...props}) => {
         console.log('Not sure whats happening',data)
       }
     })
-
-      // if(responseStatus==200){
-      //     try {
-      //       props.setToken(token)
-      //       await app.auth().signInWithEmailAndPassword(email.value, password.value)
-      //       history.push("/");
-      //     } catch (error) {
-      //       alert('An error occured.')
-      //       console.log(error);
-      //     }
-      //   }
-
-    // let response = fetch('/api/token',{
-    //     method: "POST",
-    //     headers: {
-    //       'Accept': 'application/json',
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //       email:e,
-    //       password:p,
-    //     })
-    //   })
-    // let data = await response.json()
-    // console.log('Await in token fetch',data)
-
-    // return [data.token,response.status]
   }
 
-  // const getUserStats = async (token) =>{
-  //   let response = await fetch('/api/userStats',{
-  //     method: "GET",
-  //     withCredentials: true,
-  //     credentials: 'include',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //       'Authorization': token
-  //     },
-  // })
-  //   let data = await response.json()
-  //   console.log('User Stats from login',data)
-  //   return data
-  // }
+  const handleGuestLogin = async () =>{
+    await app.auth().signInAnonymously().catch(function(error){
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode)
+      console.log(errorMessage)
+    })
+
+    await app.auth().onAuthStateChanged( async function(user){
+      if (user) {
+        // User is signed in.
+        var isAnonymous = user.isAnonymous
+        var uid = user.uid      
+        let token = await user.getIdToken()
+        
+        //set token
+        props.setToken(token)
+        props.updateGuest(isAnonymous)
+        history.push("/");
+        // ...
+      } else {
+        // User is signed out.
+        console.log('User is Signed Out')
+        // ...
+      }
+    })
+  }
 
   const { currentUser } = useContext(AuthContext);
 
@@ -261,9 +239,20 @@ const Login = ({history,...props}) => {
               </Grid>
             </Grid>
           </form>
+          
         </div>
-        <Box mt={8}>
-          <Copyright />
+        <Box mt={2}>
+          {/* <Copyright /> */}
+          <Button
+              // type="submit"
+              onClick={handleGuestLogin}
+              fullWidth
+              variant="outlined"
+              color="primary"
+              className={classes.guestButton}
+            >
+              Log In As Guest 
+            </Button>
         </Box>
         
       </Container>

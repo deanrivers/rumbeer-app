@@ -91,7 +91,7 @@ const SignUp = ({ history,...props }) => {
       })
     }).then(response=>response.json())
     .then(data=>{
-      console.log(data)
+      // console.log(data)
       if(data.status==200){
         // console.log('begin get token',data)
         getToken(email.value,password.value)
@@ -137,7 +137,7 @@ const SignUp = ({ history,...props }) => {
       })
     }).then(response=>response.json())
     .then(async data=>{
-      console.log('Data in get sign up',data)
+      // console.log('Data in get sign up',data)
       props.setToken(data.token)
       await app.auth().signInWithEmailAndPassword(e, p);
       history.push("/");
@@ -226,9 +226,9 @@ const SignUp = ({ history,...props }) => {
             </Grid>
           </form>
         </div>
-        <Box mt={5}>
+        {/* <Box mt={5}>
           <Copyright />
-        </Box>
+        </Box> */}
       </Container>
     </div>
   );

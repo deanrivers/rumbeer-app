@@ -20,27 +20,12 @@ function createData(player, position, mp, goals, assists, nutmegs, blocks) {
   return { player, position, mp, goals, assists, nutmegs, blocks };
 }
 
-// const rows = [
-//   createData('Bayern', 3, 3, 0, 0, 10,6,0,9),
-//   createData('Barcelona', 3, 3, 0, 0, 10,6,0,9),
-//   createData('Borussia Dortmund', 3, 3, 0, 0, 10,6,0,9),
-//   createData('PSG', 3, 3, 0, 0, 10,6,0,9),
-// ];
-
-
-
 const Roster = (props) => {
 
-
-  
   // const [playerRows,updatePlayerRows] = useState(null)
   const [allPlayers,updateAllPlayers] =useState(props.data)
 
-  
   const [isLoading,updateIsLoading] = useState(true)
-  
-  
-  
 
   useEffect(()=>{
     // console.log('Props in playerAllStats.js ->',props)

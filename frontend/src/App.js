@@ -18,8 +18,10 @@ import TokenModal from './Components/Common/tokenModal'
 
 const App = () => {
   const [userToken,updateUserToken] = useState(null)
+  const [tokenFetched,updateTokenFetched] = useState(false)
   const [isSignedIn,updateIsSignedIn] = useState(false)
   const [isPlayer,updateIsPlayer] = useState(false)
+  const [isGuest,updateIsGuest] = useState(false)
   const [userStats,updateUserStats] = useState(null)
   const [playerName,updatePlayerName] = useState('')
   const [tokenExpired,updateTokenExpired] = useState(false)
@@ -64,14 +66,37 @@ const App = () => {
   //listen to user token
   useEffect(()=>{
     if(userToken!==null){
-      localStorage.setItem('TOKEN', userToken);
-      getUserStats(userToken)
-      updateIsSignedIn(true)
+      // console.log('Token has been fetched!!!')
+      updateTokenFetched(true)
+      // console.log('Triggered 1',isGuest)
+      // localStorage.setItem('TOKEN', userToken);
+
+      // updateIsSignedIn(true)
+      // getUserStats(userToken)
+      
+      
     } 
   },[userToken])
 
+  useEffect(()=>{
+    if(isGuest&&tokenFetched){
+      console.log('I am a guest')
+      localStorage.setItem('TOKEN', userToken);
+      updateIsSignedIn(true)
+    } else if(!isGuest&&tokenFetched){
+      console.log('I am not a guest.')
+      localStorage.setItem('TOKEN', userToken);
+      updateIsSignedIn(true)
+      getUserStats(userToken)
+    }
+  },[isGuest,tokenFetched])
+
   const setToken = (token) =>{
     updateUserToken(token)
+  }
+
+  const updateGuest = (status) =>{
+    updateIsGuest(status)
   }
 
   const getUserStats = async (token) =>{
@@ -97,22 +122,30 @@ const App = () => {
   }
 
   const checkToken = async (token) =>{
-    fetch('/api/userStats',{
-      method: "GET",
-      withCredentials: true,
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-    }).then(response=>response.json())
-    .then(data=>{
-      if(data.status==400){
-        console.log('The session token has expired')
-        updateTokenExpired(true)
-      }
-    })
+    //try implemented for guest logins
+    try{
+      fetch('/api/weekData',{
+        method: "GET",
+        withCredentials: true,
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+      }).then(response=>response.json())
+      .then(data=>{
+        if(data.status==400){
+          console.log(data)
+          console.log('The session token has expired')
+          updateTokenExpired(true)
+        }
+      })
+    } catch(error){
+      console.log(error)
+      console.log('The session token has expired')
+      updateTokenExpired(true)
+    }
 
   }
 
@@ -142,7 +175,7 @@ let tokenExpiredRender = tokenExpired?<div id="token-modal"><button onClick={()=
             <Route path="/home" exact render={(props) => (<Home {...props} userToken={userToken}  isPlayer={isPlayer} playerName={playerName}/>)}></Route>
 
             {/* The rest of the routes are only accessible after hitting the home page */}
-            <Route exact path="/login" render={(props) => (<Login {...props} setToken={setToken}/>)} />
+            <Route exact path="/login" render={(props) => (<Login {...props} setToken={setToken} updateGuest={updateGuest}/>)} />
             <Route exact path="/signup" render={(props) => (<SignUp {...props} setToken={setToken}/>)} />
 
             {/* create certain routes only if you are a player */}

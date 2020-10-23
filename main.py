@@ -172,7 +172,7 @@ def week_data():
         return response, 200
 
     except:
-        return {"message": "There was an error retrieving week data"}, 400
+        return {"message": "There was an error retrieving week data","status":400}, 400
 
 
 @app.route("/api/weeklyResults", methods=["GET"])

@@ -347,6 +347,9 @@ const Vote = (props) => {
   }
 
   const submitRatings = async () =>{
+    //disable button imediately
+    updateSubmitDisabled(true)
+
     let tokenSession = localStorage.getItem('TOKEN')
     let updatedStats = await updatePlayerStats()
 
@@ -575,6 +578,7 @@ const Vote = (props) => {
 
 
   let cardRender = playersData?playersData.map((card,index)=>{
+    //do not render the current user or the admin account
     if(currentUser.email!==card.email&&card.email!=="test@test.com"){
       // console.log('Render Card ->',card)
       return(
@@ -654,7 +658,7 @@ const Vote = (props) => {
       <div className={classes.heroContent}>
       <Container maxWidth="sm">
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-          You can no longer vote! Come back next week.
+          You can no longer vote. Come back next week!
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
           Each player is only allowed one voting session per week. Please come back next week.
@@ -665,7 +669,7 @@ const Vote = (props) => {
 
       {/* Footer */}
       
-      <footer className={classes.footer}>
+      {/* <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography>
@@ -673,7 +677,7 @@ const Vote = (props) => {
           Rum and Beer Draft League.
         </Typography>
         <Copyright />
-      </footer>
+      </footer> */}
 
       
 
