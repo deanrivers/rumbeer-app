@@ -70,13 +70,15 @@ def test_route():
 @app.route("/api/resetPassword", methods=["POST"])
 def send_reset_email():
     data = request.get_json()
-    email = data['email'].lower()
+    email = data["email"].lower()
 
     if email is None:
         return {"message": "Error missing email"}, 400
 
     try:
         pyre_auth.send_password_reset_email(email)
+
+        return {"message": "Reset password email sent to: " + email + "!"}, 200
 
     except:
         return {"message": "Error sending reset password email"}, 400
