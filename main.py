@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv, find_dotenv  # ignore-error
 from functools import wraps
 from flask import (Flask, render_template, request)
+from flask_cors import CORS
 from firebase_admin import credentials, auth, db
 
 import requests.exceptions
@@ -13,6 +14,8 @@ app = Flask(__name__,
             static_url_path="",
             static_folder="./frontend/build",
             template_folder="./frontend/build")
+
+cors = CORS(app, resources={r"/api/*": {"origins": "nydraft.com"}})
 
 load_dotenv(find_dotenv())
 
