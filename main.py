@@ -33,6 +33,7 @@ firebase = firebase_admin.initialize_app(cred, {
 })
 pb = pyrebase.initialize_app(config)
 pyre_db = pb.database()
+pyre_auth = pb.auth()
 
 def check_token(f):
     @wraps(f)
@@ -63,8 +64,24 @@ def test_route():
     try:
         return {"message": "Hello World!"}, 200
     except Exception as e:
-        print(e)
         return {"message": "This shouldn't be failing!"}, 400
+
+
+@app.route("/api/resetPassword", methods=["POST"])
+def send_reset_email():
+    data = request.get_json()
+    email = data['email'].lower()
+
+    if email is None:
+        return {"message": "Error missing email"}, 400
+
+    try:
+        pyre_auth.send_password_reset_email(email)
+
+    except:
+        return {"message": "Error sending reset password email"}, 400
+
+    
 
 @app.route("/api/signup", methods=["POST"])
 def signup():
