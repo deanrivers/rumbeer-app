@@ -25,7 +25,6 @@ import Container from '@material-ui/core/Container';
 
 const Login = ({history,...props}) => {
 
-
   const [displayError,updateDisplayError] = useState(false)
 
   useEffect(()=>{
@@ -134,15 +133,16 @@ const Login = ({history,...props}) => {
   }
 
   const handleGuestLogin = async () =>{
-    await app.auth().signInAnonymously().catch(function(error){
+    await app.auth().signInAnonymously().catch((error) =>{
       var errorCode = error.code;
       var errorMessage = error.message;
       console.log(errorCode)
       console.log(errorMessage)
     })
 
-    await app.auth().onAuthStateChanged( async function(user){
+    await app.auth().onAuthStateChanged( async (user) => {
       if (user) {
+        // console.log('Guest User ->',user)
         // User is signed in.
         var isAnonymous = user.isAnonymous
         var uid = user.uid      
@@ -224,16 +224,17 @@ const Login = ({history,...props}) => {
               Sign In 
             </Button>
             <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2" className={classes.link}>
-                  Forgot password?
-                </Link>
-              </Grid> */}
-              <Grid item>
-                <NavLink to="/signup">
-                  <Link variant="body2" className={classes.link}>
-                    Don't have an account? Sign Up
-                  </Link>
+              <Grid item xs>
+              <NavLink to="/forgot-password" className={classes.link}>
+                Forgot password
+              </NavLink>
+              </Grid>
+              <Grid item >
+                <NavLink to="/signup" className={classes.link}>
+                  {/* <Link variant="body2" className={classes.link}>
+                    Sign Up
+                  </Link> */}
+                  Sign Up
                 </NavLink>
                 
               </Grid>

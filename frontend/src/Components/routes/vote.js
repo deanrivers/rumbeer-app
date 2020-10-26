@@ -290,7 +290,6 @@ const Vote = (props) => {
       //todays values
       let today = new Date()
 
-      
       //week values
       let weekDateStart,weekDateEnd,elligibleCount
 
@@ -324,14 +323,17 @@ const Vote = (props) => {
           break
         }
 
-        if(today>weekDateStart&&today<weekDateEnd){
+        if(today>=weekDateStart&&today<weekDateEnd){
           elligibleCount = elligibleObj[dateArr[i]]
           break
         } else if(dateArr[i]=="11/8/20"){
           elligibleCount = elligibleObj[dateArr[i]]
           console.log('Else triggered',weekDateStart,weekDateEnd)
           break
-        } 
+        } else{
+          console.log("Last else triggered",weekDateStart,weekDateEnd)
+          elligibleCount = elligibleObj[dateArr[i]]
+        }
       }
 
       console.log('Votes as of today ->',votesToday)

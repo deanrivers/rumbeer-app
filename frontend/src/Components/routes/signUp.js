@@ -94,6 +94,7 @@ const SignUp = ({ history,...props }) => {
       // console.log(data)
       if(data.status==200){
         // console.log('begin get token',data)
+        console.log('Sign up success')
         getToken(email.value,password.value)
         // try {
         //   props.setToken(token)
@@ -167,29 +168,38 @@ const SignUp = ({ history,...props }) => {
                 <TextField
                   autoComplete="fname"
                   name="firstName"
-                  variant="outlined"
-                  required="true"
+                  variant="standard"
+                  required
                   fullWidth
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  InputProps={{
+                    className:classes.textField,
+                    border:'10px sold white'
+                  }}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required="true"
+              <TextField
+                  variant="standard"
+                  margin="normal"
+                  required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  InputProps={{
+                    className:classes.textField,
+                    border:'10px sold white'
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  variant="outlined"
+                  variant="standard"
                   required
                   fullWidth
                   name="password"
@@ -197,6 +207,10 @@ const SignUp = ({ history,...props }) => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  InputProps={{
+                    className:classes.textField,
+                    border:'10px sold white'
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -217,10 +231,11 @@ const SignUp = ({ history,...props }) => {
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <NavLink to="/login">
-                  <Link href="#" variant="body2" className={classes.link}>
-                    Already have an account? Sign in
-                  </Link>
+                <NavLink to="/login" className={classes.link}>
+                  Already have an account? Sign in
+                  
+                    
+
                 </NavLink>
               </Grid>
             </Grid>

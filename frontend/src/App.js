@@ -10,6 +10,7 @@ import Vote from './Components/routes/vote'
 import Stats from './Components/routes/stats'
 import SignUp from './Components/routes/signUp'
 import SwipeNav from './Components/Common/swipeNav'
+import ForgotPassword from './Components/routes/forgotPassword'
 
 import { AuthProvider } from './Auth'
 import PrivateRoute from "./PrivateRoute";
@@ -30,6 +31,7 @@ const App = () => {
   //listen to token expired
   useEffect(()=>{
     let storageToken = localStorage.getItem('TOKEN')
+    // console.log('Storage token ->',storageToken)
     if(tokenExpired){
         alert('Your session has expired. Please log out and log back in.')
     } else if(storageToken){
@@ -45,14 +47,17 @@ const App = () => {
     if(localStorage.getItem("IS_SIGNED_IN")==="true"){
       updateIsSignedIn(true)
     }
+
   },[])
 
   //listen to user stats
   useEffect(()=>{
     if(userStats){
+      //set local storage
       localStorage.setItem('NAME', userStats["firstname"]);
       localStorage.setItem('IS_PLAYER', userStats["isPlayer"]);
       localStorage.setItem('IS_SIGNED_IN', true);
+      
       updateIsPlayer(userStats["isPlayer"])
       updatePlayerName(userStats["firstname"])
     }
@@ -66,33 +71,27 @@ const App = () => {
   //listen to user token
   useEffect(()=>{
     if(userToken!==null){
-      // console.log('Token has been fetched!!!')
       updateTokenFetched(true)
-      // console.log('Triggered 1',isGuest)
-      // localStorage.setItem('TOKEN', userToken);
-
-      // updateIsSignedIn(true)
-      // getUserStats(userToken)
-      
-      
     } 
   },[userToken])
 
-  useEffect(()=>{
+  useEffect(()=>{    
     if(isGuest&&tokenFetched){
-      console.log('I am a guest')
       localStorage.setItem('TOKEN', userToken);
+      localStorage.setItem('IS_PLAYER', false);
+      console.log('I am a guest')
+      
       updateIsSignedIn(true)
     } else if(!isGuest&&tokenFetched){
       console.log('I am not a guest.')
       localStorage.setItem('TOKEN', userToken);
-      updateIsSignedIn(true)
       getUserStats(userToken)
+      updateIsSignedIn(true)
     }
   },[isGuest,tokenFetched])
 
-  const setToken = (token) =>{
-    updateUserToken(token)
+  const setToken = async (token) =>{
+    await updateUserToken(token)
   }
 
   const updateGuest = (status) =>{
@@ -117,8 +116,9 @@ const App = () => {
   }
 
     const logoutUser = () =>{
-      console.log('History from logout',history)
+      // console.log('History from logout',history) 
       updateIsSignedIn(false)
+      updateIsPlayer(false)
   }
 
   const checkToken = async (token) =>{
@@ -177,6 +177,8 @@ let tokenExpiredRender = tokenExpired?<div id="token-modal"><button onClick={()=
             {/* The rest of the routes are only accessible after hitting the home page */}
             <Route exact path="/login" render={(props) => (<Login {...props} setToken={setToken} updateGuest={updateGuest}/>)} />
             <Route exact path="/signup" render={(props) => (<SignUp {...props} setToken={setToken}/>)} />
+            <Route exact path="/forgot-password" component={ForgotPassword} />
+
 
             {/* create certain routes only if you are a player */}
             {isPlayer?<div>
@@ -186,7 +188,9 @@ let tokenExpiredRender = tokenExpired?<div id="token-modal"><button onClick={()=
             :null}
           </Switch>
 
-          {/* {isSignedIn?<SwipeNav logout={logoutUser}/>:null} */}
+          {/* {isSignedIn?
+          <SwipeNav logout={logoutUser} isPlayer={isPlayer}/>:null
+          } */}
           <SwipeNav logout={logoutUser} isPlayer={isPlayer}/>
           
           {/* this allows the app to redirect to '/home' instead of '/' */}
