@@ -176,7 +176,10 @@ const Login = ({history,...props}) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5" className={classes.header}>
-            Please login to enter.
+            Please login to enter. 
+          </Typography>
+          <Typography component="h1" variant="h5" className={classes.header}>
+            Environment variable - {process.env.REACT_APP_NAME}
           </Typography>
 
           <form className={classes.form}  onSubmit={handleLogin} className={classes.root}>

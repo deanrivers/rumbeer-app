@@ -289,6 +289,7 @@ const Vote = (props) => {
       
       //todays values
       let today = new Date()
+      // let today = "11/9/20"
 
       //week values
       let weekDateStart,weekDateEnd,elligibleCount
@@ -315,6 +316,7 @@ const Vote = (props) => {
         weekDateStart = new Date(dateArr[i])
         weekDateEnd = new Date(dateArr[i+1])
 
+        //this triggers on the first iteration if todays date is before league start date
         if(today<firstDay){
           elligibleCount = 0
           console.log(today,firstDay)
@@ -326,7 +328,7 @@ const Vote = (props) => {
         if(today>=weekDateStart&&today<weekDateEnd){
           elligibleCount = elligibleObj[dateArr[i]]
           break
-        } else if(dateArr[i]=="11/8/20"){
+        } else if(dateArr[i]=="11/8/20"){ //triggers on last iteration
           elligibleCount = elligibleObj[dateArr[i]]
           console.log('Else triggered',weekDateStart,weekDateEnd)
           break

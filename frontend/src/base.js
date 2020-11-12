@@ -2,14 +2,14 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBWtxXs1VVgSsKUKNIvUOmMgpuSagD9pv8",
-  authDomain: "rumbeer-dda6f.firebaseapp.com",
-  databaseURL: "https://rumbeer-dda6f.firebaseio.com",
-  projectId: "rumbeer-dda6f",
-  storageBucket: "rumbeer-dda6f.appspot.com",
-  messagingSenderId: "884743176160",
-  appId: "1:884743176160:web:82ad6a455ed9a8e7baf585",
-  measurementId: "G-45DZSXSVR2"
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
+  authDomain: process.env.REACT_APP_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_SENDER_ID,
+  appId: process.env.REACT_APP_SENDER_APP_ID,
+  measurementId: process.env.REACT_APP_SENDER_MEASUREMENT_ID
 };
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
