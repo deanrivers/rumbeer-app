@@ -28,12 +28,12 @@ config = {
     "storageBucket": os.environ['FIREBASE_STORAGE_BUCKET'],
     "messagingSenderId": os.environ['FIREBASE_SENDER_ID'],
     "appId": os.environ['FIREBASE_SENDER_APP_ID'],
-    "measurementId": os.environ['FIREBASE_SENDER_MEASUREMENT_ID']
+    "measurementId": os.environ['FIREBASE_DOMAIN']
 }
 
 cred = credentials.Certificate("rumbeer-firebase-creds.json")
 firebase = firebase_admin.initialize_app(cred, {
-    "databaseURL": "https://rumbeer-dda6f.firebaseio.com"
+    "databaseURL": os.environ['FIREBASE_DATABASE'],
 })
 pb = pyrebase.initialize_app(config)
 pyre_db = pb.database()
