@@ -19,15 +19,16 @@ cors = CORS(app, resources={r"/api/*": {"origins": "nydraft.com"}})
 
 load_dotenv(find_dotenv())
 
+
 config = {
     "apiKey": os.environ['FIREBASE_API_KEY'],
-    "authDomain": "rumbeer-dda6f.firebaseapp.com",
-    "databaseURL": "https://rumbeer-dda6f.firebaseio.com",
-    "projectId": "rumbeer-dda6f",
-    "storageBucket": "rumbeer-dda6f.appspot.com",
-    "messagingSenderId": "884743176160",
-    "appId": "1:884743176160:web:82ad6a455ed9a8e7baf585",
-    "measurementId": "G-45DZSXSVR2"
+    "authDomain": os.environ['FIREBASE_DOMAIN'],
+    "databaseURL": os.environ['FIREBASE_DATABASE'],
+    "projectId": os.environ['FIREBASE_PROJECT_ID'],
+    "storageBucket": os.environ['FIREBASE_STORAGE_BUCKET'],
+    "messagingSenderId": os.environ['FIREBASE_SENDER_ID'],
+    "appId": os.environ['FIREBASE_SENDER_APP_ID'],
+    "measurementId": os.environ['FIREBASE_SENDER_MEASUREMENT_ID']
 }
 
 cred = credentials.Certificate("rumbeer-firebase-creds.json")
